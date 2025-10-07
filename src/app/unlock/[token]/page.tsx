@@ -6,18 +6,19 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Progress } from '@/components/ui/Progress';
 
-export default function UnlockPage({ params }: { params: { token: string } }) {
+export default function UnlockPage({ params }: { params: Promise<{ token: string }> }) {
   const [passphrase, setPassphrase] = useState('');
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [bundleData, setBundleData] = useState<any>(null);
   const [error, setError] = useState('');
+  const unwrappedParams = React.use(params);
 
   // Simulate fetching bundle metadata (in production, this would be an API call)
   useEffect(() => {
     // Placeholder: In production, fetch bundle info from backend using token
     const mockBundle = {
-      id: params.token,
+      id: unwrappedParams.token,
       name: 'My Secret Documents',
       ownerName: 'John Doe',
       itemCount: 3,
@@ -26,7 +27,7 @@ export default function UnlockPage({ params }: { params: { token: string } }) {
     };
 
     setBundleData(mockBundle);
-  }, [params.token]);
+  }, [unwrappedParams.token]);
 
   const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();

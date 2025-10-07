@@ -98,7 +98,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
       setDownloadProgress(90);
 
       // Trigger download
-      const blob = new Blob([decryptedData]);
+      const blob = new Blob([new Uint8Array(decryptedData)]);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

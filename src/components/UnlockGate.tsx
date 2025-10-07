@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -134,12 +135,12 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="mt-8 text-center">
-          <a
+          <Link
             href="/"
             className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
           >
             ← Back to home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

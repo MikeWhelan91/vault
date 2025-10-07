@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // New user - create account
-      user = await prisma.user.create({
+      const newUser = await prisma.user.create({
         data: {
           email: email.toLowerCase(),
           dataKeySalt,
@@ -78,13 +78,13 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         user: {
-          id: user.id,
-          email: user.email,
-          dataKeySalt: user.dataKeySalt,
-          wrappedDataKey: user.wrappedDataKey,
-          wrappedDataKeyIV: user.wrappedDataKeyIV,
-          totalSize: user.totalSize.toString(),
-          storageLimit: user.storageLimit.toString(),
+          id: newUser.id,
+          email: newUser.email,
+          dataKeySalt: newUser.dataKeySalt,
+          wrappedDataKey: newUser.wrappedDataKey,
+          wrappedDataKeyIV: newUser.wrappedDataKeyIV,
+          totalSize: newUser.totalSize.toString(),
+          storageLimit: newUser.storageLimit.toString(),
         },
         items: [],
         heartbeat: null,

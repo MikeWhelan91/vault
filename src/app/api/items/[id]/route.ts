@@ -7,7 +7,7 @@ import prisma from '@/lib/prisma';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { searchParams } = new URL(request.url);
@@ -17,9 +17,11 @@ export async function GET(
       return NextResponse.json({ error: 'userId required' }, { status: 400 });
     }
 
+    const { id } = await params;
+
     const item = await prisma.item.findFirst({
       where: {
-        id: params.id,
+        id,
         userId, // Ensure user owns this item
       },
     });
@@ -55,7 +57,7 @@ export async function GET(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { searchParams } = new URL(request.url);
@@ -65,10 +67,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'userId required' }, { status: 400 });
     }
 
+    const { id } = await params;
+
     // Get item to check ownership and size
     const item = await prisma.item.findFirst({
       where: {
-        id: params.id,
+        id,
         userId,
       },
     });
@@ -80,7 +84,7 @@ export async function DELETE(
     // Delete item and update user's total size
     await prisma.$transaction([
       prisma.item.delete({
-        where: { id: params.id },
+        where: { id },
       }),
       prisma.user.update({
         where: { id: userId },

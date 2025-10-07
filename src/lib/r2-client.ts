@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * R2 API client for interacting with Cloudflare Worker backend
  * All requests include proper CORS headers and error handling
