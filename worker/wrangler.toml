@@ -1,0 +1,28 @@
+# Cloudflare Worker API Configuration
+# This worker provides R2 storage endpoints for encrypted vault data
+
+name = "vault-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+node_compat = true
+
+# R2 Bucket Binding
+# The bucket will store all encrypted ciphertext
+[[r2_buckets]]
+binding = "VAULT_DATA"
+bucket_name = "vault-data"
+preview_bucket_name = "vault-data-dev"
+
+# Environment Variables
+[vars]
+# Comma-separated list of allowed origins for CORS
+# Add your production domain and localhost for development
+ALLOWED_ORIGINS = "http://localhost:3000,https://vault.yourdomain.com"
+
+# Production environment overrides
+[env.production]
+vars = { ALLOWED_ORIGINS = "https://vault.yourdomain.com" }
+
+# Development environment
+[env.dev]
+vars = { ALLOWED_ORIGINS = "http://localhost:3000,http://localhost:3001" }

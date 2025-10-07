@@ -1,0 +1,149 @@
+// Vault - Zero-Knowledge Encrypted Storage
+// Database schema for user accounts and metadata
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User accounts
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Cryptographic data (wrapped keys, salts)
+  dataKeySalt       String // hex-encoded salt for master key derivation
+  wrappedDataKey    String // hex-encoded wrapped data key
+  wrappedDataKeyIV  String // hex-encoded IV for wrapped data key
+
+  // Storage tracking
+  totalSize    BigInt @default(0) // bytes used
+  storageLimit BigInt @default(5368709120) // 5GB default
+
+  // Relations
+  items           Item[]
+  releaseBundles  ReleaseBundle[]
+  heartbeat       Heartbeat?
+
+  @@index([email])
+}
+
+// Encrypted items (files & notes)
+model Item {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type      String   // 'file' | 'note'
+  name      String
+  size      BigInt   // encrypted size in bytes
+  version   Int      @default(1)
+
+  // Storage location
+  r2Key     String   // path in R2: userId/itemId/version.bin
+
+  // Cryptographic data
+  itemKeySalt       String // hex-encoded salt
+  wrappedItemKey    String // hex-encoded wrapped item key
+  wrappedItemKeyIV  String // hex-encoded IV
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bundleItems BundleItem[]
+
+  @@index([userId])
+  @@index([userId, updatedAt])
+}
+
+// Release bundles (time-lock or heartbeat)
+model ReleaseBundle {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  mode      String   // 'time-lock' | 'heartbeat'
+
+  // Time-lock specific
+  releaseDate DateTime?
+
+  // Heartbeat specific
+  heartbeatCadenceDays Int?
+  lastHeartbeat        DateTime?
+
+  // Status
+  released    Boolean  @default(false)
+  releaseToken String?  @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bundleItems BundleItem[]
+  trustees    Trustee[]
+
+  @@index([userId])
+  @@index([releaseDate])
+  @@index([released])
+}
+
+// Junction table for bundles and items
+model BundleItem {
+  id       String @id @default(cuid())
+  bundleId String
+  bundle   ReleaseBundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  itemId   String
+  item     Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([bundleId, itemId])
+  @@index([bundleId])
+  @@index([itemId])
+}
+
+// Trustees for release bundles
+model Trustee {
+  id       String @id @default(cuid())
+  bundleId String
+  bundle   ReleaseBundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+
+  email    String
+  name     String?
+
+  // Notification status
+  notified Boolean @default(false)
+  accessedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([bundleId])
+  @@index([email])
+}
+
+// Heartbeat tracking
+model Heartbeat {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  enabled          Boolean @default(false)
+  cadenceDays      Int     @default(30)
+  lastHeartbeat    DateTime?
+  nextHeartbeat    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([nextHeartbeat])
+  @@index([enabled, nextHeartbeat])
+}
