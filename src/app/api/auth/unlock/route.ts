@@ -1,5 +1,3 @@
-export const runtime = 'edge';
-
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
@@ -106,12 +104,31 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Auth error:', error);
+    console.error('Error type:', typeof error);
+    console.error('Error constructor:', error?.constructor?.name);
+
     // Return more detailed error info for debugging
+    let errorDetails = 'Unknown error';
+    let errorStack = undefined;
+
+    if (error instanceof Error) {
+      errorDetails = error.message;
+      errorStack = error.stack;
+    } else if (typeof error === 'object' && error !== null) {
+      errorDetails = JSON.stringify(error, Object.getOwnPropertyNames(error));
+    } else {
+      errorDetails = String(error);
+    }
+
     return NextResponse.json(
       {
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
+        details: errorDetails,
+        stack: errorStack,
+        env_check: {
+          hasDatabaseUrl: !!process.env.DATABASE_URL,
+          databaseUrlLength: process.env.DATABASE_URL?.length,
+        }
       },
       { status: 500 }
     );
