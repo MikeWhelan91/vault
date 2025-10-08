@@ -12,30 +12,38 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+let prismaInstance: PrismaClient | undefined;
+
 function getPrismaClient() {
+  if (prismaInstance) return prismaInstance;
+
   // Edge runtime (Cloudflare Workers/Pages)
   if (process.env.DATABASE_URL) {
-    // Configure for edge runtime
+    // Configure for edge runtime - must be set before creating Pool
     neonConfig.webSocketConstructor = WebSocket;
 
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const adapter = new PrismaNeon(pool);
-    return new PrismaClient({
+    prismaInstance = new PrismaClient({
       adapter: adapter as any,
       log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
     });
+    return prismaInstance;
   }
 
   // Fallback for local development
-  return new PrismaClient({
+  prismaInstance = new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
+  return prismaInstance;
 }
 
-export const prisma = globalForPrisma.prisma ?? getPrismaClient();
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma;
-}
+// Export a proxy that creates the client lazily
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_, prop) {
+    const client = getPrismaClient();
+    return client[prop];
+  },
+});
 
 export default prisma;
