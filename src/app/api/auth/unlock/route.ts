@@ -95,8 +95,13 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Auth error:', error);
+    // Return more detailed error info for debugging
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
       { status: 500 }
     );
   }
