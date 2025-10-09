@@ -12,16 +12,6 @@
   --muted: #f7f8f8;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #33373d; /* dark graphite */
-    --foreground: #fdfdfb; /* ivory */
-    --card: #3a3f47;
-    --border: #525b66;
-    --muted: #444b54;
-  }
-}
-
 body {
   color: var(--foreground);
   background: var(--background);
@@ -54,22 +44,9 @@ input[type="password"] {
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
 
-  @media (prefers-color-scheme: dark) {
-    .card {
-      background-color: #3a3f47;
-      border-color: #444b54;
-    }
-  }
-
   .placeholder-box {
-    background-color: #f7f8f8;
+    background-color: white;
     border-radius: 0.5rem;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .placeholder-box {
-      background-color: #3a3f47;
-    }
   }
 }
 

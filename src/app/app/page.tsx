@@ -29,7 +29,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-light text-graphite-900 tracking-tight">
           Dashboard
         </h1>
-        <p className="text-graphite-600 mt-2 text-sm dark:text-graphite-300">
+        <p className="text-graphite-600 mt-2 text-sm">
           Welcome back, {session.userId}
         </p>
       </div>
@@ -52,7 +52,7 @@ export default function DashboardPage() {
 
       {/* Storage */}
       <Card>
-        <h2 className="text-lg font-medium text-graphite-900 dark:text-ivory-50 mb-4">
+        <h2 className="text-lg font-medium text-graphite-900 mb-4">
           Storage Usage
         </h2>
         <Progress
@@ -62,7 +62,7 @@ export default function DashboardPage() {
           size="lg"
         />
         {storagePercentage > 80 && (
-          <p className="mt-3 text-sm text-red-600 dark:text-red-400">
+          <p className="mt-3 text-sm text-red-600">
             You&apos;re running low on storage. Consider upgrading to Pro for 100GB.
           </p>
         )}
@@ -71,7 +71,7 @@ export default function DashboardPage() {
       {/* Recent Items */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium text-graphite-900 dark:text-ivory-50">
+          <h2 className="text-lg font-medium text-graphite-900">
             Recent Items
           </h2>
           <Link href="/app/items">
@@ -83,7 +83,7 @@ export default function DashboardPage() {
 
         {recentItems.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-graphite-500 mb-4 text-sm dark:text-graphite-400">
+            <p className="text-graphite-500 mb-4 text-sm">
               No items yet. Start by adding your first file or note.
             </p>
             <Link href="/app/items">
@@ -94,7 +94,7 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {recentItems.map((item) => (
               <Link key={item.id} href={`/app/items/${item.id}`}>
-                <div className="flex items-center justify-between rounded-lg border border-transparent p-4 transition-all duration-200 cursor-pointer hover:border-graphite-200 hover:bg-graphite-50 dark:hover:border-graphite-700 dark:hover:bg-graphite-800">
+                <div className="flex items-center justify-between rounded-lg border border-transparent p-4 transition-all duration-200 cursor-pointer hover:border-graphite-200 hover:bg-graphite-50">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center flex-shrink-0">
                       <svg className="w-5 h-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -106,16 +106,16 @@ export default function DashboardPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-medium text-graphite-900 dark:text-ivory-50">
+                      <p className="font-medium text-graphite-900">
                         {item.name}
                       </p>
-                      <p className="text-xs text-graphite-500 dark:text-graphite-400">
+                      <p className="text-xs text-graphite-500">
                         {formatFileSize(item.size)} • Updated{' '}
                         {formatDate(item.updatedAt)}
                       </p>
                     </div>
                   </div>
-                  <span className="text-graphite-400 dark:text-ivory-400">→</span>
+                  <span className="text-graphite-400">→</span>
                 </div>
               </Link>
             ))}
@@ -125,7 +125,7 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <Card>
-        <h2 className="text-lg font-medium text-graphite-900 dark:text-ivory-50 mb-4">
+        <h2 className="text-lg font-medium text-graphite-900 mb-4">
           Quick Actions
         </h2>
         <div className="grid md:grid-cols-2 gap-3">
@@ -159,8 +159,8 @@ function StatCard({ title, value }: { title: string; value: string }) {
   return (
     <Card>
       <div>
-        <p className="text-sm text-graphite-600 dark:text-graphite-400 mb-1">{title}</p>
-        <p className="text-3xl font-light text-graphite-900 dark:text-ivory-50">{value}</p>
+        <p className="text-sm text-graphite-600 mb-1">{title}</p>
+        <p className="text-3xl font-light text-graphite-900">{value}</p>
       </div>
     </Card>
   );

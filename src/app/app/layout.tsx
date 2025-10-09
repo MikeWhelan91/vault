@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <UnlockGate>
-      <div className="min-h-screen bg-ivory-50 text-graphite-900 transition-colors dark:bg-graphite-950 dark:text-ivory-50">
+      <div className="min-h-screen bg-ivory-50 text-graphite-900 transition-colors">
         <AppNav />
         <main className="container mx-auto px-4 py-8">{children}</main>
       </div>
@@ -36,13 +36,13 @@ function AppNav() {
   };
 
   return (
-    <nav className="border-b border-graphite-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-graphite-700 dark:bg-graphite-900/90 dark:supports-[backdrop-filter]:bg-graphite-900/75">
+    <nav className="border-b border-graphite-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
             href="/app"
-            className="text-xl font-semibold text-graphite-900 tracking-tight dark:text-ivory-50"
+            className="text-xl font-semibold text-graphite-900 tracking-tight"
           >
             Unlatches
           </Link>
@@ -57,8 +57,8 @@ function AppNav() {
                   text-sm font-medium transition-colors
                   ${
                     isActive(item.href)
-                      ? 'text-primary-600 dark:text-primary-300'
-                      : 'text-graphite-600 hover:text-graphite-900 dark:text-graphite-300 dark:hover:text-ivory-50'
+                      ? 'text-primary-600'
+                      : 'text-graphite-600 hover:text-graphite-900'
                   }
                 `}
               >
@@ -69,7 +69,7 @@ function AppNav() {
 
           {/* User actions */}
           <div className="flex items-center gap-4">
-            <span className="text-sm text-graphite-600 dark:text-graphite-300 truncate max-w-[200px]">
+            <span className="text-sm text-graphite-600 truncate max-w-[200px]">
               {session.userId || metadata?.userId || 'User'}
             </span>
             <Button variant="ghost" size="sm" onClick={lock}>

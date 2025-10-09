@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/Button';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-ivory-50 dark:bg-graphite-900">
+    <div className="min-h-screen bg-ivory-50">
       {/* Header */}
-      <header className="border-b border-graphite-200 dark:border-graphite-700 bg-white/90 dark:bg-graphite-900/90 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-graphite-200 bg-white/90 backdrop-blur-sm sticky top-0 z-50">
         <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="text-xl font-semibold text-graphite-900 dark:text-ivory-50 tracking-tight">
+          <div className="text-xl font-semibold text-graphite-900 tracking-tight">
             Unlatches
           </div>
           <div className="flex gap-3">
@@ -24,10 +24,10 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-graphite-900 dark:text-ivory-50 mb-6 tracking-tight animate-fade-in">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-graphite-900 mb-6 tracking-tight animate-fade-in">
             Secure Your Digital Legacy
           </h1>
-          <p className="text-lg md:text-xl text-graphite-600 dark:text-graphite-300 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up">
+          <p className="text-lg md:text-xl text-graphite-600 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up">
             Zero-knowledge encrypted storage for your most sensitive files and notes.
             Control who accesses your data, and when.
           </p>
@@ -45,14 +45,14 @@ export default function LandingPage() {
 
         {/* Hero visual placeholder */}
         <div className="mt-16 max-w-5xl mx-auto">
-          <div className="placeholder-box aspect-video border border-graphite-200 dark:border-graphite-700 shadow-sm"></div>
+          <div className="placeholder-box aspect-video border border-graphite-200 shadow-sm"></div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="bg-white dark:bg-graphite-800 py-24">
+      <section id="features" className="bg-white py-24">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-light text-graphite-900 dark:text-ivory-50 text-center mb-16 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-light text-graphite-900 text-center mb-16 tracking-tight">
             Built for Privacy & Security
           </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -85,9 +85,9 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 bg-ivory-50 dark:bg-graphite-900">
+      <section className="py-24 bg-ivory-50">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-light text-graphite-900 dark:text-ivory-50 text-center mb-16 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-light text-graphite-900 text-center mb-16 tracking-tight">
             How It Works
           </h2>
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
@@ -116,9 +116,9 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="bg-white dark:bg-graphite-800 py-24">
+      <section id="pricing" className="bg-white py-24">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-light text-graphite-900 dark:text-ivory-50 text-center mb-16 tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-light text-graphite-900 text-center mb-16 tracking-tight">
             Simple, Transparent Pricing
           </h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -156,8 +156,8 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-graphite-200 dark:border-graphite-700 py-12 bg-ivory-50 dark:bg-graphite-900">
-        <div className="container mx-auto px-6 text-center text-graphite-600 dark:text-graphite-300">
+      <footer className="border-t border-graphite-200 py-12 bg-ivory-50">
+        <div className="container mx-auto px-6 text-center text-graphite-600">
           <p className="text-sm">&copy; 2025 Unlatches. Built with privacy in mind.</p>
           <p className="mt-2 text-xs">
             Encrypted with AES-256-GCM. Keys derived with PBKDF2.
@@ -177,10 +177,10 @@ function FeatureCard({
 }) {
   return (
     <div className="card p-8 hover:shadow-md transition-shadow duration-300">
-      <h3 className="text-lg font-medium text-graphite-900 dark:text-ivory-50 mb-3">
+      <h3 className="text-lg font-medium text-graphite-900 mb-3">
         {title}
       </h3>
-      <p className="text-graphite-600 dark:text-graphite-300 text-sm leading-relaxed">{description}</p>
+      <p className="text-graphite-600 text-sm leading-relaxed">{description}</p>
     </div>
   );
 }
@@ -200,10 +200,10 @@ function Step({
         {number}
       </div>
       <div>
-        <h3 className="text-lg font-medium text-graphite-900 dark:text-ivory-50 mb-2">
+        <h3 className="text-lg font-medium text-graphite-900 mb-2">
           {title}
         </h3>
-        <p className="text-graphite-600 dark:text-graphite-300 text-sm leading-relaxed">{description}</p>
+        <p className="text-graphite-600 text-sm leading-relaxed">{description}</p>
       </div>
     </div>
   );
@@ -237,24 +237,24 @@ function PricingCard({
         }
       `}
     >
-      <h3 className="text-xl font-medium text-graphite-900 dark:text-ivory-50 mb-2">
+      <h3 className="text-xl font-medium text-graphite-900 mb-2">
         {name}
       </h3>
       <div className="mb-6">
-        <span className="text-4xl font-light text-graphite-900 dark:text-ivory-50">
+        <span className="text-4xl font-light text-graphite-900">
           {price}
         </span>
         {period && (
-          <span className="text-graphite-600 dark:text-graphite-300 text-sm">{period}</span>
+          <span className="text-graphite-600 text-sm">{period}</span>
         )}
       </div>
       <ul className="space-y-3 mb-8">
         {features.map((feature, i) => (
           <li key={i} className="flex items-start gap-3 text-sm">
-            <svg className="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span className="text-graphite-600 dark:text-graphite-300">{feature}</span>
+            <span className="text-graphite-600">{feature}</span>
           </li>
         ))}
       </ul>

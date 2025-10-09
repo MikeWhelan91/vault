@@ -64,19 +64,19 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ivory-50 dark:bg-graphite-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-ivory-50 px-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-6">
-            <h1 className="text-2xl font-semibold text-graphite-900 dark:text-ivory-50">
+            <h1 className="text-2xl font-semibold text-graphite-900">
               Unlatches
             </h1>
           </Link>
-          <h2 className="text-3xl font-light text-graphite-900 dark:text-ivory-50 mb-2">
+          <h2 className="text-3xl font-light text-graphite-900 mb-2">
             Welcome Back
           </h2>
-          <p className="text-graphite-600 dark:text-graphite-300 text-sm">
+          <p className="text-graphite-600 text-sm">
             Sign in to access your encrypted vault
           </p>
         </div>
@@ -124,11 +124,11 @@ export default function SignInPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-graphite-600 dark:text-graphite-300">
+            <p className="text-sm text-graphite-600">
               Don&apos;t have an account?{' '}
               <Link
                 href="/signup"
-                className="text-accent-600 dark:text-accent-400 hover:underline font-medium"
+                className="text-accent-600 hover:underline font-medium"
               >
                 Sign Up
               </Link>
@@ -136,7 +136,7 @@ export default function SignInPage() {
           </div>
 
           <div className="mt-6 pt-6 border-t border-graphite-200">
-            <p className="text-xs text-graphite-600 dark:text-graphite-400 leading-relaxed">
+            <p className="text-xs text-graphite-600 leading-relaxed">
               Your password is used to decrypt your data locally. We never see your password or decrypted data.
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function SignInPage() {
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-sm text-graphite-600 dark:text-graphite-400 hover:text-graphite-900 dark:hover:text-ivory-50 transition-colors"
+            className="text-sm text-graphite-600 hover:text-graphite-900 transition-colors"
           >
             ← Back to home
           </Link>
