@@ -13,13 +13,8 @@ import prisma from '@/lib/prisma';
  */
 export async function POST(request: NextRequest) {
   try {
-    console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
-    console.log('DATABASE_URL length:', process.env.DATABASE_URL?.length);
-
     const body = await request.json();
     const { email, dataKeySalt, wrappedDataKey, wrappedDataKeyIV } = body;
-
-    console.log('Unlock request for:', email);
 
     // Validate input
     if (!email || !dataKeySalt || !wrappedDataKey || !wrappedDataKeyIV) {
@@ -29,7 +24,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('Checking if user exists...');
     // Check if user exists
     let user = await prisma.user.findUnique({
       where: { email: email.toLowerCase() },
@@ -41,11 +35,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log('User found:', !!user);
-
     if (user) {
       // Existing user - return their data
-      console.log('Returning existing user data');
       return NextResponse.json({
         user: {
           id: user.id,
@@ -76,7 +67,6 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // New user - create account
-      console.log('Creating new user...');
       const newUser = await prisma.user.create({
         data: {
           email: email.toLowerCase(),
@@ -86,7 +76,6 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      console.log('New user created:', newUser.id);
       return NextResponse.json({
         user: {
           id: newUser.id,
@@ -104,32 +93,8 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Auth error:', error);
-    console.error('Error type:', typeof error);
-    console.error('Error constructor:', error?.constructor?.name);
-
-    // Return more detailed error info for debugging
-    let errorDetails = 'Unknown error';
-    let errorStack = undefined;
-
-    if (error instanceof Error) {
-      errorDetails = error.message;
-      errorStack = error.stack;
-    } else if (typeof error === 'object' && error !== null) {
-      errorDetails = JSON.stringify(error, Object.getOwnPropertyNames(error));
-    } else {
-      errorDetails = String(error);
-    }
-
     return NextResponse.json(
-      {
-        error: 'Internal server error',
-        details: errorDetails,
-        stack: errorStack,
-        env_check: {
-          hasDatabaseUrl: !!process.env.DATABASE_URL,
-          databaseUrlLength: process.env.DATABASE_URL?.length,
-        }
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
