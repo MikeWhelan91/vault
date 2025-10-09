@@ -23,7 +23,7 @@ export function Card({ children, className = '', hover = false, onClick }: CardP
       onClick={onClick}
     >
       <div className="relative z-10">{children}</div>
-      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-50/40 via-transparent to-teal-50/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-graphite-800/40 dark:to-primary-900/30" />
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-amber-50/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-primary-900/25" />
     </div>
   );
 }

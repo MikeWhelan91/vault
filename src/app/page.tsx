@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/Button';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-ivory-50 via-white to-ivory-100 dark:from-graphite-900 dark:via-graphite-900 dark:to-graphite-900">
+    <div className="min-h-screen bg-ivory-50 dark:bg-graphite-900">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-graphite-200/70 dark:border-graphite-700/60 bg-white/80 dark:bg-graphite-900/80 backdrop-blur-md">
         <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
@@ -23,7 +23,7 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-[420px] bg-gradient-to-br from-accent-100/90 via-white/40 to-primary-100/80 dark:from-graphite-800/80 dark:via-graphite-900/20 dark:to-primary-800/40 blur-[120px]"></div>
+        <div className="absolute inset-x-0 top-0 h-[420px] bg-accent-100/70 dark:bg-primary-900/40 blur-[120px]"></div>
         <div className="container mx-auto px-6 py-24 md:py-32 relative">
           <div className="max-w-5xl mx-auto text-center space-y-8">
             <span className="inline-flex items-center gap-2 rounded-full border border-accent-200/70 bg-white/60 dark:bg-graphite-800/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-graphite-500 dark:text-graphite-200">
@@ -221,7 +221,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="bg-gradient-to-b from-white via-ivory-50 to-white dark:from-graphite-900 dark:via-graphite-800 dark:to-graphite-900 py-24">
+      <section id="pricing" className="bg-ivory-50 dark:bg-graphite-900 py-24">
         <div className="container mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-light text-graphite-900 dark:text-ivory-50 text-center mb-16 tracking-tight">
             Simple, Transparent Pricing

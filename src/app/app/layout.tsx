@@ -9,8 +9,8 @@ import { Button } from '@/components/ui/Button';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <UnlockGate>
-      <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-br from-ivory-50 via-white to-amber-50">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(212,136,63,0.12),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(61,153,153,0.12),transparent_60%)]"></div>
+      <div className="relative min-h-screen overflow-x-hidden bg-ivory-50 dark:bg-graphite-900">
+        <div className="pointer-events-none absolute inset-0 bg-accent-100/30 blur-3xl dark:bg-primary-900/20"></div>
         <div className="relative z-10 flex min-h-screen flex-col">
           <AppNav />
           <main className="container mx-auto w-full max-w-6xl flex-1 px-6 pb-16 pt-12">

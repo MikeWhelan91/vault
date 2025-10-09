@@ -61,7 +61,7 @@ input[type="password"] {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(135deg, rgba(212, 136, 63, 0.12), rgba(61, 153, 153, 0.08));
+    background-color: rgba(212, 136, 63, 0.12);
     opacity: 0;
     transition: opacity 250ms ease;
   }
@@ -78,62 +78,49 @@ input[type="password"] {
     }
 
     .card::after {
-      background: linear-gradient(135deg, rgba(212, 136, 63, 0.2), rgba(90, 179, 179, 0.15));
+      background-color: rgba(212, 136, 63, 0.2);
     }
   }
 
   .gradient-panel {
     position: relative;
     border-radius: 1.5rem;
-    background: linear-gradient(135deg, rgba(250, 238, 224, 0.9), rgba(240, 246, 252, 0.9));
+    background-color: rgba(248, 240, 228, 0.95);
     border: 1px solid rgba(213, 217, 221, 0.6);
     box-shadow: 0 20px 60px -30px rgba(51, 55, 61, 0.35);
     overflow: hidden;
   }
 
-  .gradient-panel::before {
-    content: "";
-    position: absolute;
-    inset: -20%;
-    background: radial-gradient(circle at top left, rgba(212, 136, 63, 0.25), transparent 55%),
-      radial-gradient(circle at bottom right, rgba(61, 153, 153, 0.25), transparent 60%);
-    animation: gradientDrift 12s ease-in-out infinite alternate;
-    opacity: 0.9;
-  }
-
   .placeholder-box {
     position: relative;
     border-radius: 1rem;
-    background: linear-gradient(120deg, rgba(212, 136, 63, 0.18), rgba(61, 153, 153, 0.18));
+    background-color: rgba(244, 220, 192, 0.45);
     overflow: hidden;
   }
 
   .placeholder-box::after {
     content: "";
     position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-    transform: translateX(-100%);
-    animation: shimmer 4s infinite;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    background-color: rgba(255, 255, 255, 0.45);
+    transform: translateX(-120%);
+    animation: placeholderSweep 4s infinite;
   }
 
   @media (prefers-color-scheme: dark) {
     .gradient-panel {
-      background: linear-gradient(135deg, rgba(61, 67, 74, 0.92), rgba(35, 41, 46, 0.92));
+      background-color: rgba(61, 67, 74, 0.92);
       border-color: rgba(82, 91, 102, 0.6);
     }
 
-    .gradient-panel::before {
-      background: radial-gradient(circle at top left, rgba(212, 136, 63, 0.25), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(90, 179, 179, 0.2), transparent 60%);
-    }
-
     .placeholder-box {
-      background: linear-gradient(120deg, rgba(212, 136, 63, 0.22), rgba(61, 153, 153, 0.22));
+      background-color: rgba(100, 116, 128, 0.55);
     }
 
     .placeholder-box::after {
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      background-color: rgba(255, 255, 255, 0.22);
     }
   }
 }
@@ -144,26 +131,14 @@ input[type="password"] {
   }
 }
 
-@keyframes shimmer {
+@keyframes placeholderSweep {
   0% {
-    transform: translateX(-100%);
-  }
-  60% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes gradientDrift {
-  0% {
-    transform: rotate(0deg) scale(1);
+    transform: translateX(-120%);
   }
   50% {
-    transform: rotate(2deg) scale(1.02);
+    transform: translateX(60%);
   }
   100% {
-    transform: rotate(-2deg) scale(1.03);
+    transform: translateX(120%);
   }
 }
