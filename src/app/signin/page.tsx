@@ -2,18 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useCrypto } from '@/contexts/CryptoContext';
+import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { validatePassphrase } from '@/lib/crypto';
+import { useCrypto } from '@/contexts/CryptoContext';
 
-export function UnlockGate({ children }: { children: React.ReactNode }) {
-  const { isUnlocked, unlock } = useCrypto();
+export default function SignInPage() {
+  const router = useRouter();
+  const { unlock, isUnlocked } = useCrypto();
   const [email, setEmail] = useState('');
-  const [passphrase, setPassphrase] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showValidation, setShowValidation] = useState(false);
 
   // Load saved email on mount
   useEffect(() => {
@@ -23,11 +23,14 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  if (isUnlocked) {
-    return <>{children}</>;
-  }
+  // Redirect if already unlocked
+  useEffect(() => {
+    if (isUnlocked) {
+      router.push('/app');
+    }
+  }, [isUnlocked, router]);
 
-  const handleUnlock = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -37,15 +40,22 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    if (!password) {
+      setError('Please enter your password');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       // Save email for next time
       localStorage.setItem('vault_user_email', email.trim().toLowerCase());
 
-      // Use email as userId for encryption
-      await unlock(passphrase, email.trim().toLowerCase());
-      setPassphrase('');
+      // Unlock vault
+      await unlock(password, email.trim().toLowerCase());
+
+      // Redirect to app
+      router.push('/app');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to unlock vault');
     } finally {
@@ -53,12 +63,10 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const validation = validatePassphrase(passphrase);
-  const showErrors = showValidation && !validation.valid && passphrase.length > 0;
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-ivory-50 dark:bg-graphite-900 px-4">
-      <div className="max-w-md w-full">
+      <div className="w-full max-w-md">
+        {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-6">
             <h1 className="text-2xl font-semibold text-graphite-900 dark:text-ivory-50">
@@ -66,15 +74,16 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
             </h1>
           </Link>
           <h2 className="text-3xl font-light text-graphite-900 dark:text-ivory-50 mb-2">
-            Access Your Vault
+            Welcome Back
           </h2>
-          <p className="text-graphite-600 dark:text-graphite-400 text-sm">
-            Enter your credentials to unlock
+          <p className="text-graphite-600 dark:text-graphite-300 text-sm">
+            Sign in to access your encrypted vault
           </p>
         </div>
 
+        {/* Form */}
         <div className="card p-8 animate-slide-up">
-          <form onSubmit={handleUnlock} className="space-y-5">
+          <form onSubmit={handleSignIn} className="space-y-5">
             <Input
               type="email"
               label="Email Address"
@@ -92,12 +101,11 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
             <Input
               type="password"
               label="Password"
-              value={passphrase}
+              value={password}
               onChange={(e) => {
-                setPassphrase(e.target.value);
+                setPassword(e.target.value);
                 setError('');
               }}
-              onBlur={() => setShowValidation(true)}
               placeholder="Enter your password"
               error={error}
               disabled={isLoading}
@@ -105,47 +113,40 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
               autoFocus={!!email}
             />
 
-            {showErrors && (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
-                  Weak password:
-                </p>
-                <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                  {validation.errors.map((err, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span className="text-yellow-500 mt-0.5">•</span>
-                      <span>{err}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || passphrase.length === 0 || email.length === 0}
+              disabled={isLoading || !email || !password}
               isLoading={isLoading}
             >
-              Unlock Vault
+              Sign In
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-graphite-200 dark:border-graphite-700">
-            <p className="text-xs text-graphite-600 dark:text-graphite-400 leading-relaxed">
-              <strong className="text-graphite-900 dark:text-ivory-50">First time?</strong> Enter your email and create a strong password.
-              Your password encrypts all your data - we can never access it.
+          <div className="mt-6 text-center">
+            <p className="text-sm text-graphite-600">
+              Don&apos;t have an account?{' '}
+              <Link
+                href="/signup"
+                className="text-accent-600 hover:underline font-medium"
+              >
+                Sign Up
+              </Link>
             </p>
-            <p className="text-xs text-red-600 dark:text-red-400 mt-3 leading-relaxed">
-              If you forget your password, your data cannot be recovered.
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-graphite-200">
+            <p className="text-xs text-graphite-600 leading-relaxed">
+              Your password is used to decrypt your data locally. We never see your password or decrypted data.
             </p>
           </div>
         </div>
 
+        {/* Back to home */}
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-sm text-graphite-600 dark:text-graphite-400 hover:text-graphite-900 dark:hover:text-ivory-50 transition-colors"
+            className="text-sm text-graphite-600 hover:text-graphite-900 transition-colors"
           >
             ← Back to home
           </Link>

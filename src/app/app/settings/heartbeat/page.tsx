@@ -94,10 +94,10 @@ export default function HeartbeatSettingsPage() {
     <div className="space-y-6 max-w-3xl">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-bold text-graphite-900">
           💓 Heartbeat Settings
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
+        <p className="text-graphite-600 mt-1">
           Configure automated monitoring to trigger releases if you fail to check in
         </p>
       </div>
@@ -105,16 +105,16 @@ export default function HeartbeatSettingsPage() {
       {/* Status Card */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-xl font-semibold text-graphite-900">
             Status
           </h2>
           <span
             className={`
               px-3 py-1 rounded-full text-sm font-medium
-              ${status.color === 'green' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : ''}
-              ${status.color === 'yellow' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : ''}
-              ${status.color === 'red' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : ''}
-              ${status.color === 'gray' ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200' : ''}
+              ${status.color === 'green' ? 'bg-green-100 text-green-800' : ''}
+              ${status.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' : ''}
+              ${status.color === 'red' ? 'bg-red-100 text-red-800' : ''}
+              ${status.color === 'gray' ? 'bg-gray-100 text-gray-800' : ''}
             `}
           >
             {status.message}
@@ -124,15 +124,15 @@ export default function HeartbeatSettingsPage() {
         {settings.lastHeartbeat && (
           <div className="space-y-2 mb-4">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Last heartbeat:</span>
-              <span className="font-medium text-gray-900 dark:text-white">
+              <span className="text-graphite-600">Last heartbeat:</span>
+              <span className="font-medium text-graphite-900">
                 {new Date(settings.lastHeartbeat).toLocaleString()}
               </span>
             </div>
             {settings.nextHeartbeat && (
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-gray-400">Next heartbeat due:</span>
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="text-graphite-600">Next heartbeat due:</span>
+                <span className="font-medium text-graphite-900">
                   {new Date(settings.nextHeartbeat).toLocaleString()}
                 </span>
               </div>
@@ -149,7 +149,7 @@ export default function HeartbeatSettingsPage() {
 
       {/* Configuration */}
       <Card>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-xl font-semibold text-graphite-900 mb-4">
           Configuration
         </h2>
 
@@ -157,10 +157,10 @@ export default function HeartbeatSettingsPage() {
           {/* Enable/Disable */}
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-gray-700">
                 Enable Heartbeat Monitoring
               </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-graphite-500">
                 Require regular check-ins to prevent automatic releases
               </p>
             </div>
@@ -168,8 +168,8 @@ export default function HeartbeatSettingsPage() {
               onClick={() => setSettings({ ...settings, enabled: !settings.enabled })}
               className={`
                 relative inline-flex h-6 w-11 items-center rounded-full
-                transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500
-                ${settings.enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'}
+                transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500
+                ${settings.enabled ? 'bg-primary-600' : 'bg-gray-200'}
               `}
             >
               <span
@@ -201,11 +201,11 @@ export default function HeartbeatSettingsPage() {
       </Card>
 
       {/* Info Card */}
-      <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-        <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
+      <Card className="bg-primary-50 border-blue-200">
+        <h3 className="text-lg font-semibold text-blue-900 mb-2">
           How It Works
         </h3>
-        <div className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
+        <div className="space-y-2 text-sm text-blue-800">
           <p>
             <strong>1. Enable monitoring:</strong> Turn on heartbeat monitoring and set your check-in cadence.
           </p>
@@ -220,14 +220,14 @@ export default function HeartbeatSettingsPage() {
 
       {/* Warning Card */}
       {settings.enabled && (
-        <Card className="bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800">
+        <Card className="bg-yellow-50 border-yellow-200">
           <div className="flex gap-3">
             <span className="text-2xl">⚠️</span>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100 mb-1">
+              <h3 className="text-lg font-semibold text-yellow-900 mb-1">
                 Important Reminder
               </h3>
-              <p className="text-sm text-yellow-800 dark:text-yellow-200">
+              <p className="text-sm text-yellow-800">
                 Make sure to set reminders to check in regularly. Missing a heartbeat will trigger
                 release of sensitive information to your designated trustees.
               </p>

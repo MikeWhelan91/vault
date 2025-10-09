@@ -143,7 +143,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500 dark:text-gray-400">Loading...</p>
+        <p className="text-graphite-500">Loading...</p>
       </div>
     );
   }
@@ -153,10 +153,10 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
       <Card>
         <div className="text-center py-12">
           <span className="text-6xl block mb-4">❓</span>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-2xl font-semibold text-graphite-900 mb-2">
             Item Not Found
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-graphite-600 mb-6">
             The item you&apos;re looking for doesn&apos;t exist or has been deleted.
           </p>
           <Button onClick={() => router.push('/app/items')}>
@@ -174,10 +174,10 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
         <div className="flex items-start gap-4">
           <span className="text-5xl">{item.type === 'file' ? '📄' : '📝'}</span>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-3xl font-bold text-graphite-900">
               {item.name}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-graphite-600 mt-1">
               {formatFileSize(item.size)} •{' '}
               {item.type === 'file' ? 'File' : 'Note'} •{' '}
               Created {formatDate(item.createdAt)}
@@ -216,7 +216,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
       {item.type === 'file' && !isDownloading && (
         <Card>
           <div className="text-center py-8">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-graphite-600 mb-4">
               Click below to download and decrypt this file
             </p>
             <Button onClick={handleDownloadFile} size="lg">
@@ -229,15 +229,15 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
       {/* Note Content */}
       {item.type === 'note' && (
         <Card>
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-xl font-semibold text-graphite-900 mb-4">
             Content
           </h2>
           {decryptedContent ? (
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap">
+            <div className="bg-graphite-50 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap">
               {decryptedContent}
             </div>
           ) : isDownloading ? (
-            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            <div className="text-center py-8 text-graphite-500">
               Loading...
             </div>
           ) : (
@@ -252,7 +252,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
 
       {/* Metadata */}
       <Card>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <h2 className="text-xl font-semibold text-graphite-900 mb-4">
           Metadata
         </h2>
         <dl className="space-y-2">
@@ -272,7 +272,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
         title="Delete Item"
       >
         <div className="space-y-4">
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-graphite-600">
             Are you sure you want to delete <strong>{item.name}</strong>?
             This action cannot be undone.
           </p>
@@ -300,9 +300,9 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
 
 function MetadataRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between py-2 border-b border-gray-200 dark:border-gray-700">
-      <dt className="font-medium text-gray-700 dark:text-gray-300">{label}</dt>
-      <dd className="text-gray-600 dark:text-gray-400 font-mono text-sm">{value}</dd>
+    <div className="flex justify-between py-2 border-b border-graphite-200">
+      <dt className="font-medium text-gray-700">{label}</dt>
+      <dd className="text-graphite-600 font-mono text-sm">{value}</dd>
     </div>
   );
 }

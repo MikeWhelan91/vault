@@ -33,8 +33,8 @@ export default function ItemsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Items</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <h1 className="text-3xl font-bold text-graphite-900">Items</h1>
+          <p className="text-graphite-600 mt-1">
             {items.length} encrypted {items.length === 1 ? 'item' : 'items'}
           </p>
         </div>
@@ -46,10 +46,10 @@ export default function ItemsPage() {
         <Card>
           <div className="text-center py-12">
             <span className="text-6xl mb-4 block">📭</span>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-xl font-semibold text-graphite-900 mb-2">
               No items yet
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-graphite-600 mb-6">
               Start by adding your first encrypted file or note
             </p>
             <Button onClick={() => setShowAddModal(true)}>Add Your First Item</Button>
@@ -66,10 +66,10 @@ export default function ItemsPage() {
                       {item.type === 'file' ? '📄' : '📝'}
                     </span>
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">
+                      <h3 className="font-semibold text-graphite-900">
                         {item.name}
                       </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-graphite-500">
                         {formatFileSize(item.size)} •{' '}
                         {item.type === 'file' ? 'File' : 'Note'} •{' '}
                         Updated {formatDate(item.updatedAt)}
@@ -219,13 +219,13 @@ function AddItemModal({
               flex-1 p-4 rounded-lg border-2 transition-colors
               ${
                 type === 'file'
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-gray-200 dark:border-gray-700'
+                  ? 'border-blue-500 bg-primary-50'
+                  : 'border-graphite-200'
               }
             `}
           >
             <span className="text-3xl block mb-2">📄</span>
-            <span className="font-medium text-gray-900 dark:text-white">File</span>
+            <span className="font-medium text-graphite-900">File</span>
           </button>
           <button
             onClick={() => onTypeChange('note')}
@@ -233,13 +233,13 @@ function AddItemModal({
               flex-1 p-4 rounded-lg border-2 transition-colors
               ${
                 type === 'note'
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-gray-200 dark:border-gray-700'
+                  ? 'border-blue-500 bg-primary-50'
+                  : 'border-graphite-200'
               }
             `}
           >
             <span className="text-3xl block mb-2">📝</span>
-            <span className="font-medium text-gray-900 dark:text-white">Note</span>
+            <span className="font-medium text-graphite-900">Note</span>
           </button>
         </div>
 
@@ -251,7 +251,7 @@ function AddItemModal({
               disabled={isUploading}
             />
             {selectedFile && (
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-sm text-graphite-600">
                 Selected: {selectedFile.name} ({formatFileSize(selectedFile.size)})
               </p>
             )}
@@ -269,13 +269,13 @@ function AddItemModal({
               disabled={isUploading}
             />
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Content
               </label>
               <textarea
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
                 rows={8}
                 placeholder="Enter your note content..."
                 disabled={isUploading}

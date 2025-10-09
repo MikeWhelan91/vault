@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <UnlockGate>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-ivory-50">
         <AppNav />
         <main className="container mx-auto px-4 py-8">{children}</main>
       </div>
@@ -36,12 +36,12 @@ function AppNav() {
   };
 
   return (
-    <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <nav className="bg-white border-b border-graphite-200">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/app" className="text-xl font-bold text-gray-900 dark:text-white">
-            🔒 Vault
+          <Link href="/app" className="text-xl font-semibold text-graphite-900 tracking-tight">
+            Unlatches
           </Link>
 
           {/* Navigation */}
@@ -54,8 +54,8 @@ function AppNav() {
                   text-sm font-medium transition-colors
                   ${
                     isActive(item.href)
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                      ? 'text-primary-600'
+                      : 'text-graphite-600 hover:text-graphite-900'
                   }
                 `}
               >
@@ -66,7 +66,7 @@ function AppNav() {
 
           {/* User actions */}
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-[200px]">
+            <span className="text-sm text-graphite-600 truncate max-w-[200px]">
               {session.userId || metadata?.userId || 'User'}
             </span>
             <Button variant="ghost" size="sm" onClick={lock}>

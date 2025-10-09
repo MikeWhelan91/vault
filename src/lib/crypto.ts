@@ -242,19 +242,19 @@ export function validatePassphrase(passphrase: string): {
   const errors: string[] = [];
 
   if (passphrase.length < 12) {
-    errors.push('Passphrase must be at least 12 characters');
+    errors.push('Password must be at least 12 characters');
   }
 
   if (!/[a-z]/.test(passphrase)) {
-    errors.push('Passphrase must contain lowercase letters');
+    errors.push('Password must contain lowercase letters');
   }
 
   if (!/[A-Z]/.test(passphrase)) {
-    errors.push('Passphrase must contain uppercase letters');
+    errors.push('Password must contain uppercase letters');
   }
 
   if (!/[0-9]/.test(passphrase)) {
-    errors.push('Passphrase must contain numbers');
+    errors.push('Password must contain numbers');
   }
 
   return {
