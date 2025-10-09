@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Button } from './Button';
 
 export interface ModalProps {
   isOpen: boolean;
@@ -61,29 +60,29 @@ export function Modal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Modal */}
       <div
-        className={`relative bg-white dark:bg-gray-900 rounded-lg shadow-xl ${sizes[size]} w-full mx-4 max-h-[90vh] overflow-y-auto`}
+        className={`relative mx-4 w-full max-h-[90vh] overflow-y-auto rounded-xl border border-graphite-200 bg-white/95 shadow-xl transition-colors supports-[backdrop-filter]:bg-white/80 dark:border-graphite-700 dark:bg-graphite-900/90 dark:supports-[backdrop-filter]:bg-graphite-900/75 ${sizes[size]}`}
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-4 border-b dark:border-gray-700">
+          <div className="flex items-center justify-between border-b border-graphite-200 p-4 dark:border-graphite-700">
             {title && (
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-xl font-semibold text-graphite-900 dark:text-ivory-50">
                 {title}
               </h2>
             )}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl leading-none"
+                className="text-graphite-400 transition-colors hover:text-graphite-600 dark:text-graphite-400 dark:hover:text-ivory-200 text-2xl leading-none"
                 aria-label="Close"
               >
                 ×

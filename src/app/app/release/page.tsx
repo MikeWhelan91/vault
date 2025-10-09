@@ -106,10 +106,10 @@ export default function ReleasePage() {
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-graphite-900">
+        <h1 className="text-3xl font-bold text-graphite-900 dark:text-ivory-50">
           ⏰ Create Release Bundle
         </h1>
-        <p className="text-graphite-600 mt-1">
+        <p className="text-graphite-600 mt-1 dark:text-graphite-300">
           Configure automatic release of encrypted data to trustees
         </p>
       </div>
@@ -121,7 +121,7 @@ export default function ReleasePage() {
             key={s}
             className={`
               flex-1 h-2 rounded-full
-              ${s <= step ? 'bg-primary-600' : 'bg-gray-200'}
+              ${s <= step ? 'bg-primary-600 dark:bg-primary-500' : 'bg-gray-200 dark:bg-graphite-700'}
             `}
           />
         ))}
@@ -130,7 +130,7 @@ export default function ReleasePage() {
       {/* Step 1: Basic Info */}
       {step === 1 && (
         <Card>
-          <h2 className="text-xl font-semibold text-graphite-900 mb-4">
+          <h2 className="text-xl font-semibold text-graphite-900 dark:text-ivory-50 mb-4">
             Step 1: Basic Information
           </h2>
           <div className="space-y-6">
@@ -142,7 +142,7 @@ export default function ReleasePage() {
             />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-gray-700 dark:text-ivory-300 mb-3">
                 Release Mode
               </label>
               <div className="grid md:grid-cols-2 gap-4">
@@ -152,16 +152,16 @@ export default function ReleasePage() {
                     p-6 rounded-lg border-2 transition-colors text-left
                     ${
                       mode === 'time-lock'
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-graphite-200'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                        : 'border-graphite-200 dark:border-graphite-600'
                     }
                   `}
                 >
                   <span className="text-3xl block mb-2">⏰</span>
-                  <h3 className="font-semibold text-graphite-900 mb-1">
+                  <h3 className="font-semibold text-graphite-900 dark:text-ivory-50 mb-1">
                     Time-Lock
                   </h3>
-                  <p className="text-sm text-graphite-600">
+                  <p className="text-sm text-graphite-600 dark:text-graphite-400">
                     Release on a specific date in the future
                   </p>
                 </button>
@@ -172,16 +172,16 @@ export default function ReleasePage() {
                     p-6 rounded-lg border-2 transition-colors text-left
                     ${
                       mode === 'heartbeat'
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-graphite-200'
+                        ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                        : 'border-graphite-200 dark:border-graphite-600'
                     }
                   `}
                 >
                   <span className="text-3xl block mb-2">💓</span>
-                  <h3 className="font-semibold text-graphite-900 mb-1">
+                  <h3 className="font-semibold text-graphite-900 dark:text-ivory-50 mb-1">
                     Heartbeat
                   </h3>
-                  <p className="text-sm text-graphite-600">
+                  <p className="text-sm text-graphite-600 dark:text-graphite-400">
                     Release if you miss regular check-ins
                   </p>
                 </button>
@@ -220,15 +220,15 @@ export default function ReleasePage() {
       {/* Step 2: Select Items */}
       {step === 2 && (
         <Card>
-          <h2 className="text-xl font-semibold text-graphite-900 mb-4">
+          <h2 className="text-xl font-semibold text-graphite-900 dark:text-ivory-50 mb-4">
             Step 2: Select Items
           </h2>
-          <p className="text-graphite-600 mb-4">
+          <p className="text-graphite-600 mb-4 dark:text-graphite-400">
             Choose which items to include in this release bundle
           </p>
 
           {metadata.items.length === 0 ? (
-            <p className="text-center py-8 text-graphite-500">
+            <p className="text-center py-8 text-graphite-500 dark:text-graphite-400">
               No items available. Add items first.
             </p>
           ) : (
@@ -236,7 +236,7 @@ export default function ReleasePage() {
               {metadata.items.map((item) => (
                 <label
                   key={item.id}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-graphite-50 cursor-pointer"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-graphite-50 dark:hover:bg-graphite-800 cursor-pointer"
                 >
                   <input
                     type="checkbox"
@@ -247,7 +247,7 @@ export default function ReleasePage() {
                   <span className="text-2xl">
                     {item.type === 'file' ? '📄' : '📝'}
                   </span>
-                  <span className="flex-1 text-graphite-900">
+                  <span className="flex-1 text-graphite-900 dark:text-ivory-50">
                     {item.name}
                   </span>
                 </label>
@@ -272,10 +272,10 @@ export default function ReleasePage() {
       {/* Step 3: Add Trustees */}
       {step === 3 && (
         <Card>
-          <h2 className="text-xl font-semibold text-graphite-900 mb-4">
+          <h2 className="text-xl font-semibold text-graphite-900 dark:text-ivory-50 mb-4">
             Step 3: Add Trustees
           </h2>
-          <p className="text-graphite-600 mb-4">
+          <p className="text-graphite-600 mb-4 dark:text-graphite-400">
             Trustees will receive access to the encrypted data when release conditions are met
           </p>
 
@@ -302,20 +302,20 @@ export default function ReleasePage() {
 
           {trustees.length > 0 && (
             <div className="space-y-2 mb-6">
-              <h3 className="text-sm font-medium text-gray-700">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-ivory-300">
                 Added Trustees ({trustees.length})
               </h3>
               {trustees.map((trustee) => (
                 <div
                   key={trustee.id}
-                  className="flex items-center justify-between p-3 bg-graphite-50 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-graphite-50 dark:bg-graphite-900/60 rounded-lg"
                 >
                   <div>
-                    <p className="font-medium text-graphite-900">
+                    <p className="font-medium text-graphite-900 dark:text-ivory-50">
                       {trustee.name || trustee.email}
                     </p>
                     {trustee.name && (
-                      <p className="text-sm text-graphite-600">
+                      <p className="text-sm text-graphite-600 dark:text-graphite-400">
                         {trustee.email}
                       </p>
                     )}
@@ -346,36 +346,36 @@ export default function ReleasePage() {
       {/* Step 4: Review & Create */}
       {step === 4 && (
         <Card>
-          <h2 className="text-xl font-semibold text-graphite-900 mb-4">
+          <h2 className="text-xl font-semibold text-graphite-900 dark:text-ivory-50 mb-4">
             Step 4: Review & Create
           </h2>
 
           <div className="space-y-6">
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-1">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-ivory-300 mb-1">
                 Bundle Name
               </h3>
-              <p className="text-graphite-900">{bundleName}</p>
+              <p className="text-graphite-900 dark:text-ivory-50">{bundleName}</p>
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-1">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-ivory-300 mb-1">
                 Release Mode
               </h3>
-              <p className="text-graphite-900">
+              <p className="text-graphite-900 dark:text-ivory-50">
                 {mode === 'time-lock' ? `⏰ Time-Lock (${new Date(releaseDate).toLocaleString()})` : `💓 Heartbeat (${heartbeatCadence} days)`}
               </p>
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-1">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-ivory-300 mb-1">
                 Selected Items ({selectedItems.length})
               </h3>
               <ul className="space-y-1">
                 {selectedItems.map((itemId) => {
                   const item = metadata.items.find((i) => i.id === itemId);
                   return item ? (
-                    <li key={itemId} className="text-graphite-900">
+                    <li key={itemId} className="text-graphite-900 dark:text-ivory-50">
                       {item.type === 'file' ? '📄' : '📝'} {item.name}
                     </li>
                   ) : null;
@@ -384,12 +384,12 @@ export default function ReleasePage() {
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-1">
+              <h3 className="text-sm font-medium text-gray-700 dark:text-ivory-300 mb-1">
                 Trustees ({trustees.length})
               </h3>
               <ul className="space-y-1">
                 {trustees.map((trustee) => (
-                  <li key={trustee.id} className="text-graphite-900">
+                  <li key={trustee.id} className="text-graphite-900 dark:text-ivory-50">
                     {trustee.name || trustee.email}
                   </li>
                 ))}
@@ -409,11 +409,11 @@ export default function ReleasePage() {
       )}
 
       {/* Info */}
-      <Card className="bg-primary-50 border-blue-200">
-        <h3 className="text-lg font-semibold text-blue-900 mb-2">
+      <Card className="bg-primary-50 border-blue-200 dark:bg-primary-900/20 dark:border-blue-500/40">
+        <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-2">
           Note: Placeholder Implementation
         </h3>
-        <p className="text-sm text-blue-800">
+        <p className="text-sm text-blue-800 dark:text-blue-100">
           This is a client-side prototype. In production, bundles would be stored on the backend
           and trustees would receive email notifications with secure unlock links when conditions are met.
         </p>
