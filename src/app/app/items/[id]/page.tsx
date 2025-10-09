@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { useToast } from '@/contexts/ToastContext';
@@ -25,20 +25,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
   const [isDeleting, setIsDeleting] = useState(false);
   const unwrappedParams = React.use(params);
 
-  useEffect(() => {
-    if (metadata) {
-      const foundItem = metadata.items.find((i) => i.id === unwrappedParams.id);
-      setItem(foundItem || null);
-      setIsLoading(false);
-
-      // Auto-load notes
-      if (foundItem && foundItem.type === 'note') {
-        loadContent(foundItem);
-      }
-    }
-  }, [metadata, unwrappedParams.id]);
-
-  const loadContent = async (itemToLoad: VaultItem) => {
+  const loadContent = useCallback(async (itemToLoad: VaultItem) => {
     setIsDownloading(true);
     setDownloadProgress(0);
 
@@ -72,7 +59,19 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
       setIsDownloading(false);
       setDownloadProgress(0);
     }
-  };
+  }, [getItemKey, session.userId, showToast]);
+
+  useEffect(() => {
+    if (metadata) {
+      const foundItem = metadata.items.find((i) => i.id === unwrappedParams.id);
+      setItem(foundItem || null);
+      setIsLoading(false);
+
+      if (foundItem && foundItem.type === 'note') {
+        loadContent(foundItem);
+      }
+    }
+  }, [loadContent, metadata, unwrappedParams.id]);
 
   const handleDownloadFile = async () => {
     if (!item) return;
