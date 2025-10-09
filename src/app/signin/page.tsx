@@ -124,11 +124,11 @@ export default function SignInPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-graphite-600">
+            <p className="text-sm text-graphite-600 dark:text-graphite-300">
               Don&apos;t have an account?{' '}
               <Link
                 href="/signup"
-                className="text-accent-600 hover:underline font-medium"
+                className="text-accent-600 dark:text-accent-400 hover:underline font-medium"
               >
                 Sign Up
               </Link>
@@ -136,7 +136,7 @@ export default function SignInPage() {
           </div>
 
           <div className="mt-6 pt-6 border-t border-graphite-200">
-            <p className="text-xs text-graphite-600 leading-relaxed">
+            <p className="text-xs text-graphite-600 dark:text-graphite-400 leading-relaxed">
               Your password is used to decrypt your data locally. We never see your password or decrypted data.
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function SignInPage() {
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-sm text-graphite-600 hover:text-graphite-900 transition-colors"
+            className="text-sm text-graphite-600 dark:text-graphite-400 hover:text-graphite-900 dark:hover:text-ivory-50 transition-colors"
           >
             ← Back to home
           </Link>
