@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/Input';
 import type { ReleaseMode, ReleaseBundle, Trustee } from '@/types';
 
 export default function ReleasePage() {
-  const { metadata } = useCrypto();
+  const { metadata, session } = useCrypto();
   const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [bundleName, setBundleName] = useState('');
@@ -50,7 +50,7 @@ export default function ReleasePage() {
     setTrustees(trustees.filter((t) => t.id !== id));
   };
 
-  const handleCreateBundle = () => {
+  const handleCreateBundle = async () => {
     // Validation
     if (!bundleName.trim()) {
       showToast('Please enter a bundle name', 'error');
@@ -72,30 +72,40 @@ export default function ReleasePage() {
       return;
     }
 
-    // Create bundle
-    const bundle: ReleaseBundle = {
-      id: crypto.randomUUID(),
-      name: bundleName,
-      mode,
-      items: selectedItems,
-      createdAt: new Date().toISOString(),
-      releaseDate: mode === 'time-lock' ? releaseDate : undefined,
-      heartbeatCadence: mode === 'heartbeat' ? heartbeatCadence : undefined,
-      trustees,
-    };
+    try {
+      // Call API to create bundle
+      const response = await fetch('/api/bundles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: session.dbUserId,
+          name: bundleName,
+          mode,
+          releaseDate: mode === 'time-lock' ? releaseDate : undefined,
+          heartbeatCadenceDays: mode === 'heartbeat' ? heartbeatCadence : undefined,
+          itemIds: selectedItems,
+          trustees: trustees.map(t => ({ email: t.email, name: t.name })),
+        }),
+      });
 
-    // Save to localStorage (in production, this would sync with backend)
-    const existingBundles = JSON.parse(localStorage.getItem('release_bundles') || '[]');
-    localStorage.setItem('release_bundles', JSON.stringify([...existingBundles, bundle]));
+      if (!response.ok) {
+        throw new Error('Failed to create bundle');
+      }
 
-    showToast('Release bundle created successfully', 'success');
+      const data = await response.json();
 
-    // Reset form
-    setBundleName('');
-    setSelectedItems([]);
-    setReleaseDate('');
-    setTrustees([]);
-    setStep(1);
+      showToast('Release bundle created successfully', 'success');
+
+      // Reset form
+      setBundleName('');
+      setSelectedItems([]);
+      setReleaseDate('');
+      setTrustees([]);
+      setStep(1);
+    } catch (error) {
+      console.error('Create bundle error:', error);
+      showToast('Failed to create release bundle', 'error');
+    }
   };
 
   if (!metadata) {
@@ -107,10 +117,10 @@ export default function ReleasePage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-graphite-900">
-          ⏰ Create Release Bundle
+          Share Your Memories
         </h1>
         <p className="text-graphite-600 mt-1">
-          Configure automatic release of encrypted data to trustees
+          Choose what you want to share and who should receive it
         </p>
       </div>
 
@@ -159,10 +169,10 @@ export default function ReleasePage() {
                 >
                   <span className="text-3xl block mb-2">⏰</span>
                   <h3 className="font-semibold text-graphite-900 mb-1">
-                    Time-Lock
+                    Scheduled Date
                   </h3>
                   <p className="text-sm text-graphite-600">
-                    Release on a specific date in the future
+                    Share on a specific future date
                   </p>
                 </button>
 
@@ -179,32 +189,38 @@ export default function ReleasePage() {
                 >
                   <span className="text-3xl block mb-2">💓</span>
                   <h3 className="font-semibold text-graphite-900 mb-1">
-                    Heartbeat
+                    If I Stop Checking In
                   </h3>
                   <p className="text-sm text-graphite-600">
-                    Release if you miss regular check-ins
+                    Share if I miss check-ins for too long
                   </p>
                 </button>
               </div>
             </div>
 
             {mode === 'time-lock' && (
-              <Input
-                type="datetime-local"
-                label="Release Date & Time"
-                value={releaseDate}
-                onChange={(e) => setReleaseDate(e.target.value)}
-                helperText="Data will be released to trustees at this time"
-              />
+              <div>
+                <Input
+                  type="datetime-local"
+                  label="When should this be shared?"
+                  value={releaseDate}
+                  onChange={(e) => setReleaseDate(e.target.value)}
+                  helperText="Your memories will be sent within 1 hour of this time"
+                  step="3600"
+                />
+                <p className="text-xs text-graphite-500 mt-1">
+                  Times are checked every hour (e.g., 5:00 PM, 6:00 PM)
+                </p>
+              </div>
             )}
 
             {mode === 'heartbeat' && (
               <Input
                 type="number"
-                label="Heartbeat Cadence (days)"
+                label="How long between check-ins? (days)"
                 value={heartbeatCadence}
                 onChange={(e) => setHeartbeatCadence(parseInt(e.target.value) || 1)}
-                helperText="Release if you miss check-in by this many days"
+                helperText="If you don't check in for this long, memories will be shared"
                 min={1}
                 max={365}
               />
@@ -273,10 +289,10 @@ export default function ReleasePage() {
       {step === 3 && (
         <Card>
           <h2 className="text-xl font-semibold text-graphite-900 mb-4">
-            Step 3: Add Trustees
+            Step 3: Who Should Receive This?
           </h2>
           <p className="text-graphite-600 mb-4">
-            Trustees will receive access to the encrypted data when release conditions are met
+            Add the people who will receive these memories when the time comes
           </p>
 
           <div className="space-y-4 mb-6">
@@ -408,16 +424,6 @@ export default function ReleasePage() {
         </Card>
       )}
 
-      {/* Info */}
-      <Card className="bg-primary-50 border-blue-200">
-        <h3 className="text-lg font-semibold text-blue-900 mb-2">
-          Note: Placeholder Implementation
-        </h3>
-        <p className="text-sm text-blue-800">
-          This is a client-side prototype. In production, bundles would be stored on the backend
-          and trustees would receive email notifications with secure unlock links when conditions are met.
-        </p>
-      </Card>
     </div>
   );
 }

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <UnlockGate>
-      <div className="min-h-screen bg-ivory-50 text-graphite-900 transition-colors">
+      <div className="min-h-screen bg-primary-50 text-graphite-900 transition-colors">
         <AppNav />
         <main className="container mx-auto px-4 py-8">{children}</main>
       </div>
@@ -25,6 +25,7 @@ function AppNav() {
     { name: 'Dashboard', href: '/app' },
     { name: 'Items', href: '/app/items' },
     { name: 'Releases', href: '/app/release' },
+    { name: 'My Bundles', href: '/app/bundles' },
     { name: 'Settings', href: '/app/settings/heartbeat' },
   ];
 

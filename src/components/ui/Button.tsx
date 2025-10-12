@@ -18,10 +18,10 @@ export function Button({
   const baseStyles = 'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variants = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-sm hover:shadow-md',
-    secondary: 'bg-graphite-100 text-graphite-900 hover:bg-graphite-200 focus:ring-graphite-500 dark:bg-graphite-700 dark:text-ivory-100 dark:hover:bg-graphite-600',
+    primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500 shadow-sm hover:shadow-md',
+    secondary: 'bg-graphite-100 text-graphite-900 hover:bg-graphite-200 focus:ring-graphite-500',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm hover:shadow-md',
-    ghost: 'text-graphite-700 hover:bg-graphite-100 focus:ring-graphite-500 dark:text-ivory-300 dark:hover:bg-graphite-800',
+    ghost: 'text-graphite-700 hover:bg-graphite-100 focus:ring-graphite-500',
   };
 
   const sizes = {

@@ -13,7 +13,6 @@ import {
   generateItemKey,
 } from '@/lib/crypto';
 import type { VaultMetadata, VaultItem } from '@/types';
-import { useToast } from './ToastContext';
 
 interface CryptoSession {
   masterKey: CryptoKey | null;
@@ -38,7 +37,6 @@ interface CryptoContextType {
 const CryptoContext = createContext<CryptoContextType | undefined>(undefined);
 
 export function CryptoProvider({ children }: { children: React.ReactNode }) {
-  const { showToast } = useToast();
 
   const [session, setSession] = useState<CryptoSession>({
     masterKey: null,
@@ -151,17 +149,13 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           }
         }
 
-        showToast(data.created ? 'Vault created' : 'Vault unlocked', 'success');
+        // Success - vault unlocked
       } catch (error) {
         console.error('Unlock failed:', error);
-        showToast(
-          error instanceof Error ? error.message : 'Failed to unlock vault',
-          'error'
-        );
         throw error;
       }
     },
-    [showToast]
+    []
   );
 
   /**
@@ -177,8 +171,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
     });
     setMetadata(null);
     sessionStorage.clear();
-    showToast('Vault locked', 'info');
-  }, [showToast]);
+  }, []);
 
   /**
    * Get or generate item key

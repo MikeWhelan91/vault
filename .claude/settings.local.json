@@ -19,7 +19,9 @@
       "Bash(npm uninstall:*)",
       "Bash(for file in items/page.tsx items/[id]/page.tsx release/page.tsx settings/heartbeat/page.tsx)",
       "Bash(do)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(dir:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

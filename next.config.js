@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Image optimization configuration
+  images: {
+    qualities: [75, 90, 100],
+  },
   // Headers for security
   async headers() {
     return [
