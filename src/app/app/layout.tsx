@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Button } from '@/components/ui/Button';
+import { useState } from 'react';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -20,6 +21,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 function AppNav() {
   const pathname = usePathname();
   const { lock, metadata, session } = useCrypto();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigation = [
     { name: 'Dashboard', href: '/app' },
@@ -48,8 +50,8 @@ function AppNav() {
             Unlatches
           </Link>
 
-          {/* Navigation */}
-          <div className="flex items-center gap-6">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-6">
             {navigation.map((item) => (
               <Link
                 key={item.href}
@@ -68,8 +70,8 @@ function AppNav() {
             ))}
           </div>
 
-          {/* User actions */}
-          <div className="flex items-center gap-4">
+          {/* Desktop User actions */}
+          <div className="hidden md:flex items-center gap-4">
             <span className="text-sm text-graphite-600 truncate max-w-[200px]">
               {session.userId || metadata?.userId || 'User'}
             </span>
@@ -77,7 +79,63 @@ function AppNav() {
               Lock
             </Button>
           </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-graphite-600 hover:text-graphite-900"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-graphite-200">
+            <div className="flex flex-col space-y-3">
+              {navigation.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`
+                    px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                    ${
+                      isActive(item.href)
+                        ? 'bg-primary-50 text-primary-600'
+                        : 'text-graphite-600 hover:bg-graphite-50 hover:text-graphite-900'
+                    }
+                  `}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="border-t border-graphite-200 pt-3 mt-3">
+                <div className="px-3 py-2 text-sm text-graphite-600 truncate">
+                  {session.userId || metadata?.userId || 'User'}
+                </div>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    lock();
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-graphite-600 hover:bg-graphite-50 hover:text-graphite-900"
+                >
+                  Lock
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
