@@ -35,25 +35,50 @@ async function r2Fetch(
 ): Promise<Response> {
   const url = `${API_BASE_URL}${endpoint}`;
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/octet-stream',
-      ...options.headers,
-    },
-    mode: 'cors',
-  });
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        ...options.headers,
+      },
+      mode: 'cors',
+    });
 
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => 'Unknown error');
+    if (!response.ok) {
+      let errorText = 'Unknown error';
+      try {
+        errorText = await response.text();
+      } catch (e) {
+        console.error('Failed to read error response:', e);
+      }
+
+      const errorInfo = {
+        status: response.status,
+        statusText: response.statusText,
+        url,
+        errorText,
+      };
+      console.error('R2 API Error:', errorInfo);
+      throw new R2Error(
+        `R2 API error: ${response.statusText} (${response.status}) - ${errorText}`,
+        response.status,
+        errorText
+      );
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof R2Error) {
+      throw error;
+    }
+    console.error('R2 Fetch Error:', error);
     throw new R2Error(
-      `R2 API error: ${response.statusText}`,
-      response.status,
-      errorText
+      `Network error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      0,
+      error
     );
   }
-
-  return response;
 }
 
 /**

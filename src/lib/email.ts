@@ -46,7 +46,7 @@ export async function sendWelcomeEmail(email: string) {
               </div>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL}/app"
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com'}/app"
                    style="display: inline-block; background-color: #22c55e; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                   Get Started
                 </a>
@@ -304,7 +304,7 @@ export async function sendCheckInReminder(email: string, daysUntil: number) {
               </p>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL}/app/settings/heartbeat"
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com'}/app/settings/heartbeat"
                    style="display: inline-block; background-color: #22c55e; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                   Check In Now
                 </a>
@@ -339,7 +339,8 @@ export async function sendReleaseNotification(
   releaseToken: string,
   itemCount: number
 ) {
-  const releaseUrl = `${process.env.NEXT_PUBLIC_APP_URL}/release/${releaseToken}`;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com';
+  const releaseUrl = `${appUrl}/release/${releaseToken}`;
 
   try {
     await resend.emails.send({

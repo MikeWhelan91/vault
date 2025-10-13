@@ -1,10 +1,73 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
+import { Footer } from '@/components/Footer';
 
 export default function LandingPage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Unlatches",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": [
+      {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "name": "Free Plan",
+        "description": "300 MB storage for photos, videos, and messages"
+      },
+      {
+        "@type": "Offer",
+        "price": "9",
+        "priceCurrency": "USD",
+        "name": "Plus Plan",
+        "description": "2 GB storage with unlimited items and trustees"
+      }
+    ],
+    "description": "Store photos, videos, and messages safely. Share them with loved ones at the right time. End-to-end encrypted digital memory vault.",
+    "featureList": [
+      "End-to-end encryption",
+      "Time-lock releases",
+      "Heartbeat monitoring",
+      "Secure file storage",
+      "Automatic delivery to trustees",
+      "Zero-knowledge privacy"
+    ],
+    "screenshot": "https://unlatches.com/hero.jpg",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "ratingCount": "1"
+    }
+  };
+
+  const organizationData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Unlatches",
+    "url": "https://unlatches.com",
+    "logo": "https://unlatches.com/logo.png",
+    "description": "Secure digital legacy and memory storage platform",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "support@unlatches.com",
+      "contactType": "Customer Support"
+    }
+  };
+
   return (
     <div className="min-h-screen bg-primary-50">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+      />
       {/* Header */}
       <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
         <nav className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -267,11 +330,13 @@ export default function LandingPage() {
               name="Free"
               price="$0"
               features={[
-                '5GB storage',
-                'Unlimited memories',
-                'Up to 3 recipients',
-                'Check-in reminders',
-                'Scheduled releases',
+                '300 MB storage',
+                'Upload any file type',
+                'Unlimited items',
+                'Up to 20 trustees per bundle',
+                'Time-lock releases',
+                'Heartbeat check-ins',
+                'Email notifications',
               ]}
               ctaText="Get Started"
               ctaLink="/signup"
@@ -281,12 +346,13 @@ export default function LandingPage() {
               price="$9"
               period="/month"
               features={[
-                '100GB storage',
-                'Unlimited memories',
-                'Unlimited recipients',
+                '2 GB storage',
+                'Upload any file type',
+                'Unlimited items',
+                'Unlimited trustees',
                 'Priority delivery',
-                'Video messages',
                 'Priority support',
+                'Early access to new features',
               ]}
               ctaText="Coming Soon"
               ctaLink="#"
@@ -297,14 +363,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-graphite-200 py-12 bg-primary-50">
-        <div className="container mx-auto px-6 text-center text-graphite-600">
-          <p className="text-sm">&copy; 2025 Unlatches. Share what matters.</p>
-          <p className="mt-2 text-xs">
-            Secure, private, and easy to use.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

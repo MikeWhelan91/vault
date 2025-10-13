@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Generate a unique release token
+    const releaseToken = crypto.randomUUID();
+
     // Create bundle with items and trustees in a transaction
     const bundle = await prisma.releaseBundle.create({
       data: {
@@ -33,6 +36,7 @@ export async function POST(request: NextRequest) {
         mode,
         releaseDate: releaseDate ? new Date(releaseDate) : undefined,
         heartbeatCadenceDays,
+        releaseToken,
         bundleItems: {
           create: itemIds.map((itemId: string) => ({
             itemId,

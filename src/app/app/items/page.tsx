@@ -13,6 +13,8 @@ import { Progress } from '@/components/ui/Progress';
 import { encryptFile } from '@/lib/crypto';
 import { uploadObject } from '@/lib/r2-client';
 import type { ItemType } from '@/types';
+import { FileText, StickyNote, Plus, Clock, HardDrive, ChevronRight, Archive, Image, Video, Music, File } from 'lucide-react';
+import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
 
 export default function ItemsPage() {
   const { metadata, addItem, getItemKey, session } = useCrypto();
@@ -28,18 +30,50 @@ export default function ItemsPage() {
     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
 
+  // Categorize items
+  const categorizedItems = {
+    notes: items.filter(item => item.type === 'note'),
+    images: items.filter(item => {
+      if (item.type !== 'file') return false;
+      const fileInfo = getFileTypeInfo(item.name);
+      return fileInfo.category === 'image';
+    }),
+    videos: items.filter(item => {
+      if (item.type !== 'file') return false;
+      const fileInfo = getFileTypeInfo(item.name);
+      return fileInfo.category === 'video';
+    }),
+    audio: items.filter(item => {
+      if (item.type !== 'file') return false;
+      const fileInfo = getFileTypeInfo(item.name);
+      return fileInfo.category === 'audio';
+    }),
+    documents: items.filter(item => {
+      if (item.type !== 'file') return false;
+      const fileInfo = getFileTypeInfo(item.name);
+      return fileInfo.category === 'text' || fileInfo.category === 'pdf';
+    }),
+    other: items.filter(item => {
+      if (item.type !== 'file') return false;
+      const fileInfo = getFileTypeInfo(item.name);
+      return fileInfo.category === 'other';
+    }),
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-graphite-900">Items</h1>
-          <p className="text-sm sm:text-base text-graphite-600 mt-1">
+          <p className="text-sm sm:text-base text-graphite-600 mt-1 flex items-center gap-2">
+            <Archive className="w-4 h-4" />
             {items.length} encrypted {items.length === 1 ? 'item' : 'items'}
           </p>
         </div>
         <Button onClick={() => setShowAddModal(true)} className="w-full sm:w-auto sm:flex-shrink-0">
-          + Add Item
+          <Plus className="w-4 h-4 mr-2" />
+          Add Item
         </Button>
       </div>
 
@@ -47,42 +81,82 @@ export default function ItemsPage() {
       {items.length === 0 ? (
         <Card>
           <div className="text-center py-12">
-            <span className="text-6xl mb-4 block">📭</span>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-graphite-100 flex items-center justify-center">
+              <Archive className="w-8 h-8 text-graphite-400" />
+            </div>
             <h3 className="text-xl font-semibold text-graphite-900 mb-2">
               No items yet
             </h3>
             <p className="text-graphite-600 mb-6">
               Start by adding your first encrypted file or note
             </p>
-            <Button onClick={() => setShowAddModal(true)}>Add Your First Item</Button>
+            <Button onClick={() => setShowAddModal(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Your First Item
+            </Button>
           </div>
         </Card>
       ) : (
-        <div className="grid gap-4">
-          {items.map((item) => (
-            <Link key={item.id} href={`/app/items/${item.id}`}>
-              <Card hover>
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                    <span className="text-2xl sm:text-3xl flex-shrink-0">
-                      {item.type === 'file' ? '📄' : '📝'}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-graphite-900 truncate">
-                        {item.name}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-graphite-500 break-words">
-                        {formatFileSize(item.size)} •{' '}
-                        {item.type === 'file' ? 'File' : 'Note'} •{' '}
-                        Updated {formatDate(item.updatedAt)}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-gray-400 flex-shrink-0">→</span>
-                </div>
-              </Card>
-            </Link>
-          ))}
+        <div className="space-y-8">
+          {/* Notes */}
+          {categorizedItems.notes.length > 0 && (
+            <CategorySection
+              title="Notes"
+              icon={<StickyNote className="w-5 h-5" />}
+              items={categorizedItems.notes}
+              count={categorizedItems.notes.length}
+            />
+          )}
+
+          {/* Images */}
+          {categorizedItems.images.length > 0 && (
+            <CategorySection
+              title="Images"
+              icon={<Image className="w-5 h-5" />}
+              items={categorizedItems.images}
+              count={categorizedItems.images.length}
+            />
+          )}
+
+          {/* Videos */}
+          {categorizedItems.videos.length > 0 && (
+            <CategorySection
+              title="Videos"
+              icon={<Video className="w-5 h-5" />}
+              items={categorizedItems.videos}
+              count={categorizedItems.videos.length}
+            />
+          )}
+
+          {/* Audio */}
+          {categorizedItems.audio.length > 0 && (
+            <CategorySection
+              title="Audio"
+              icon={<Music className="w-5 h-5" />}
+              items={categorizedItems.audio}
+              count={categorizedItems.audio.length}
+            />
+          )}
+
+          {/* Documents */}
+          {categorizedItems.documents.length > 0 && (
+            <CategorySection
+              title="Documents"
+              icon={<FileText className="w-5 h-5" />}
+              items={categorizedItems.documents}
+              count={categorizedItems.documents.length}
+            />
+          )}
+
+          {/* Other Files */}
+          {categorizedItems.other.length > 0 && (
+            <CategorySection
+              title="Other Files"
+              icon={<File className="w-5 h-5" />}
+              items={categorizedItems.other}
+              count={categorizedItems.other.length}
+            />
+          )}
         </div>
       )}
 
@@ -94,6 +168,103 @@ export default function ItemsPage() {
         onTypeChange={setAddType}
       />
     </div>
+  );
+}
+
+function CategorySection({
+  title,
+  icon,
+  items,
+  count,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  items: any[];
+  count: number;
+}) {
+  const [isExpanded, setIsExpanded] = useState(true);
+
+  return (
+    <div className="border border-graphite-200 rounded">
+      {/* Category Header - Collapsible */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-white hover:bg-graphite-50 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 text-graphite-700">
+            {icon}
+            <h2 className="text-sm font-semibold uppercase tracking-wide">{title}</h2>
+          </div>
+          <span className="text-xs text-graphite-400">
+            {count}
+          </span>
+        </div>
+        <ChevronRight className={`w-4 h-4 text-graphite-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+      </button>
+
+      {/* Items List */}
+      {isExpanded && (
+        <div className="divide-y divide-graphite-100">
+          {items.map((item) => (
+            <ItemCard key={item.id} item={item} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ItemCard({ item }: { item: any }) {
+  const fileInfo = item.type === 'file' ? getFileTypeInfo(item.name) : null;
+  const hasPreview = item.type === 'note' || (item.type === 'file' && canPreviewFile(item.name));
+
+  const getIcon = () => {
+    if (item.type === 'note') {
+      return <StickyNote className="w-4 h-4 text-graphite-500" />;
+    }
+    if (fileInfo) {
+      switch (fileInfo.category) {
+        case 'image':
+          return <Image className="w-4 h-4 text-graphite-500" />;
+        case 'video':
+          return <Video className="w-4 h-4 text-graphite-500" />;
+        case 'audio':
+          return <Music className="w-4 h-4 text-graphite-500" />;
+        case 'text':
+          return <FileText className="w-4 h-4 text-graphite-500" />;
+        default:
+          return <File className="w-4 h-4 text-graphite-500" />;
+      }
+    }
+    return <FileText className="w-4 h-4 text-graphite-500" />;
+  };
+
+  return (
+    <Link href={`/app/items/${item.id}`}>
+      <div className="group flex items-center gap-3 px-4 py-3 bg-white hover:bg-graphite-50 transition-colors">
+        {/* Icon */}
+        <div className="flex-shrink-0">
+          {getIcon()}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0 flex items-center gap-6">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm text-graphite-900 truncate">
+              {item.name}
+            </h3>
+          </div>
+
+          <div className="hidden md:flex items-center gap-6 text-xs text-graphite-500">
+            <span className="w-20 text-right">{formatFileSize(item.size)}</span>
+            <span className="w-24 text-right">{formatDate(item.updatedAt)}</span>
+          </div>
+
+          <ChevronRight className="w-4 h-4 text-graphite-300 flex-shrink-0" />
+        </div>
+      </div>
+    </Link>
   );
 }
 
@@ -221,12 +392,12 @@ function AddItemModal({
               flex-1 p-4 rounded-lg border-2 transition-colors
               ${
                 type === 'file'
-                  ? 'border-blue-500 bg-primary-50'
-                  : 'border-graphite-200'
+                  ? 'border-primary-500 bg-primary-50'
+                  : 'border-graphite-200 hover:border-graphite-300'
               }
             `}
           >
-            <span className="text-3xl block mb-2">📄</span>
+            <FileText className={`w-8 h-8 mx-auto mb-2 ${type === 'file' ? 'text-primary-600' : 'text-graphite-400'}`} />
             <span className="font-medium text-graphite-900">File</span>
           </button>
           <button
@@ -235,12 +406,12 @@ function AddItemModal({
               flex-1 p-4 rounded-lg border-2 transition-colors
               ${
                 type === 'note'
-                  ? 'border-blue-500 bg-primary-50'
-                  : 'border-graphite-200'
+                  ? 'border-primary-500 bg-primary-50'
+                  : 'border-graphite-200 hover:border-graphite-300'
               }
             `}
           >
-            <span className="text-3xl block mb-2">📝</span>
+            <StickyNote className={`w-8 h-8 mx-auto mb-2 ${type === 'note' ? 'text-primary-600' : 'text-graphite-400'}`} />
             <span className="font-medium text-graphite-900">Note</span>
           </button>
         </div>

@@ -14,8 +14,8 @@ export default function DashboardPage() {
     return <div>Loading...</div>;
   }
 
-  const storageUsedGB = metadata.totalSize / (1024 * 1024 * 1024);
-  const storageLimitGB = metadata.storageLimit / (1024 * 1024 * 1024);
+  const storageUsedMB = metadata.totalSize / (1024 * 1024);
+  const storageLimitMB = metadata.storageLimit / (1024 * 1024);
   const storagePercentage = (metadata.totalSize / metadata.storageLimit) * 100;
 
   const recentItems = metadata.items
@@ -52,20 +52,59 @@ export default function DashboardPage() {
 
       {/* Storage */}
       <Card>
-        <h2 className="text-lg font-medium text-graphite-900 mb-4">
-          Storage Usage
-        </h2>
-        <Progress
-          value={storagePercentage}
-          label={`${storageUsedGB.toFixed(2)} GB / ${storageLimitGB} GB`}
-          color={storagePercentage > 80 ? 'red' : storagePercentage > 60 ? 'yellow' : 'blue'}
-          size="lg"
-        />
-        {storagePercentage > 80 && (
-          <p className="mt-3 text-sm text-red-600">
-            You&apos;re running low on storage. Consider upgrading to Pro for 100GB.
-          </p>
-        )}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium text-graphite-900">
+            Storage Usage
+          </h2>
+          {metadata.tier === 'free' && (
+            <Link href="/pricing">
+              <Button variant="ghost" size="sm" className="text-primary-600">
+                Upgrade to Plus
+              </Button>
+            </Link>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          {/* Storage Bar */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-graphite-700">
+                {metadata.tier === 'free' ? 'Free Tier (300 MB)' : 'Plus Tier (2 GB)'}
+              </span>
+              <span className="text-sm text-graphite-600">
+                {storageUsedMB.toFixed(1)} MB / {storageLimitMB.toFixed(0)} MB
+              </span>
+            </div>
+            <Progress
+              value={storagePercentage}
+              color={storagePercentage > 80 ? 'red' : storagePercentage > 60 ? 'yellow' : 'blue'}
+              size="md"
+            />
+          </div>
+
+          {/* Tier-specific message */}
+          {metadata.tier === 'free' && (
+            <p className="text-sm text-graphite-600">
+              Upload any file type • Unlimited items within storage limit
+            </p>
+          )}
+
+          {metadata.tier === 'plus' && (
+            <p className="text-sm text-graphite-600">
+              2 GB storage • Unlimited items • All file types supported
+            </p>
+          )}
+
+          {/* Warning message */}
+          {metadata.tier === 'free' && storagePercentage > 80 && (
+            <div className="pt-2 border-t border-graphite-200">
+              <p className="text-sm text-red-600">
+                You&apos;re approaching your storage limit. <Link href="/pricing" className="underline font-medium">Upgrade to Plus</Link> for 2GB storage.
+              </p>
+            </div>
+          )}
+        </div>
       </Card>
 
       {/* Recent Items */}

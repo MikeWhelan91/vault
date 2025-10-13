@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import type { ReleaseMode, ReleaseBundle, Trustee } from '@/types';
+import { Calendar, Heart, FileText, StickyNote, Plus, X } from 'lucide-react';
 
 export default function ReleasePage() {
   const { metadata, session } = useCrypto();
@@ -118,7 +119,7 @@ export default function ReleasePage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-graphite-900">
@@ -168,11 +169,11 @@ export default function ReleasePage() {
                     ${
                       mode === 'time-lock'
                         ? 'border-primary-500 bg-primary-50'
-                        : 'border-graphite-200'
+                        : 'border-graphite-200 hover:border-graphite-300'
                     }
                   `}
                 >
-                  <span className="text-3xl block mb-2">⏰</span>
+                  <Calendar className={`w-8 h-8 mb-3 ${mode === 'time-lock' ? 'text-primary-600' : 'text-graphite-400'}`} />
                   <h3 className="font-semibold text-graphite-900 mb-1">
                     Scheduled Date
                   </h3>
@@ -188,11 +189,11 @@ export default function ReleasePage() {
                     ${
                       mode === 'heartbeat'
                         ? 'border-primary-500 bg-primary-50'
-                        : 'border-graphite-200'
+                        : 'border-graphite-200 hover:border-graphite-300'
                     }
                   `}
                 >
-                  <span className="text-3xl block mb-2">💓</span>
+                  <Heart className={`w-8 h-8 mb-3 ${mode === 'heartbeat' ? 'text-primary-600' : 'text-graphite-400'}`} />
                   <h3 className="font-semibold text-graphite-900 mb-1">
                     If I Stop Checking In
                   </h3>
@@ -206,11 +207,11 @@ export default function ReleasePage() {
             {mode === 'time-lock' && (
               <div>
                 <Input
-                  type="date"
+                  type="datetime-local"
                   label="When should this be shared?"
                   value={releaseDate}
                   onChange={(e) => setReleaseDate(e.target.value)}
-                  helperText="Your memories will be sent on this date"
+                  helperText="Your memories will be sent at this date and time"
                 />
                 <p className="text-xs text-graphite-500 mt-1">
                   Releases are checked every hour
@@ -256,7 +257,7 @@ export default function ReleasePage() {
               {metadata.items.map((item) => (
                 <label
                   key={item.id}
-                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-graphite-50 cursor-pointer"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-graphite-50 cursor-pointer border border-transparent hover:border-graphite-200 transition-colors"
                 >
                   <input
                     type="checkbox"
@@ -264,9 +265,13 @@ export default function ReleasePage() {
                     onChange={() => handleToggleItem(item.id)}
                     className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
                   />
-                  <span className="text-2xl">
-                    {item.type === 'file' ? '📄' : '📝'}
-                  </span>
+                  <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0">
+                    {item.type === 'file' ? (
+                      <FileText className="w-5 h-5 text-primary-600" />
+                    ) : (
+                      <StickyNote className="w-5 h-5 text-primary-600" />
+                    )}
+                  </div>
                   <span className="flex-1 text-graphite-900">
                     {item.name}
                   </span>
@@ -321,7 +326,8 @@ export default function ReleasePage() {
               className="w-full"
               disabled={trustees.length >= 20}
             >
-              + Add Trustee {trustees.length >= 20 && '(Max 20 reached)'}
+              <Plus className="w-4 h-4 mr-2" />
+              Add Trustee {trustees.length >= 20 && '(Max 20 reached)'}
             </Button>
           </div>
 
@@ -333,7 +339,7 @@ export default function ReleasePage() {
               {trustees.map((trustee) => (
                 <div
                   key={trustee.id}
-                  className="flex items-center justify-between p-3 bg-graphite-50 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-graphite-50 rounded-lg border border-graphite-200"
                 >
                   <div>
                     <p className="font-medium text-graphite-900">
@@ -349,7 +355,9 @@ export default function ReleasePage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleRemoveTrustee(trustee.id)}
+                    className="flex items-center gap-1"
                   >
+                    <X className="w-4 h-4" />
                     Remove
                   </Button>
                 </div>
@@ -387,21 +395,36 @@ export default function ReleasePage() {
               <h3 className="text-sm font-medium text-gray-700 mb-1">
                 Release Mode
               </h3>
-              <p className="text-graphite-900">
-                {mode === 'time-lock' ? `⏰ Time-Lock (${new Date(releaseDate).toLocaleDateString()})` : `💓 Heartbeat (${heartbeatCadence} days)`}
-              </p>
+              <div className="flex items-center gap-2 text-graphite-900">
+                {mode === 'time-lock' ? (
+                  <>
+                    <Calendar className="w-4 h-4" />
+                    <span>Time-Lock ({new Date(releaseDate).toLocaleString()})</span>
+                  </>
+                ) : (
+                  <>
+                    <Heart className="w-4 h-4" />
+                    <span>Heartbeat ({heartbeatCadence} days)</span>
+                  </>
+                )}
+              </div>
             </div>
 
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-1">
                 Selected Items ({selectedItems.length})
               </h3>
-              <ul className="space-y-1">
+              <ul className="space-y-2">
                 {selectedItems.map((itemId) => {
                   const item = metadata.items.find((i) => i.id === itemId);
                   return item ? (
-                    <li key={itemId} className="text-graphite-900">
-                      {item.type === 'file' ? '📄' : '📝'} {item.name}
+                    <li key={itemId} className="flex items-center gap-2 text-graphite-900">
+                      {item.type === 'file' ? (
+                        <FileText className="w-4 h-4 text-primary-600" />
+                      ) : (
+                        <StickyNote className="w-4 h-4 text-primary-600" />
+                      )}
+                      <span>{item.name}</span>
                     </li>
                   ) : null;
                 })}

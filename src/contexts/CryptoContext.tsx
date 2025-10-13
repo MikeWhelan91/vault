@@ -29,7 +29,7 @@ interface CryptoContextType {
   unlock: (passphrase: string, email: string) => Promise<void>;
   lock: () => void;
   getItemKey: (itemId: string) => Promise<CryptoKey>;
-  addItem: (item: Omit<VaultItem, 'id' | 'createdAt' | 'updatedAt' | 'version'>, itemKey: CryptoKey) => Promise<VaultItem>;
+  addItem: (item: Omit<VaultItem, 'id' | 'createdAt' | 'updatedAt' | 'version'>, itemKey: CryptoKey, mimeType?: string) => Promise<VaultItem>;
   removeItem: (itemId: string) => Promise<void>;
   updateMetadata: (updates: Partial<VaultMetadata>) => void;
 }
@@ -132,6 +132,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           })),
           totalSize: parseInt(data.user.totalSize),
           storageLimit: parseInt(data.user.storageLimit),
+          tier: data.user.tier || 'free',
         });
 
         // Store wrapped item keys in memory (for quick access)
@@ -203,7 +204,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
    * Add new item to vault
    */
   const addItem = useCallback(
-    async (item: Omit<VaultItem, 'id' | 'createdAt' | 'updatedAt' | 'version'>, itemKey: CryptoKey): Promise<VaultItem> => {
+    async (item: Omit<VaultItem, 'id' | 'createdAt' | 'updatedAt' | 'version'>, itemKey: CryptoKey, mimeType?: string): Promise<VaultItem> => {
       if (!session.dataKey || !session.dbUserId) {
         throw new Error('Vault is locked');
       }
@@ -226,11 +227,23 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           itemKeySalt: bytesToHex(itemKeySalt),
           wrappedItemKey: bytesToHex(wrappedItemKey),
           wrappedItemKeyIV: bytesToHex(iv),
+          mimeType,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create item');
+        const errorData = await response.json().catch(() => null);
+
+        // Handle quota/limit errors with user-friendly messages
+        if (errorData?.code === 'QUOTA_EXCEEDED') {
+          throw new Error(errorData.error);
+        } else if (errorData?.code === 'STORAGE_LIMIT_EXCEEDED') {
+          throw new Error(errorData.error);
+        } else if (errorData?.code === 'FILE_TOO_LARGE') {
+          throw new Error(errorData.error);
+        }
+
+        throw new Error(errorData?.error || 'Failed to create item');
       }
 
       const data = await response.json();

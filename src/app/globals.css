@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #f0fdf4; /* pale mint */
-  --foreground: #14532d; /* forest green */
+  --background: #f8fafc; /* soft slate gray */
+  --foreground: #1e293b; /* deep slate */
   --card: #ffffff; /* pure white */
   --border: #cbd5e1; /* cool gray */
   --muted: #f1f5f9; /* pale gray */
@@ -18,6 +18,17 @@ body {
   font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Fix input autofill colors */
@@ -26,13 +37,13 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
-  -webkit-text-fill-color: #14532d !important;
+  -webkit-text-fill-color: #1e293b !important;
 }
 
 /* Ensure password dots are visible */
 input[type="password"] {
-  color: #14532d !important;
-  -webkit-text-fill-color: #14532d !important;
+  color: #1e293b !important;
+  -webkit-text-fill-color: #1e293b !important;
 }
 
 

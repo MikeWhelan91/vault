@@ -11,9 +11,9 @@ export function Card({ children, className = '', hover = false, onClick }: CardP
   return (
     <div
       className={`
-        rounded-xl border border-graphite-200 bg-white/90 p-6 shadow-sm transition-colors
+        rounded-xl border border-graphite-200 bg-white/90 p-4 sm:p-6 shadow-sm transition-colors
         dark:border-graphite-700 dark:bg-graphite-900/60 backdrop-blur supports-[backdrop-filter]:bg-white/75
-        dark:supports-[backdrop-filter]:bg-graphite-900/50
+        dark:supports-[backdrop-filter]:bg-graphite-900/50 overflow-hidden w-full
         ${hover ? 'hover:shadow-lg transition-shadow cursor-pointer' : ''}
         ${className}
       `}

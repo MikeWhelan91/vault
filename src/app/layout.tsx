@@ -4,32 +4,53 @@ import { CryptoProvider } from "@/contexts/CryptoContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 
 export const metadata: Metadata = {
-  title: "Unlatches - Zero-Knowledge Encrypted Storage",
-  description: "Secure your digital legacy with zero-knowledge encrypted storage, time-locked releases, and heartbeat monitoring.",
+  title: "Unlatches - Leave Something Behind | Secure Digital Legacy",
+  description: "Store photos, videos, and messages safely. Share them with loved ones at the right time. End-to-end encrypted digital memory vault with time-lock and heartbeat features.",
   keywords: [
-    "zero-knowledge storage",
-    "encrypted vault",
-    "digital legacy planning",
-    "secure document sharing",
-    "time-lock releases",
+    "digital legacy",
+    "memory storage",
+    "encrypted photos",
+    "time capsule",
+    "digital inheritance",
+    "secure file storage",
     "heartbeat monitoring",
+    "dead man switch",
+    "posthumous messages",
+    "digital vault",
+    "encrypted memories",
+    "family memories",
   ],
+  authors: [{ name: "Unlatches" }],
+  metadataBase: new URL("https://unlatches.com"),
   openGraph: {
-    title: "Unlatches - Zero-Knowledge Encrypted Storage",
+    title: "Unlatches - Leave Something Behind",
     description:
-      "Client-side encrypted storage with automated releases, trustee workflows, and heartbeat monitoring to protect your most sensitive data.",
+      "Store memories, messages, and meaningful things. Share them with loved ones when the time is right. Fully encrypted and private.",
     type: "website",
     siteName: "Unlatches",
-    url: "https://unlatches.app/",
+    url: "https://unlatches.com",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Unlatches - Zero-Knowledge Encrypted Storage",
+    title: "Unlatches - Leave Something Behind",
     description:
-      "Protect critical files and notes with zero-knowledge encryption, automated releases, and trustee controls.",
+      "Store photos, videos, and messages safely. Share them with loved ones when the time is right.",
+    creator: "@unlatches",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   alternates: {
-    canonical: "https://unlatches.app/",
+    canonical: "https://unlatches.com",
   },
 };
 

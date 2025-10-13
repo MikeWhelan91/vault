@@ -22,7 +22,12 @@
       "Bash(done)",
       "Bash(dir:*)",
       "WebSearch",
-      "Bash(curl -s -w \"\\nHTTP Status: %{http_code}\\n\" -H \"Authorization: Bearer c51544ed21e85a8eeb4e5614bf95730cfaefc13f5f389c319061c4e72354535b\" https://unlatches.com/api/cron/daily)"
+      "Bash(curl -s -w \"\\nHTTP Status: %{http_code}\\n\" -H \"Authorization: Bearer c51544ed21e85a8eeb4e5614bf95730cfaefc13f5f389c319061c4e72354535b\" https://unlatches.com/api/cron/daily)",
+      "Bash(curl:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": [],
     "ask": []

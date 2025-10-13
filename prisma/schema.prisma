@@ -23,9 +23,12 @@ model User {
   wrappedDataKey    String // hex-encoded wrapped data key
   wrappedDataKeyIV  String // hex-encoded IV for wrapped data key
 
+  // Subscription tier
+  tier String @default("free") // 'free' | 'plus'
+
   // Storage tracking
   totalSize    BigInt @default(0) // bytes used
-  storageLimit BigInt @default(5368709120) // 5GB default
+  storageLimit BigInt @default(314572800) // 300MB default for free tier (2GB for plus)
 
   // Relations
   items           Item[]

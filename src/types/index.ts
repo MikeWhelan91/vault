@@ -2,6 +2,10 @@
 
 export type ItemType = 'file' | 'note';
 
+export type FileCategory = 'video' | 'image' | 'document' | 'audio' | 'other';
+
+export type UserTier = 'free' | 'plus';
+
 export type ReleaseMode = 'time-lock' | 'heartbeat';
 
 export interface VaultItem {
@@ -21,7 +25,8 @@ export interface VaultMetadata {
   dataKeySalt: string; // hex-encoded salt for data key
   items: VaultItem[];
   totalSize: number; // total bytes used
-  storageLimit: number; // bytes allowed (5GB for free tier)
+  storageLimit: number; // bytes allowed
+  tier: UserTier;
 }
 
 export interface ReleaseBundle {

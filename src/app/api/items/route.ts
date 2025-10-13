@@ -74,8 +74,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get user to check storage limit
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Check storage limit
+    const newTotalSize = user.totalSize + BigInt(size);
+    if (newTotalSize > user.storageLimit) {
+      return NextResponse.json(
+        {
+          error: 'Storage limit exceeded. Delete some items or upgrade to Plus for more storage.',
+          code: 'STORAGE_LIMIT_EXCEEDED',
+          limit: user.storageLimit.toString(),
+          used: user.totalSize.toString(),
+          tier: user.tier,
+        },
+        { status: 403 }
+      );
+    }
+
     // Create item and update user's total size
-    const [item, user] = await prisma.$transaction([
+    const [item, updatedUser] = await prisma.$transaction([
       prisma.item.create({
         data: {
           userId,
@@ -110,7 +134,7 @@ export async function POST(request: NextRequest) {
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),
       },
-      totalSize: user.totalSize.toString(),
+      totalSize: updatedUser.totalSize.toString(),
     });
   } catch (error) {
     console.error('Create item error:', error);

@@ -1,0 +1,13 @@
+# robots.txt for Unlatches
+User-agent: *
+Allow: /
+Allow: /support
+Allow: /faq
+Disallow: /app/
+Disallow: /signin
+Disallow: /signup
+Disallow: /api/
+Disallow: /release/
+
+# Sitemap
+Sitemap: https://unlatches.com/sitemap.xml

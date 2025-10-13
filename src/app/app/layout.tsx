@@ -1,6 +1,7 @@
 'use client';
 
 import { UnlockGate } from '@/components/UnlockGate';
+import { Footer } from '@/components/Footer';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
@@ -10,9 +11,10 @@ import { useState } from 'react';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <UnlockGate>
-      <div className="min-h-screen bg-primary-50 text-graphite-900 transition-colors">
+      <div className="min-h-screen bg-primary-50 text-graphite-900 transition-colors overflow-x-hidden flex flex-col">
         <AppNav />
-        <main className="container mx-auto px-4 py-8">{children}</main>
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl w-full flex-1">{children}</main>
+        <Footer />
       </div>
     </UnlockGate>
   );
@@ -28,7 +30,7 @@ function AppNav() {
     { name: 'Items', href: '/app/items' },
     { name: 'Releases', href: '/app/release' },
     { name: 'My Bundles', href: '/app/bundles' },
-    { name: 'Settings', href: '/app/settings/heartbeat' },
+    { name: 'Settings', href: '/app/settings' },
   ];
 
   const isActive = (href: string) => {

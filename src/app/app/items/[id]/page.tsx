@@ -11,6 +11,20 @@ import { Progress } from '@/components/ui/Progress';
 import { decryptFile } from '@/lib/crypto';
 import { downloadObject, deleteObject } from '@/lib/r2-client';
 import type { VaultItem } from '@/types';
+import {
+  FileText,
+  StickyNote,
+  Download,
+  Trash2,
+  ArrowLeft,
+  Calendar,
+  HardDrive,
+  Hash,
+  Clock,
+  AlertCircle
+} from 'lucide-react';
+import { MediaViewer } from '@/components/media/MediaViewer';
+import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
 
 export default function ItemViewPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -21,6 +35,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [decryptedContent, setDecryptedContent] = useState<string | null>(null);
+  const [decryptedData, setDecryptedData] = useState<Uint8Array | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const unwrappedParams = React.use(params);
@@ -31,9 +46,11 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
       setItem(foundItem || null);
       setIsLoading(false);
 
-      // Auto-load notes
-      if (foundItem && foundItem.type === 'note') {
-        loadContent(foundItem);
+      // Auto-load notes and previewable files
+      if (foundItem) {
+        if (foundItem.type === 'note' || canPreviewFile(foundItem.name)) {
+          loadContent(foundItem);
+        }
       }
     }
   }, [metadata, unwrappedParams.id]);
@@ -55,19 +72,30 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
 
       // Get item key and decrypt
       const itemKey = await getItemKey(itemToLoad.id);
-      const decryptedData = await decryptFile(encryptedData, itemKey);
+      const decryptedDataBuffer = await decryptFile(encryptedData, itemKey);
 
       setDownloadProgress(90);
 
+      // Store decrypted data
+      setDecryptedData(decryptedDataBuffer);
+
       // Convert to string for notes
-      const content = new TextDecoder().decode(decryptedData);
-      setDecryptedContent(content);
+      if (itemToLoad.type === 'note') {
+        const content = new TextDecoder().decode(decryptedDataBuffer);
+        setDecryptedContent(content);
+      }
 
       setDownloadProgress(100);
       showToast('Content loaded successfully', 'success');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to load content:', error);
-      showToast('Failed to load content', 'error');
+
+      // Show more specific error message for 404s
+      if (error?.statusCode === 404) {
+        showToast('File not found in storage. This item may be corrupted.', 'error');
+      } else {
+        showToast('Failed to load content', 'error');
+      }
     } finally {
       setIsDownloading(false);
       setDownloadProgress(0);
@@ -152,7 +180,9 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
     return (
       <Card>
         <div className="text-center py-12">
-          <span className="text-6xl block mb-4">❓</span>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+            <AlertCircle className="w-8 h-8 text-red-600" />
+          </div>
           <h2 className="text-2xl font-semibold text-graphite-900 mb-2">
             Item Not Found
           </h2>
@@ -160,6 +190,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
             The item you&apos;re looking for doesn&apos;t exist or has been deleted.
           </p>
           <Button onClick={() => router.push('/app/items')}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Items
           </Button>
         </div>
@@ -170,34 +201,56 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-4">
-          <span className="text-5xl">{item.type === 'file' ? '📄' : '📝'}</span>
-          <div>
-            <h1 className="text-3xl font-bold text-graphite-900">
-              {item.name}
-            </h1>
-            <p className="text-graphite-600 mt-1">
-              {formatFileSize(item.size)} •{' '}
-              {item.type === 'file' ? 'File' : 'Note'} •{' '}
-              Created {formatDate(item.createdAt)}
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
           <Button
             variant="ghost"
             onClick={() => router.push('/app/items')}
+            className="flex items-center gap-2"
           >
-            ← Back
+            <ArrowLeft className="w-4 h-4" />
+            Back to Items
           </Button>
           <Button
             variant="danger"
             onClick={() => setShowDeleteModal(true)}
+            className="flex items-center gap-2"
           >
+            <Trash2 className="w-4 h-4" />
             Delete
           </Button>
         </div>
+
+        <Card>
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-primary-50 flex items-center justify-center">
+              {item.type === 'file' ? (
+                <FileText className="w-8 h-8 text-primary-600" />
+              ) : (
+                <StickyNote className="w-8 h-8 text-primary-600" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-graphite-900 break-words">
+                {item.name}
+              </h1>
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 text-sm text-graphite-600">
+                <span className="flex items-center gap-1.5">
+                  {item.type === 'file' ? <FileText className="w-4 h-4" /> : <StickyNote className="w-4 h-4" />}
+                  {item.type === 'file' ? 'File' : 'Note'}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <HardDrive className="w-4 h-4" />
+                  {formatFileSize(item.size)}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4" />
+                  Created {formatDate(item.createdAt)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
       </div>
 
       {/* Download Progress */}
@@ -212,18 +265,45 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
         </Card>
       )}
 
-      {/* File Actions */}
+      {/* File Content - Media Viewer */}
       {item.type === 'file' && !isDownloading && (
-        <Card>
-          <div className="text-center py-8">
-            <p className="text-graphite-600 mb-4">
-              Click below to download and decrypt this file
-            </p>
-            <Button onClick={handleDownloadFile} size="lg">
-              📥 Download File
-            </Button>
-          </div>
-        </Card>
+        <>
+          {decryptedData && canPreviewFile(item.name) ? (
+            <MediaViewer
+              filename={item.name}
+              data={decryptedData}
+              onDownload={handleDownloadFile}
+            />
+          ) : !decryptedData ? (
+            <Card>
+              <div className="text-center py-8">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
+                  <Download className="w-8 h-8 text-primary-600" />
+                </div>
+                <p className="text-graphite-600 mb-4">
+                  {canPreviewFile(item.name)
+                    ? 'Click below to load preview'
+                    : 'Preview not available for this file type'}
+                </p>
+                <Button onClick={() => loadContent(item)} size="lg">
+                  {canPreviewFile(item.name) ? 'Load Preview' : 'Download File'}
+                </Button>
+              </div>
+            </Card>
+          ) : (
+            <Card>
+              <div className="text-center py-8">
+                <p className="text-graphite-600 mb-4">
+                  Preview not available for this file type
+                </p>
+                <Button onClick={handleDownloadFile} size="lg">
+                  <Download className="w-5 h-5 mr-2" />
+                  Download File
+                </Button>
+              </div>
+            </Card>
+          )}
+        </>
       )}
 
       {/* Note Content */}
@@ -252,17 +332,42 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
 
       {/* Metadata */}
       <Card>
-        <h2 className="text-xl font-semibold text-graphite-900 mb-4">
+        <h2 className="text-xl font-semibold text-graphite-900 mb-6 flex items-center gap-2">
+          <Hash className="w-5 h-5" />
           Metadata
         </h2>
-        <dl className="space-y-2">
-          <MetadataRow label="ID" value={item.id} />
-          <MetadataRow label="Type" value={item.type} />
-          <MetadataRow label="Size" value={formatFileSize(item.size)} />
-          <MetadataRow label="Version" value={item.version.toString()} />
-          <MetadataRow label="Created" value={new Date(item.createdAt).toLocaleString()} />
-          <MetadataRow label="Updated" value={new Date(item.updatedAt).toLocaleString()} />
-        </dl>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <MetadataItem
+            icon={<Hash className="w-5 h-5 text-graphite-400" />}
+            label="ID"
+            value={item.id}
+          />
+          <MetadataItem
+            icon={item.type === 'file' ? <FileText className="w-5 h-5 text-graphite-400" /> : <StickyNote className="w-5 h-5 text-graphite-400" />}
+            label="Type"
+            value={item.type}
+          />
+          <MetadataItem
+            icon={<HardDrive className="w-5 h-5 text-graphite-400" />}
+            label="Size"
+            value={formatFileSize(item.size)}
+          />
+          <MetadataItem
+            icon={<Hash className="w-5 h-5 text-graphite-400" />}
+            label="Version"
+            value={item.version.toString()}
+          />
+          <MetadataItem
+            icon={<Calendar className="w-5 h-5 text-graphite-400" />}
+            label="Created"
+            value={new Date(item.createdAt).toLocaleString()}
+          />
+          <MetadataItem
+            icon={<Clock className="w-5 h-5 text-graphite-400" />}
+            label="Updated"
+            value={new Date(item.updatedAt).toLocaleString()}
+          />
+        </div>
       </Card>
 
       {/* Delete Confirmation Modal */}
@@ -298,11 +403,16 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
   );
 }
 
-function MetadataRow({ label, value }: { label: string; value: string }) {
+function MetadataItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex justify-between py-2 border-b border-graphite-200">
-      <dt className="font-medium text-gray-700">{label}</dt>
-      <dd className="text-graphite-600 font-mono text-sm">{value}</dd>
+    <div className="flex items-start gap-3 p-4 rounded-lg bg-graphite-50">
+      <div className="flex-shrink-0 mt-0.5">
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <dt className="text-sm font-medium text-gray-700 mb-1">{label}</dt>
+        <dd className="text-sm text-graphite-600 font-mono break-all">{value}</dd>
+      </div>
     </div>
   );
 }

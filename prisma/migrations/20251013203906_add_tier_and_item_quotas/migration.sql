@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "Item" ADD COLUMN     "category" TEXT;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "maxDocuments" INTEGER DEFAULT 10,
+ADD COLUMN     "maxImages" INTEGER DEFAULT 10,
+ADD COLUMN     "maxVideos" INTEGER DEFAULT 1,
+ADD COLUMN     "tier" TEXT NOT NULL DEFAULT 'free',
+ALTER COLUMN "storageLimit" SET DEFAULT 314572800;
