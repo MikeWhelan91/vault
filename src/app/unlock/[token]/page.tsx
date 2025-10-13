@@ -86,7 +86,7 @@ export default function UnlockPage({ params }: { params: Promise<{ token: string
                 <p>Items: <strong>{bundleData.itemCount}</strong></p>
                 <p>
                   Released:{' '}
-                  <strong>{new Date(bundleData.releaseDate).toLocaleString()}</strong>
+                  <strong>{new Date(bundleData.releaseDate).toLocaleDateString()}</strong>
                 </p>
               </div>
             </div>

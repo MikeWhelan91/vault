@@ -378,7 +378,7 @@ export default function ReleasePage() {
                 Release Mode
               </h3>
               <p className="text-graphite-900">
-                {mode === 'time-lock' ? `⏰ Time-Lock (${new Date(releaseDate).toLocaleString()})` : `💓 Heartbeat (${heartbeatCadence} days)`}
+                {mode === 'time-lock' ? `⏰ Time-Lock (${new Date(releaseDate).toLocaleDateString()})` : `💓 Heartbeat (${heartbeatCadence} days)`}
               </p>
             </div>
 
