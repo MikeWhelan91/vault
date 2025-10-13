@@ -205,10 +205,10 @@ export default function ReleasePage() {
                   label="When should this be shared?"
                   value={releaseDate}
                   onChange={(e) => setReleaseDate(e.target.value)}
-                  helperText="Your memories will be sent on or after this date"
+                  helperText="Your memories will be sent on this date"
                 />
                 <p className="text-xs text-graphite-500 mt-1">
-                  Releases are checked once daily at midnight UTC (within 24 hours)
+                  Releases are checked every hour
                 </p>
               </div>
             )}
