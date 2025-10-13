@@ -74,7 +74,7 @@ export async function sendWelcomeEmail(email: string) {
  * Send email verification link
  */
 export async function sendVerificationEmail(email: string, verificationToken: string) {
-  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://unlatched.com'}/verify?token=${verificationToken}`;
+  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com'}/verify?token=${verificationToken}`;
 
   try {
     await resend.emails.send({
@@ -181,7 +181,7 @@ export async function sendReleaseCreatedEmail(email: string, releaseName: string
                 Your designated trustees will receive access to this release bundle on the scheduled date.
               </p>
 
-              <a href="https://unlatched.com/app/release"
+              <a href="https://unlatches.com/app/release"
                  style="display: inline-block; background-color: #3d9999; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; margin: 16px 0;">
                 Manage Releases
               </a>
@@ -245,7 +245,7 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
                 If you miss your check-in deadline, your designated trustees will receive access to your release bundles.
               </p>
 
-              <a href="https://unlatched.com/app/settings/heartbeat"
+              <a href="https://unlatches.com/app/settings/heartbeat"
                  style="display: inline-block; background-color: #3d9999; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; margin: 16px 0;">
                 Check In Now
               </a>
