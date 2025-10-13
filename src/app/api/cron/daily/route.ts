@@ -3,14 +3,15 @@ import prisma from '@/lib/prisma';
 import { sendCheckInReminder, sendReleaseNotification } from '@/lib/email';
 
 /**
- * GET /api/cron/hourly
+ * GET /api/cron/daily
  *
- * Hourly cron job that:
+ * Daily cron job that:
  * 1. Checks for overdue heartbeats and triggers releases
- * 2. Checks for time-lock releases that have passed (within 1 hour)
+ * 2. Checks for time-lock releases that have passed (within 24 hours)
  * 3. Sends check-in reminders (3 days before deadline)
  *
- * Runs every hour on the hour (0 * * * *)
+ * Runs once daily at midnight UTC (0 0 * * *)
+ * Note: On Vercel Hobby plan, exact timing is not guaranteed (may run within the midnight hour)
  * Secured with CRON_SECRET to prevent unauthorized access
  */
 export async function GET(request: NextRequest) {

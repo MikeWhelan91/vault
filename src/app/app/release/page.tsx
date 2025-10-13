@@ -201,15 +201,14 @@ export default function ReleasePage() {
             {mode === 'time-lock' && (
               <div>
                 <Input
-                  type="datetime-local"
+                  type="date"
                   label="When should this be shared?"
                   value={releaseDate}
                   onChange={(e) => setReleaseDate(e.target.value)}
-                  helperText="Your memories will be sent within 1 hour of this time"
-                  step="3600"
+                  helperText="Your memories will be sent on or after this date"
                 />
                 <p className="text-xs text-graphite-500 mt-1">
-                  Times are checked every hour (e.g., 5:00 PM, 6:00 PM)
+                  Releases are checked once daily at midnight UTC (within 24 hours)
                 </p>
               </div>
             )}
