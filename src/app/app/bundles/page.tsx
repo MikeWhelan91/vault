@@ -58,17 +58,17 @@ export default function BundlesPage() {
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-graphite-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-graphite-900">
             Your Release Bundles
           </h1>
-          <p className="text-graphite-600 mt-1">
+          <p className="text-sm sm:text-base text-graphite-600 mt-1">
             Manage your scheduled memory releases
           </p>
         </div>
-        <Link href="/app/release">
-          <Button>+ Create New Bundle</Button>
+        <Link href="/app/release" className="sm:flex-shrink-0">
+          <Button className="w-full sm:w-auto">+ Create New Bundle</Button>
         </Link>
       </div>
 
@@ -92,19 +92,19 @@ export default function BundlesPage() {
         <div className="space-y-4">
           {bundles.map((bundle) => (
             <Card key={bundle.id}>
-              <div className="flex items-start justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-xl font-semibold text-graphite-900">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-graphite-900">
                       {bundle.name}
                     </h3>
                     {bundle.released && (
-                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded whitespace-nowrap">
                         Released
                       </span>
                     )}
                     {!bundle.released && (
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded whitespace-nowrap">
                         Pending
                       </span>
                     )}
@@ -113,10 +113,10 @@ export default function BundlesPage() {
                   <div className="space-y-2 text-sm">
                     {/* Release Mode Info */}
                     <div className="flex items-center gap-2 text-graphite-600">
-                      <span>
+                      <span className="flex-shrink-0">
                         {bundle.mode === 'time-lock' ? '⏰' : '💓'}
                       </span>
-                      <span>
+                      <span className="break-words">
                         {bundle.mode === 'time-lock'
                           ? `Releases on ${new Date(bundle.releaseDate!).toLocaleDateString()}`
                           : `Heartbeat mode (${bundle.heartbeatCadenceDays} days)`
@@ -131,9 +131,9 @@ export default function BundlesPage() {
 
                     {/* Trustees */}
                     <div className="text-graphite-600">
-                      👥 {bundle.trustees.length} {bundle.trustees.length === 1 ? 'trustee' : 'trustees'}
-                      {bundle.trustees.length > 0 && (
-                        <span className="ml-2">
+                      <span className="flex-shrink-0">👥 {bundle.trustees.length} {bundle.trustees.length === 1 ? 'trustee' : 'trustees'}</span>
+                      {bundle.trustees.length > 0 && bundle.trustees.length <= 3 && (
+                        <span className="ml-2 break-words">
                           ({bundle.trustees.map(t => t.name || t.email).join(', ')})
                         </span>
                       )}
@@ -147,8 +147,8 @@ export default function BundlesPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="sm">
+                <div className="flex gap-2 sm:flex-shrink-0">
+                  <Button variant="ghost" size="sm" className="text-xs sm:text-sm">
                     View Details
                   </Button>
                 </div>

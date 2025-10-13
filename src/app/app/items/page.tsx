@@ -31,14 +31,16 @@ export default function ItemsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-graphite-900">Items</h1>
-          <p className="text-graphite-600 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-graphite-900">Items</h1>
+          <p className="text-sm sm:text-base text-graphite-600 mt-1">
             {items.length} encrypted {items.length === 1 ? 'item' : 'items'}
           </p>
         </div>
-        <Button onClick={() => setShowAddModal(true)}>+ Add Item</Button>
+        <Button onClick={() => setShowAddModal(true)} className="w-full sm:w-auto sm:flex-shrink-0">
+          + Add Item
+        </Button>
       </div>
 
       {/* Items List */}
@@ -60,23 +62,23 @@ export default function ItemsPage() {
           {items.map((item) => (
             <Link key={item.id} href={`/app/items/${item.id}`}>
               <Card hover>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <span className="text-3xl">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                    <span className="text-2xl sm:text-3xl flex-shrink-0">
                       {item.type === 'file' ? '📄' : '📝'}
                     </span>
-                    <div>
-                      <h3 className="font-semibold text-graphite-900">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-graphite-900 truncate">
                         {item.name}
                       </h3>
-                      <p className="text-sm text-graphite-500">
+                      <p className="text-xs sm:text-sm text-graphite-500 break-words">
                         {formatFileSize(item.size)} •{' '}
                         {item.type === 'file' ? 'File' : 'Note'} •{' '}
                         Updated {formatDate(item.updatedAt)}
                       </p>
                     </div>
                   </div>
-                  <span className="text-gray-400">→</span>
+                  <span className="text-gray-400 flex-shrink-0">→</span>
                 </div>
               </Card>
             </Link>

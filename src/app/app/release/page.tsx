@@ -35,6 +35,11 @@ export default function ReleasePage() {
       return;
     }
 
+    if (trustees.length >= 20) {
+      showToast('Maximum 20 trustees allowed per bundle', 'error');
+      return;
+    }
+
     const trustee: Trustee = {
       id: crypto.randomUUID(),
       email: newTrusteeEmail.trim(),
@@ -310,8 +315,13 @@ export default function ReleasePage() {
                 placeholder="John Doe"
               />
             </div>
-            <Button variant="secondary" onClick={handleAddTrustee} className="w-full">
-              + Add Trustee
+            <Button
+              variant="secondary"
+              onClick={handleAddTrustee}
+              className="w-full"
+              disabled={trustees.length >= 20}
+            >
+              + Add Trustee {trustees.length >= 20 && '(Max 20 reached)'}
             </Button>
           </div>
 
