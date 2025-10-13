@@ -67,7 +67,6 @@ const CATEGORY_MAPPINGS: Record<string, FileCategory> = {
   '.mp3': 'audio',
   '.m4a': 'audio',
   '.wav': 'audio',
-  '.webm': 'audio',
   '.ogg': 'audio',
   '.flac': 'audio',
 };
