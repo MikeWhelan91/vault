@@ -339,8 +339,8 @@ export async function sendReleaseNotification(
   releaseToken: string,
   itemCount: number
 ) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com';
-  const releaseUrl = `${appUrl}/release/${releaseToken}`;
+  // Hardcoded to ensure it always works regardless of env config
+  const releaseUrl = `https://unlatches.com/release/${releaseToken}`;
 
   try {
     await resend.emails.send({
