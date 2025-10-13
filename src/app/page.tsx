@@ -7,16 +7,20 @@ export default function LandingPage() {
     <div className="min-h-screen bg-primary-50">
       {/* Header */}
       <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
-        <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="text-xl font-semibold text-graphite-900 tracking-tight">
+        <nav className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="text-lg sm:text-xl font-semibold text-graphite-900 tracking-tight">
             Unlatches
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3">
             <Link href="/signin">
-              <Button variant="ghost" size="sm">Sign In</Button>
+              <Button variant="ghost" size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
+                Sign In
+              </Button>
             </Link>
             <Link href="/signup">
-              <Button size="sm">Get Started</Button>
+              <Button size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
+                Get Started
+              </Button>
             </Link>
           </div>
         </nav>
