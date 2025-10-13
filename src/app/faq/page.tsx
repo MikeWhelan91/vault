@@ -219,7 +219,7 @@ export default function FAQPage() {
               Still have questions?
             </h2>
             <p className="text-graphite-600 mb-6">
-              Can't find what you're looking for? Reach out to our support team.
+              Can&apos;t find what you&apos;re looking for? Reach out to our support team.
             </p>
             <Link href="/support">
               <Button>Contact Support</Button>
