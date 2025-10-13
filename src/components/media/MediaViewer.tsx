@@ -23,7 +23,7 @@ export function MediaViewer({ filename, data, onDownload }: MediaViewerProps) {
   useEffect(() => {
     // Create blob URL for media
     if (fileInfo.category !== 'text') {
-      const blob = new Blob([data.buffer], { type: fileInfo.mimeType });
+      const blob = new Blob([new Uint8Array(data)], { type: fileInfo.mimeType });
       const url = URL.createObjectURL(blob);
       setObjectUrl(url);
 
