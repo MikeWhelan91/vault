@@ -326,7 +326,7 @@ export default function DashboardPage() {
               />
               {tier === 'free' && storagePercentage > 70 && (
                 <p className="text-sm text-orange-600 mt-2">
-                  You're using {storagePercentage.toFixed(0)}% of your storage.
+                  You&apos;re using {storagePercentage.toFixed(0)}% of your storage.
                   <Link href="/app/pricing" className="font-medium underline ml-1">
                     Upgrade to Plus
                   </Link> for 5 GB.
