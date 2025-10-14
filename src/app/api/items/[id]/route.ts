@@ -53,7 +53,7 @@ export async function GET(
 
 /**
  * DELETE /api/items/[id]?userId=xxx
- * Delete an item
+ * Delete an item from database and R2 storage
  */
 export async function DELETE(
   request: NextRequest,
@@ -69,7 +69,7 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // Get item to check ownership and size
+    // Get item to check ownership and get r2Key
     const item = await prisma.item.findFirst({
       where: {
         id,
@@ -79,6 +79,33 @@ export async function DELETE(
 
     if (!item) {
       return NextResponse.json({ error: 'Item not found' }, { status: 404 });
+    }
+
+    // Delete from R2 first
+    try {
+      const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || 'https://vault-api.yourdomain.workers.dev';
+      // URL-encode the r2Key to handle special characters in email addresses
+      const encodedKey = encodeURIComponent(item.r2Key);
+      const deleteUrl = `${workerUrl}/r2/${encodedKey}`;
+      console.log('Attempting to delete from R2:', deleteUrl);
+
+      const r2Response = await fetch(deleteUrl, {
+        method: 'DELETE',
+      });
+
+      console.log('R2 deletion response status:', r2Response.status);
+
+      if (!r2Response.ok) {
+        const errorText = await r2Response.text();
+        console.error('Failed to delete from R2:', errorText);
+        // Continue anyway - we still want to clean up the database
+      } else {
+        const responseData = await r2Response.json();
+        console.log('R2 deletion successful:', responseData);
+      }
+    } catch (r2Error) {
+      console.error('R2 deletion error:', r2Error);
+      // Continue anyway - we still want to clean up the database
     }
 
     // Delete item and update user's total size

@@ -3,7 +3,7 @@ import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const { email, name } = await request.json();
 
     if (!email || !email.includes('@')) {
       return NextResponse.json(
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await sendWelcomeEmail(email);
+    const result = await sendWelcomeEmail(email, name);
 
     if (!result.success) {
       return NextResponse.json(

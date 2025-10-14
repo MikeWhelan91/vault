@@ -14,7 +14,7 @@ import prisma from '@/lib/prisma';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, dataKeySalt, wrappedDataKey, wrappedDataKeyIV } = body;
+    const { email, dataKeySalt, wrappedDataKey, wrappedDataKeyIV, name } = body;
 
     // Validate input
     if (!email || !dataKeySalt || !wrappedDataKey || !wrappedDataKeyIV) {
@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
         user: {
           id: user.id,
           email: user.email,
+          name: user.name,
           dataKeySalt: user.dataKeySalt,
           wrappedDataKey: user.wrappedDataKey,
           wrappedDataKeyIV: user.wrappedDataKeyIV,
@@ -71,6 +72,7 @@ export async function POST(request: NextRequest) {
       const newUser = await prisma.user.create({
         data: {
           email: email.toLowerCase(),
+          name: name || '',
           dataKeySalt,
           wrappedDataKey,
           wrappedDataKeyIV,
@@ -81,6 +83,7 @@ export async function POST(request: NextRequest) {
         user: {
           id: newUser.id,
           email: newUser.email,
+          name: newUser.name,
           dataKeySalt: newUser.dataKeySalt,
           wrappedDataKey: newUser.wrappedDataKey,
           wrappedDataKeyIV: newUser.wrappedDataKeyIV,

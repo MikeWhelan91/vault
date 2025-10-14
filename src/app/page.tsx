@@ -23,7 +23,7 @@ export default function LandingPage() {
         "price": "9",
         "priceCurrency": "USD",
         "name": "Plus Plan",
-        "description": "2 GB storage with unlimited items and trustees"
+        "description": "5 GB storage with unlimited bundles and trustees"
       }
     ],
     "description": "Store photos, videos, and messages safely. Share them with loved ones at the right time. End-to-end encrypted digital memory vault.",
@@ -331,11 +331,11 @@ export default function LandingPage() {
               price="$0"
               features={[
                 '300 MB storage',
-                'Upload any file type',
+                '1 active release bundle',
+                'Up to 10 trustees per bundle',
                 'Unlimited items',
-                'Up to 20 trustees per bundle',
-                'Time-lock releases',
-                'Heartbeat check-ins',
+                'Upload any file type',
+                'Monthly heartbeat check-ins',
                 'Email notifications',
               ]}
               ctaText="Get Started"
@@ -345,14 +345,15 @@ export default function LandingPage() {
               name="Plus"
               price="$9"
               period="/month"
+              annual="$99/year"
               features={[
-                '2 GB storage',
-                'Upload any file type',
-                'Unlimited items',
+                '5 GB storage',
+                'Unlimited release bundles',
                 'Unlimited trustees',
-                'Priority delivery',
+                'Custom heartbeat schedules',
+                'Release analytics',
                 'Priority support',
-                'Early access to new features',
+                'All file types',
               ]}
               ctaText="Coming Soon"
               ctaLink="#"
@@ -372,6 +373,7 @@ function PricingCard({
   name,
   price,
   period,
+  annual,
   features,
   ctaText,
   ctaLink,
@@ -380,6 +382,7 @@ function PricingCard({
   name: string;
   price: string;
   period?: string;
+  annual?: string;
   features: string[];
   ctaText: string;
   ctaLink: string;
@@ -405,6 +408,9 @@ function PricingCard({
         </span>
         {period && (
           <span className="text-graphite-600 text-sm">{period}</span>
+        )}
+        {annual && (
+          <p className="text-xs text-graphite-500 mt-1">or {annual}</p>
         )}
       </div>
       <ul className="space-y-3 mb-8">

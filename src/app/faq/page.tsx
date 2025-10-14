@@ -97,7 +97,7 @@ export default function FAQPage() {
 
             <FAQItem
               question="How much does Forebearer cost?"
-              answer="We offer a free tier with 300 MB of storage. Plus tier is $9/month with 2 GB of storage, unlimited trustees, and priority support. Both tiers support all file types and unlimited items within your storage limit."
+              answer="We offer a free tier with 300 MB of storage, 1 active release bundle, and up to 10 trustees per bundle. Plus tier is $9/month (or $99/year) with 5 GB of storage, unlimited release bundles, unlimited trustees, custom heartbeat schedules, and priority support. Both tiers support all file types and unlimited items within your storage limit."
             />
 
             <FAQItem
@@ -112,7 +112,7 @@ export default function FAQPage() {
 
             <FAQItem
               question="Can I upgrade or downgrade my plan?"
-              answer="Plus tier is coming soon. Once available, you'll be able to upgrade at any time. We'll provide options to manage your subscription directly from your account settings."
+              answer="Yes! You can upgrade to Plus at any time from your account settings. If you downgrade from Plus to Free, you'll need to ensure you're within the free tier limits (1 active bundle, 10 trustees per bundle, 300 MB storage)."
             />
           </section>
 
@@ -132,12 +132,12 @@ export default function FAQPage() {
 
             <FAQItem
               question="How many trustees can I add?"
-              answer="Free tier: up to 20 trustees per release bundle. Plus tier: unlimited trustees."
+              answer="Free tier: up to 10 trustees per release bundle. Plus tier: unlimited trustees."
             />
 
             <FAQItem
               question="Can I have multiple release bundles?"
-              answer="Yes! You can create as many release bundles as you want. Each bundle can have different trustees, different items, and different release conditions."
+              answer="Yes! Free tier users can have 1 active release bundle at a time. Plus tier users can create unlimited active release bundles. Each bundle can have different trustees, different items, and different release conditions."
             />
 
             <FAQItem

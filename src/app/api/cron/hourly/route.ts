@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
         (new Date(heartbeat.nextHeartbeat!).getTime() - now.getTime()) / (24 * 60 * 60 * 1000)
       );
 
-      await sendCheckInReminder(heartbeat.user.email, daysUntil);
+      await sendCheckInReminder(heartbeat.user.email, daysUntil, heartbeat.user.name);
       remindersSent++;
     }
 
@@ -137,10 +137,16 @@ export async function GET(request: NextRequest) {
  */
 async function triggerRelease(bundle: any) {
   try {
-    // Mark bundle as released
+    // Generate release token if it doesn't exist
+    const releaseToken = bundle.releaseToken || crypto.randomUUID();
+
+    // Mark bundle as released and set release token
     await prisma.releaseBundle.update({
       where: { id: bundle.id },
-      data: { released: true },
+      data: {
+        released: true,
+        releaseToken: releaseToken
+      },
     });
 
     // Send email to each trustee
@@ -150,7 +156,7 @@ async function triggerRelease(bundle: any) {
         trustee.name,
         bundle.user.email,
         bundle.name,
-        bundle.releaseToken,
+        releaseToken,
         bundle.bundleItems.length
       );
 

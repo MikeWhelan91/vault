@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { canCreateBundle, canAddTrustee, type TierName } from '@/lib/pricing';
 
 /**
  * POST /api/bundles
@@ -22,6 +23,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
+      );
+    }
+
+    // Get user to check tier and bundle limits
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        releaseBundles: {
+          where: { released: false }, // Only count active bundles
+        },
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const tier = (user.tier || 'free') as TierName;
+    const currentBundleCount = user.releaseBundles.length;
+
+    // Check bundle limit
+    if (!canCreateBundle(tier, currentBundleCount)) {
+      return NextResponse.json(
+        {
+          error: 'Bundle limit exceeded. Upgrade to Plus for unlimited bundles.',
+          code: 'BUNDLE_LIMIT_EXCEEDED',
+          tier,
+          currentCount: currentBundleCount,
+        },
+        { status: 403 }
+      );
+    }
+
+    // Check trustee limit
+    if (!canAddTrustee(tier, trustees.length)) {
+      return NextResponse.json(
+        {
+          error: `Trustee limit exceeded. Free tier allows up to 10 trustees per bundle. You have ${trustees.length} trustees.`,
+          code: 'TRUSTEE_LIMIT_EXCEEDED',
+          tier,
+          currentCount: trustees.length,
+        },
+        { status: 403 }
       );
     }
 

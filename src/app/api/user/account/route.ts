@@ -17,6 +17,27 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // Get all items to delete from R2
+    const items = await prisma.item.findMany({
+      where: { userId },
+      select: { r2Key: true },
+    });
+
+    // Delete all items from R2 storage
+    const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL || 'https://vault-api.yourdomain.workers.dev';
+    for (const item of items) {
+      try {
+        // URL-encode the r2Key to handle special characters in email addresses
+        const encodedKey = encodeURIComponent(item.r2Key);
+        await fetch(`${workerUrl}/r2/${encodedKey}`, {
+          method: 'DELETE',
+        });
+      } catch (r2Error) {
+        console.error('Failed to delete R2 object:', item.r2Key, r2Error);
+        // Continue with other deletions
+      }
+    }
+
     // Delete everything in order due to foreign key constraints
     await prisma.$transaction(async (tx) => {
       // Delete trustees (referenced by bundles)

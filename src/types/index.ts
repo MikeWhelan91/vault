@@ -22,6 +22,7 @@ export interface VaultItem {
 
 export interface VaultMetadata {
   userId: string;
+  userName: string;
   dataKeySalt: string; // hex-encoded salt for data key
   items: VaultItem[];
   totalSize: number; // total bytes used

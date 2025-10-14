@@ -17,11 +17,11 @@ preview_bucket_name = "vault-data-dev"
 [vars]
 # Comma-separated list of allowed origins for CORS
 # Add your production domain and localhost for development
-ALLOWED_ORIGINS = "http://localhost:3000,https://vault.yourdomain.com"
+ALLOWED_ORIGINS = "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004,https://forebearer.app"
 
 # Production environment overrides
 [env.production]
-vars = { ALLOWED_ORIGINS = "https://vault.yourdomain.com" }
+vars = { ALLOWED_ORIGINS = "https://forebearer.app" }
 
 # Development environment
 [env.dev]

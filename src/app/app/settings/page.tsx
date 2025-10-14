@@ -7,11 +7,11 @@ import { useToast } from '@/contexts/ToastContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
-import { User, Trash2, Database, Heart, AlertTriangle } from 'lucide-react';
+import { User, Trash2, Database, Heart, AlertTriangle, CreditCard } from 'lucide-react';
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { session, metadata } = useCrypto();
+  const { session, metadata, updateMetadata } = useCrypto();
   const { showToast } = useToast();
   const [hasHeartbeatBundles, setHasHeartbeatBundles] = useState(false);
   const [showDeleteDataModal, setShowDeleteDataModal] = useState(false);
@@ -48,6 +48,14 @@ export default function SettingsPage() {
 
       if (!response.ok) {
         throw new Error('Failed to delete data');
+      }
+
+      // Update metadata to reflect deletion
+      if (metadata) {
+        updateMetadata({
+          items: [],
+          totalSize: 0,
+        });
       }
 
       showToast('All your data has been deleted', 'success');
@@ -115,6 +123,29 @@ export default function SettingsPage() {
                   <div>{metadata.items.length} items stored</div>
                 )}
               </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Billing & Subscription */}
+        <Card>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
+              <CreditCard className="w-5 h-5 text-graphite-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base font-semibold text-graphite-900 mb-2">Billing</h2>
+              <p className="text-sm text-graphite-600 mb-3">
+                {metadata?.tier === 'plus' ? 'Plus Tier - $9/month' : 'Free Tier'}
+              </p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.push('/app/settings/billing')}
+                className="text-xs"
+              >
+                Manage
+              </Button>
             </div>
           </div>
         </Card>

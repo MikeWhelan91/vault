@@ -15,6 +15,9 @@ import { uploadObject } from '@/lib/r2-client';
 import type { ItemType } from '@/types';
 import { FileText, StickyNote, Plus, Clock, HardDrive, ChevronRight, Archive, Image, Video, Music, File } from 'lucide-react';
 import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
+import { StorageIndicator } from '@/components/StorageIndicator';
+import type { TierName } from '@/lib/pricing';
+import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
 
 export default function ItemsPage() {
   const { metadata, addItem, getItemKey, session } = useCrypto();
@@ -76,6 +79,13 @@ export default function ItemsPage() {
           Add Item
         </Button>
       </div>
+
+      {/* Storage Indicator */}
+      <StorageIndicator
+        tier={(metadata.tier as TierName) || 'free'}
+        usedBytes={metadata.totalSize}
+        limitBytes={metadata.storageLimit}
+      />
 
       {/* Items List */}
       {items.length === 0 ? (
@@ -279,13 +289,29 @@ function AddItemModal({
   type: ItemType;
   onTypeChange: (type: ItemType) => void;
 }) {
-  const { addItem, getItemKey, session } = useCrypto();
+  const { metadata, addItem, getItemKey, session } = useCrypto();
   const { showToast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [noteName, setNoteName] = useState('');
   const [noteContent, setNoteContent] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  // Clear error when file changes or type changes
+  React.useEffect(() => {
+    setUploadError(null);
+  }, [selectedFile, type]);
+
+  // Clear error and reset state when modal closes
+  React.useEffect(() => {
+    if (!isOpen) {
+      setUploadError(null);
+      setSelectedFile(null);
+      setNoteName('');
+      setNoteContent('');
+    }
+  }, [isOpen]);
 
   const handleAddNote = async () => {
     if (!noteName.trim() || !noteContent.trim()) {
@@ -308,21 +334,30 @@ function AddItemModal({
         itemKeySalt: '',
       }, itemKey);
 
-      // Upload encrypted data to R2
-      await uploadObject(
-        session.userId,
-        item.id,
-        1,
-        encryptedData,
-        (progress) => setUploadProgress(progress.percentage)
-      );
+      try {
+        // Upload encrypted data to R2
+        await uploadObject(
+          session.userId,
+          item.id,
+          1,
+          encryptedData,
+          (progress) => setUploadProgress(progress.percentage)
+        );
+      } catch (uploadError) {
+        // If R2 upload fails, delete the database entry to keep things consistent
+        console.error('R2 upload failed, cleaning up database entry:', uploadError);
+        await fetch(`/api/items/${item.id}?userId=${session.dbUserId}`, {
+          method: 'DELETE',
+        });
+        throw new Error('Upload failed. Please try again.');
+      }
 
       showToast('Note added successfully', 'success');
       onClose();
       setNoteName('');
       setNoteContent('');
     } catch (error) {
-      showToast('Failed to add note', 'error');
+      showToast(error instanceof Error ? error.message : 'Failed to add note', 'error');
       console.error(error);
     } finally {
       setIsUploading(false);
@@ -332,10 +367,31 @@ function AddItemModal({
 
   const handleAddFile = async () => {
     if (!selectedFile) {
-      showToast('Please select a file', 'error');
+      setUploadError('Please select a file');
       return;
     }
 
+    // Check if this is a video file
+    const fileInfo = getFileTypeInfo(selectedFile.name);
+    const isVideo = fileInfo.category === 'video';
+
+    // If it's a video, check video limits for free tier
+    if (isVideo && metadata) {
+      const tier = (metadata.tier as TierName) || 'free';
+      const currentVideoCount = metadata.items.filter(item => {
+        if (item.type !== 'file') return false;
+        const itemFileInfo = getFileTypeInfo(item.name);
+        return itemFileInfo.category === 'video';
+      }).length;
+
+      if (!canUploadVideo(tier, currentVideoCount)) {
+        const upgradeMsg = UPGRADE_MESSAGES.video_limit;
+        setUploadError(upgradeMsg.message);
+        return;
+      }
+    }
+
+    setUploadError(null);
     setIsUploading(true);
     try {
       // Read file data, generate key, and encrypt
@@ -352,20 +408,29 @@ function AddItemModal({
         itemKeySalt: '',
       }, itemKey);
 
-      // Upload encrypted data to R2
-      await uploadObject(
-        session.userId,
-        item.id,
-        1,
-        encryptedData,
-        (progress) => setUploadProgress(progress.percentage)
-      );
+      try {
+        // Upload encrypted data to R2
+        await uploadObject(
+          session.userId,
+          item.id,
+          1,
+          encryptedData,
+          (progress) => setUploadProgress(progress.percentage)
+        );
+      } catch (uploadError) {
+        // If R2 upload fails, delete the database entry to keep things consistent
+        console.error('R2 upload failed, cleaning up database entry:', uploadError);
+        await fetch(`/api/items/${item.id}?userId=${session.dbUserId}`, {
+          method: 'DELETE',
+        });
+        throw new Error('Upload failed. Please try again.');
+      }
 
       showToast('File uploaded successfully', 'success');
       onClose();
       setSelectedFile(null);
     } catch (error) {
-      showToast('Failed to upload file', 'error');
+      showToast(error instanceof Error ? error.message : 'Failed to upload file', 'error');
       console.error(error);
     } finally {
       setIsUploading(false);
@@ -454,6 +519,16 @@ function AddItemModal({
                 disabled={isUploading}
               />
             </div>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {uploadError && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-sm text-red-800">{uploadError}</p>
+            <Link href="/app/pricing" className="text-sm font-medium text-red-600 hover:text-red-700 underline mt-2 inline-block">
+              Upgrade to Plus
+            </Link>
           </div>
         )}
 

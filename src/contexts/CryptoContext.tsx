@@ -48,6 +48,21 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
 
   const [metadata, setMetadata] = useState<VaultMetadata | null>(null);
 
+  // Restore session from sessionStorage on mount
+  React.useEffect(() => {
+    const storedSession = sessionStorage.getItem('vault_session_active');
+    if (storedSession === 'true') {
+      // Session was active, but we can't restore crypto keys from storage
+      // User will need to unlock again, but we can prevent immediate logout
+      const userId = sessionStorage.getItem('vault_user_id');
+      const dbUserId = sessionStorage.getItem('vault_db_user_id');
+      if (userId && dbUserId) {
+        // Don't set unlocked to true since we don't have keys
+        // Just preserve the userId so we know someone was logged in
+      }
+    }
+  }, []);
+
   /**
    * Unlock vault with passphrase
    */
@@ -63,12 +78,16 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
         const iv = generateIV();
         const wrappedDataKey = await wrapKey(tempDataKey, masterKey, iv);
 
+        // Get name from localStorage if available (for new signups)
+        const name = typeof window !== 'undefined' ? localStorage.getItem('vault_user_name') : null;
+
         // Call API to create or unlock user
         const response = await fetch('/api/auth/unlock', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email,
+            name: name || undefined,
             dataKeySalt: bytesToHex(dataKeySalt),
             wrappedDataKey: bytesToHex(wrappedDataKey),
             wrappedDataKeyIV: bytesToHex(iv),
@@ -116,9 +135,15 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           unlocked: true,
         });
 
+        // Persist session markers to sessionStorage
+        sessionStorage.setItem('vault_session_active', 'true');
+        sessionStorage.setItem('vault_user_id', email);
+        sessionStorage.setItem('vault_db_user_id', data.user.id);
+
         // Set metadata from API response
         setMetadata({
           userId: email,
+          userName: data.user.name || '',
           dataKeySalt: data.user.dataKeySalt,
           items: data.items.map((item: any) => ({
             id: item.id,
@@ -134,6 +159,11 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           storageLimit: parseInt(data.user.storageLimit),
           tier: data.user.tier || 'free',
         });
+
+        // Clean up name from localStorage after account creation
+        if (data.created && typeof window !== 'undefined') {
+          localStorage.removeItem('vault_user_name');
+        }
 
         // Store wrapped item keys in memory (for quick access)
         if (data.items) {
@@ -171,7 +201,16 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
       unlocked: false,
     });
     setMetadata(null);
-    sessionStorage.clear();
+
+    // Clear only vault-related sessionStorage items
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key && key.startsWith('vault_')) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => sessionStorage.removeItem(key));
   }, []);
 
   /**
@@ -215,6 +254,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
       const wrappedItemKey = await wrapKey(itemKey, session.dataKey, iv);
 
       // Call API to create item
+      // The server will generate the correct r2Key using the item ID
       const response = await fetch('/api/items', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -223,7 +263,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           type: item.type,
           name: item.name,
           size: item.size,
-          r2Key: `${session.userId}/${crypto.randomUUID()}/1.bin`,
+          r2Key: 'placeholder', // Server will replace with correct key
           itemKeySalt: bytesToHex(itemKeySalt),
           wrappedItemKey: bytesToHex(wrappedItemKey),
           wrappedItemKeyIV: bytesToHex(iv),

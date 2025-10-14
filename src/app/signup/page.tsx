@@ -9,6 +9,7 @@ import { validatePassphrase } from '@/lib/crypto';
 
 export default function SignUpPage() {
   const router = useRouter();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -19,6 +20,12 @@ export default function SignUpPage() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validate name
+    if (!name.trim()) {
+      setError('Please enter your name');
+      return;
+    }
 
     // Validate email
     if (!email.trim() || !email.includes('@')) {
@@ -43,15 +50,19 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
-      // Save email for signin
+      // Save email and name for signin
       localStorage.setItem('vault_user_email', email.trim().toLowerCase());
+      localStorage.setItem('vault_user_name', name.trim());
 
       // Send welcome email
       try {
         await fetch('/api/email/welcome', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim().toLowerCase() }),
+          body: JSON.stringify({
+            email: email.trim().toLowerCase(),
+            name: name.trim()
+          }),
         });
       } catch (emailError) {
         console.error('Failed to send welcome email:', emailError);
@@ -92,6 +103,20 @@ export default function SignUpPage() {
         <div className="card p-8 animate-slide-up">
           <form onSubmit={handleSignUp} className="space-y-5">
             <Input
+              type="text"
+              label="Full Name"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                setError('');
+              }}
+              placeholder="John Doe"
+              disabled={isLoading}
+              autoComplete="name"
+              autoFocus
+            />
+
+            <Input
               type="email"
               label="Email Address"
               value={email}
@@ -102,7 +127,6 @@ export default function SignUpPage() {
               placeholder="you@example.com"
               disabled={isLoading}
               autoComplete="email"
-              autoFocus
             />
 
             <Input
@@ -165,7 +189,7 @@ export default function SignUpPage() {
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || !email || !password || !confirmPassword}
+              disabled={isLoading || !name || !email || !password || !confirmPassword}
               isLoading={isLoading}
             >
               Create Account

@@ -6,7 +6,7 @@ const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Forebearer <hello@forebeare
 /**
  * Send welcome email to new user
  */
-export async function sendWelcomeEmail(email: string) {
+export async function sendWelcomeEmail(email: string, name?: string) {
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -30,6 +30,10 @@ export async function sendWelcomeEmail(email: string) {
             </div>
 
             <div style="padding: 20px 0;">
+              <p style="color: #166534; margin-bottom: 20px; font-size: 16px;">
+                Hi${name ? ` ${name}` : ''},
+              </p>
+
               <p style="color: #166534; margin-bottom: 20px; font-size: 16px;">
                 Thanks for creating your account. You can now start storing memories and setting up releases to share with loved ones.
               </p>
@@ -207,7 +211,7 @@ export async function sendReleaseCreatedEmail(email: string, releaseName: string
 /**
  * Send heartbeat reminder email
  */
-export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: string) {
+export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: string, name?: string) {
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -231,6 +235,10 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
             </div>
 
             <div style="padding: 20px 0;">
+              <p style="color: #525b66; margin-bottom: 16px;">
+                Hi${name ? ` ${name}` : ''},
+              </p>
+
               <p style="color: #525b66; margin-bottom: 16px;">
                 This is a friendly reminder to check in with your Vault heartbeat monitoring.
               </p>
@@ -271,7 +279,7 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
 /**
  * Send check-in reminder (updated for new design)
  */
-export async function sendCheckInReminder(email: string, daysUntil: number) {
+export async function sendCheckInReminder(email: string, daysUntil: number, name?: string) {
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -295,6 +303,10 @@ export async function sendCheckInReminder(email: string, daysUntil: number) {
             </div>
 
             <div style="padding: 20px 0;">
+              <p style="color: #166534; margin-bottom: 20px; font-size: 16px;">
+                Hi${name ? ` ${name}` : ''},
+              </p>
+
               <p style="color: #166534; margin-bottom: 20px; font-size: 16px;">
                 Just a friendly reminder that your check-in is due soon.
               </p>
@@ -339,8 +351,9 @@ export async function sendReleaseNotification(
   releaseToken: string,
   itemCount: number
 ) {
-  // Hardcoded to ensure it always works regardless of env config
-  const releaseUrl = `https://forebearer.app/release/${releaseToken}`;
+  // Use environment variable for flexibility (localhost in dev, production in prod)
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app';
+  const releaseUrl = `${baseUrl}/release/${releaseToken}`;
 
   try {
     await resend.emails.send({

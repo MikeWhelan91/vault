@@ -97,10 +97,12 @@ export default {
       // R2 object operations: /r2/{userId}/{itemId}/{version}.bin
       const r2Match = url.pathname.match(/^\/r2\/(.+)$/);
       if (r2Match) {
-        const key = r2Match[1];
+        // Decode the key to handle URL-encoded characters (like + in emails)
+        const key = decodeURIComponent(r2Match[1]);
 
         // Validate key format (basic security check)
-        if (!key.match(/^[a-zA-Z0-9@._\-\/]+\.bin$/)) {
+        // Must end with .bin and contain at least userId/itemId/version structure
+        if (!key.match(/^.+\/.+\/.+\.bin$/)) {
           return new Response(
             JSON.stringify({ error: 'Invalid key format' }),
             {

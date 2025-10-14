@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { Modal } from '@/components/ui/Modal';
 import { Progress } from '@/components/ui/Progress';
 import { decryptFile } from '@/lib/crypto';
-import { downloadObject, deleteObject } from '@/lib/r2-client';
+import { downloadObject } from '@/lib/r2-client';
 import type { VaultItem } from '@/types';
 import {
   FileText,
@@ -153,11 +153,8 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
     setIsDeleting(true);
 
     try {
-      // Delete from R2
-      await deleteObject(session.userId, item.id, item.version);
-
-      // Remove from metadata
-      removeItem(item.id);
+      // Delete item (API handles both database and R2 deletion)
+      await removeItem(item.id);
 
       showToast('Item deleted successfully', 'success');
       router.push('/app/items');

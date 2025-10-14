@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { useToast } from '@/contexts/ToastContext';
 import { Card } from '@/components/ui/Card';
@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import type { ReleaseMode, ReleaseBundle, Trustee } from '@/types';
 import { Calendar, Heart, FileText, StickyNote, Plus, X } from 'lucide-react';
+import { UpgradePrompt, type UpgradeReason } from '@/components/UpgradePrompt';
+import { canCreateBundle, canAddTrustee, getTierLimits, type TierName } from '@/lib/pricing';
 
 export default function ReleasePage() {
   const { metadata, session } = useCrypto();
@@ -21,6 +23,28 @@ export default function ReleasePage() {
   const [trustees, setTrustees] = useState<Trustee[]>([]);
   const [newTrusteeEmail, setNewTrusteeEmail] = useState('');
   const [newTrusteeName, setNewTrusteeName] = useState('');
+  const [existingBundles, setExistingBundles] = useState<any[]>([]);
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState<UpgradeReason>('bundle_limit');
+
+  // Fetch existing bundles on mount
+  useEffect(() => {
+    if (session.dbUserId) {
+      fetchBundles();
+    }
+  }, [session.dbUserId]);
+
+  const fetchBundles = async () => {
+    try {
+      const response = await fetch(`/api/bundles?userId=${session.dbUserId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setExistingBundles(data.bundles.filter((b: any) => !b.released));
+      }
+    } catch (error) {
+      console.error('Error fetching bundles:', error);
+    }
+  };
 
   const handleToggleItem = (itemId: string) => {
     setSelectedItems((prev) =>
@@ -36,8 +60,15 @@ export default function ReleasePage() {
       return;
     }
 
-    if (trustees.length >= 20) {
-      showToast('Maximum 20 trustees allowed per bundle', 'error');
+    if (!metadata) return;
+
+    const tier = (metadata.tier as TierName) || 'free';
+    const tierLimits = getTierLimits(tier);
+
+    // Check tier-based trustee limit
+    if (!canAddTrustee(tier, trustees.length)) {
+      setUpgradeReason('trustee_limit');
+      setShowUpgradePrompt(true);
       return;
     }
 
@@ -57,6 +88,8 @@ export default function ReleasePage() {
   };
 
   const handleCreateBundle = async () => {
+    if (!metadata) return;
+
     // Validation
     if (!bundleName.trim()) {
       showToast('Please enter a bundle name', 'error');
@@ -78,6 +111,14 @@ export default function ReleasePage() {
       return;
     }
 
+    // Check bundle limit before attempting to create
+    const tier = (metadata.tier as TierName) || 'free';
+    if (!canCreateBundle(tier, existingBundles.length)) {
+      setUpgradeReason('bundle_limit');
+      setShowUpgradePrompt(true);
+      return;
+    }
+
     try {
       // Call API to create bundle
       const response = await fetch('/api/bundles', {
@@ -95,12 +136,28 @@ export default function ReleasePage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create bundle');
+        const errorData = await response.json().catch(() => null);
+
+        // Handle limit errors by showing upgrade prompt
+        if (errorData?.code === 'BUNDLE_LIMIT_EXCEEDED') {
+          setUpgradeReason('bundle_limit');
+          setShowUpgradePrompt(true);
+          return;
+        } else if (errorData?.code === 'TRUSTEE_LIMIT_EXCEEDED') {
+          setUpgradeReason('trustee_limit');
+          setShowUpgradePrompt(true);
+          return;
+        }
+
+        throw new Error(errorData?.error || 'Failed to create bundle');
       }
 
       const data = await response.json();
 
       showToast('Release bundle created successfully', 'success');
+
+      // Refresh bundles list
+      await fetchBundles();
 
       // Reset form
       setBundleName('');
@@ -110,7 +167,7 @@ export default function ReleasePage() {
       setStep(1);
     } catch (error) {
       console.error('Create bundle error:', error);
-      showToast('Failed to create release bundle', 'error');
+      showToast(error instanceof Error ? error.message : 'Failed to create release bundle', 'error');
     }
   };
 
@@ -324,10 +381,10 @@ export default function ReleasePage() {
               variant="secondary"
               onClick={handleAddTrustee}
               className="w-full"
-              disabled={trustees.length >= 20}
+              disabled={!canAddTrustee((metadata.tier as TierName) || 'free', trustees.length)}
             >
               <Plus className="w-4 h-4 mr-2" />
-              Add Trustee {trustees.length >= 20 && '(Max 20 reached)'}
+              Add Trustee
             </Button>
           </div>
 
@@ -456,6 +513,12 @@ export default function ReleasePage() {
         </Card>
       )}
 
+      {/* Upgrade Prompt */}
+      <UpgradePrompt
+        isOpen={showUpgradePrompt}
+        onClose={() => setShowUpgradePrompt(false)}
+        reason={upgradeReason}
+      />
     </div>
   );
 }

@@ -98,19 +98,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create item and update user's total size
-    const [item, updatedUser] = await prisma.$transaction([
-      prisma.item.create({
-        data: {
-          userId,
-          type,
-          name,
-          size: BigInt(size),
-          r2Key,
-          itemKeySalt,
-          wrappedItemKey,
-          wrappedItemKeyIV,
-        },
+    // Create item first to get the ID, then update with correct r2Key
+    const item = await prisma.item.create({
+      data: {
+        userId,
+        type,
+        name,
+        size: BigInt(size),
+        r2Key: 'temp', // Temporary, will update below
+        itemKeySalt,
+        wrappedItemKey,
+        wrappedItemKeyIV,
+      },
+    });
+
+    // Get user email for r2Key
+    const userEmail = user.email;
+    const correctR2Key = `${userEmail}/${item.id}/1.bin`;
+
+    // Update item with correct r2Key and user's total size
+    const [updatedItem, updatedUser] = await prisma.$transaction([
+      prisma.item.update({
+        where: { id: item.id },
+        data: { r2Key: correctR2Key },
       }),
       prisma.user.update({
         where: { id: userId },
@@ -124,15 +134,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       item: {
-        id: item.id,
-        type: item.type,
-        name: item.name,
-        size: item.size.toString(),
-        version: item.version,
-        r2Key: item.r2Key,
-        itemKeySalt: item.itemKeySalt,
-        createdAt: item.createdAt.toISOString(),
-        updatedAt: item.updatedAt.toISOString(),
+        id: updatedItem.id,
+        type: updatedItem.type,
+        name: updatedItem.name,
+        size: updatedItem.size.toString(),
+        version: updatedItem.version,
+        r2Key: updatedItem.r2Key,
+        itemKeySalt: updatedItem.itemKeySalt,
+        createdAt: updatedItem.createdAt.toISOString(),
+        updatedAt: updatedItem.updatedAt.toISOString(),
       },
       totalSize: updatedUser.totalSize.toString(),
     });
