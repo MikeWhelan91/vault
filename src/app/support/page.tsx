@@ -48,7 +48,7 @@ export default function SupportPage() {
       <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
         <nav className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-lg sm:text-xl font-semibold text-graphite-900 tracking-tight">
-            Unlatches
+            Forebearer
           </Link>
           <div className="flex gap-2 sm:gap-3">
             <Link href="/signin">
@@ -84,8 +84,8 @@ export default function SupportPage() {
               <Link href="/faq" className="block text-primary-600 hover:text-primary-700">
                 → Frequently Asked Questions
               </Link>
-              <a href="mailto:support@unlatches.com" className="block text-primary-600 hover:text-primary-700">
-                → Email: support@unlatches.com
+              <a href="mailto:hello@forebearer.app" className="block text-primary-600 hover:text-primary-700">
+                → Email: hello@forebearer.app
               </a>
             </div>
           </Card>
@@ -116,7 +116,7 @@ export default function SupportPage() {
           {status === 'error' && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
               <p className="font-medium">Failed to send message</p>
-              <p className="text-sm">Please try again or email us directly at support@unlatches.com</p>
+              <p className="text-sm">Please try again or email us directly at hello@forebearer.app</p>
             </div>
           )}
 

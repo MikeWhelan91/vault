@@ -49,7 +49,7 @@ function AppNav() {
             href="/app"
             className="text-xl font-semibold text-graphite-900 tracking-tight"
           >
-            Unlatches
+            Forebearer
           </Link>
 
           {/* Desktop Navigation */}

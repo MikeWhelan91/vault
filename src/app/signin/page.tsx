@@ -70,7 +70,7 @@ export default function SignInPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-6">
             <h1 className="text-2xl font-semibold text-graphite-900">
-              Unlatches
+              Forebearer
             </h1>
           </Link>
           <h2 className="text-3xl font-light text-graphite-900 mb-2">

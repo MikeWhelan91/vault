@@ -7,7 +7,7 @@ export default function LandingPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Unlatches",
+    "name": "Forebearer",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": [
@@ -35,7 +35,7 @@ export default function LandingPage() {
       "Automatic delivery to trustees",
       "Zero-knowledge privacy"
     ],
-    "screenshot": "https://unlatches.com/hero.jpg",
+    "screenshot": "https://forebearer.app/hero.jpg",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5.0",
@@ -46,13 +46,13 @@ export default function LandingPage() {
   const organizationData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Unlatches",
-    "url": "https://unlatches.com",
-    "logo": "https://unlatches.com/logo.png",
+    "name": "Forebearer",
+    "url": "https://forebearer.app",
+    "logo": "https://forebearer.app/logo.png",
     "description": "Secure digital legacy and memory storage platform",
     "contactPoint": {
       "@type": "ContactPoint",
-      "email": "support@unlatches.com",
+      "email": "hello@forebearer.app",
       "contactType": "Customer Support"
     }
   };
@@ -72,7 +72,7 @@ export default function LandingPage() {
       <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
         <nav className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="text-lg sm:text-xl font-semibold text-graphite-900 tracking-tight">
-            Unlatches
+            Forebearer
           </div>
           <div className="flex gap-2 sm:gap-3">
             <Link href="/signin">

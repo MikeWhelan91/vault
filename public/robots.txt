@@ -1,4 +1,4 @@
-# robots.txt for Unlatches
+# robots.txt for Forebearer
 User-agent: *
 Allow: /
 Allow: /support
@@ -10,4 +10,4 @@ Disallow: /api/
 Disallow: /release/
 
 # Sitemap
-Sitemap: https://unlatches.com/sitemap.xml
+Sitemap: https://forebearer.app/sitemap.xml

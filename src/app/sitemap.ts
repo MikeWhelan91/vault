@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://unlatches.com';
+  const baseUrl = 'https://forebearer.app';
 
   return [
     {

@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Unlatches <support@unlatches.com>';
-const SUPPORT_EMAIL = 'support@unlatches.com';
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Forebearer <hello@forebearer.app>';
+const SUPPORT_EMAIL = 'hello@forebearer.app';
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
             <div style="border-top: 1px solid #d5d9dd; padding-top: 20px; margin-top: 40px;">
               <p style="color: #67717d; font-size: 12px; margin: 0;">
-                This message was sent via the Unlatches support form.
+                This message was sent via the Forebearer support form.
               </p>
             </div>
           </body>
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: 'We received your message - Unlatches Support',
+      subject: 'We received your message - Forebearer Support',
       html: `
         <!DOCTYPE html>
         <html>
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
               </p>
 
               <p style="color: #166534; margin-bottom: 20px;">
-                Thank you for contacting Unlatches support. We&apos;ve received your message about &quot;${subject}&quot; and we&apos;ll get back to you within 24-48 hours.
+                Thank you for contacting Forebearer support. We&apos;ve received your message about &quot;${subject}&quot; and we&apos;ll get back to you within 24-48 hours.
               </p>
 
               <p style="color: #166534; margin-bottom: 20px;">
@@ -105,13 +105,13 @@ export async function POST(request: NextRequest) {
 
               <p style="color: #166534; margin-bottom: 20px;">
                 Best regards,<br>
-                The Unlatches Team
+                The Forebearer Team
               </p>
             </div>
 
             <div style="border-top: 1px solid #cbd5e1; padding-top: 20px; margin-top: 40px; text-align: center;">
               <p style="color: #64748b; font-size: 14px; margin: 0;">
-                Unlatches - Share what matters
+                Forebearer - Share what matters
               </p>
             </div>
           </body>

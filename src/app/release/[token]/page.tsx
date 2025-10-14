@@ -124,7 +124,7 @@ export default function ReleasePage() {
       {/* Header */}
       <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-4">
-          <h1 className="text-xl font-semibold text-graphite-900">Unlatches</h1>
+          <h1 className="text-xl font-semibold text-graphite-900">Forebearer</h1>
         </div>
       </header>
 
@@ -214,7 +214,7 @@ export default function ReleasePage() {
       {/* Footer */}
       <footer className="border-t border-graphite-200 py-12 bg-white mt-12">
         <div className="container mx-auto px-6 text-center text-graphite-600">
-          <p className="text-sm">Unlatches - Share what matters</p>
+          <p className="text-sm">Forebearer - Share what matters</p>
         </div>
       </footer>
     </div>

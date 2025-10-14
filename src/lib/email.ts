@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Unlatches <support@unlatches.com>';
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Forebearer <hello@forebearer.app>';
 
 /**
  * Send welcome email to new user
@@ -11,7 +11,7 @@ export async function sendWelcomeEmail(email: string) {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: 'Welcome to Unlatches',
+      subject: 'Welcome to Forebearer',
       html: `
         <!DOCTYPE html>
         <html>
@@ -22,7 +22,7 @@ export async function sendWelcomeEmail(email: string) {
           <body style="font-family: Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #14532d; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background-color: #f0fdf4; border-radius: 12px; padding: 40px; margin-bottom: 20px; text-align: center;">
               <h1 style="color: #14532d; font-size: 32px; font-weight: 600; margin: 0 0 16px 0;">
-                Welcome to Unlatches
+                Welcome to Forebearer
               </h1>
               <p style="color: #166534; font-size: 18px; margin: 0;">
                 Your memories are safe with us
@@ -46,7 +46,7 @@ export async function sendWelcomeEmail(email: string) {
               </div>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com'}/app"
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/app"
                    style="display: inline-block; background-color: #22c55e; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                   Get Started
                 </a>
@@ -55,7 +55,7 @@ export async function sendWelcomeEmail(email: string) {
 
             <div style="border-top: 1px solid #cbd5e1; padding-top: 20px; margin-top: 40px; text-align: center;">
               <p style="color: #64748b; font-size: 14px; margin: 0;">
-                Unlatches - Share what matters
+                Forebearer - Share what matters
               </p>
             </div>
           </body>
@@ -74,13 +74,13 @@ export async function sendWelcomeEmail(email: string) {
  * Send email verification link
  */
 export async function sendVerificationEmail(email: string, verificationToken: string) {
-  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com'}/verify?token=${verificationToken}`;
+  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/verify?token=${verificationToken}`;
 
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: 'Verify Your Email - Unlatches',
+      subject: 'Verify Your Email - Forebearer',
       html: `
         <!DOCTYPE html>
         <html>
@@ -122,7 +122,7 @@ export async function sendVerificationEmail(email: string, verificationToken: st
 
             <div style="border-top: 1px solid #d5d9dd; padding-top: 20px; margin-top: 40px;">
               <p style="color: #67717d; font-size: 12px; margin: 0;">
-                If you didn't create an Unlatches account, you can safely ignore this email.
+                If you didn't create a Forebearer account, you can safely ignore this email.
               </p>
             </div>
           </body>
@@ -181,7 +181,7 @@ export async function sendReleaseCreatedEmail(email: string, releaseName: string
                 Your designated trustees will receive access to this release bundle on the scheduled date.
               </p>
 
-              <a href="https://unlatches.com/app/release"
+              <a href="https://forebearer.app/app/release"
                  style="display: inline-block; background-color: #3d9999; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; margin: 16px 0;">
                 Manage Releases
               </a>
@@ -189,7 +189,7 @@ export async function sendReleaseCreatedEmail(email: string, releaseName: string
 
             <div style="border-top: 1px solid #d5d9dd; padding-top: 20px; margin-top: 40px;">
               <p style="color: #67717d; font-size: 12px; margin: 0;">
-                © 2025 Unlatches. Built with privacy in mind.
+                © 2025 Forebearer. Built with privacy in mind.
               </p>
             </div>
           </body>
@@ -212,7 +212,7 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: 'Heartbeat Check-In Reminder - Unlatches',
+      subject: 'Heartbeat Check-In Reminder - Forebearer',
       html: `
         <!DOCTYPE html>
         <html>
@@ -245,7 +245,7 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
                 If you miss your check-in deadline, your designated trustees will receive access to your release bundles.
               </p>
 
-              <a href="https://unlatches.com/app/settings/heartbeat"
+              <a href="https://forebearer.app/app/settings/heartbeat"
                  style="display: inline-block; background-color: #3d9999; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; margin: 16px 0;">
                 Check In Now
               </a>
@@ -253,7 +253,7 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
 
             <div style="border-top: 1px solid #d5d9dd; padding-top: 20px; margin-top: 40px;">
               <p style="color: #67717d; font-size: 12px; margin: 0;">
-                © 2025 Unlatches. Built with privacy in mind.
+                © 2025 Forebearer. Built with privacy in mind.
               </p>
             </div>
           </body>
@@ -304,7 +304,7 @@ export async function sendCheckInReminder(email: string, daysUntil: number) {
               </p>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://unlatches.com'}/app/settings/heartbeat"
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/app/settings/heartbeat"
                    style="display: inline-block; background-color: #22c55e; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                   Check In Now
                 </a>
@@ -313,7 +313,7 @@ export async function sendCheckInReminder(email: string, daysUntil: number) {
 
             <div style="border-top: 1px solid #cbd5e1; padding-top: 20px; margin-top: 40px; text-align: center;">
               <p style="color: #64748b; font-size: 14px; margin: 0;">
-                Unlatches - Share what matters
+                Forebearer - Share what matters
               </p>
             </div>
           </body>
@@ -340,7 +340,7 @@ export async function sendReleaseNotification(
   itemCount: number
 ) {
   // Hardcoded to ensure it always works regardless of env config
-  const releaseUrl = `https://unlatches.com/release/${releaseToken}`;
+  const releaseUrl = `https://forebearer.app/release/${releaseToken}`;
 
   try {
     await resend.emails.send({
@@ -396,7 +396,7 @@ export async function sendReleaseNotification(
 
             <div style="border-top: 1px solid #cbd5e1; padding-top: 20px; margin-top: 40px; text-align: center;">
               <p style="color: #64748b; font-size: 14px; margin: 0;">
-                Unlatches - Share what matters
+                Forebearer - Share what matters
               </p>
             </div>
           </body>

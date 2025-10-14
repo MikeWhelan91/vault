@@ -6,8 +6,8 @@ import { Card } from '@/components/ui/Card';
 import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'FAQ - Frequently Asked Questions | Unlatches',
-  description: 'Common questions about Unlatches digital legacy service. Learn about encryption, pricing, storage, and how to share memories with loved ones.',
+  title: 'FAQ - Frequently Asked Questions | Forebearer',
+  description: 'Common questions about Forebearer digital legacy service. Learn about encryption, pricing, storage, and how to share memories with loved ones.',
 };
 
 export default function FAQPage() {
@@ -17,7 +17,7 @@ export default function FAQPage() {
       <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
         <nav className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link href="/" className="text-lg sm:text-xl font-semibold text-graphite-900 tracking-tight">
-            Unlatches
+            Forebearer
           </Link>
           <div className="flex gap-2 sm:gap-3">
             <Link href="/signin">
@@ -41,7 +41,7 @@ export default function FAQPage() {
             Frequently Asked Questions
           </h1>
           <p className="text-lg text-graphite-600">
-            Everything you need to know about Unlatches
+            Everything you need to know about Forebearer
           </p>
         </div>
 
@@ -51,17 +51,17 @@ export default function FAQPage() {
             <h2 className="text-2xl font-semibold text-graphite-900 mb-4">General</h2>
 
             <FAQItem
-              question="What is Unlatches?"
-              answer="Unlatches is a secure digital memory vault that lets you store photos, videos, messages, and important documents. You can schedule when to share them with loved ones—whether that's a future date or through our heartbeat check-in system."
+              question="What is Forebearer?"
+              answer="Forebearer is a secure digital memory vault that lets you store photos, videos, messages, and important documents. You can schedule when to share them with loved ones—whether that's a future date or through our heartbeat check-in system."
             />
 
             <FAQItem
-              question="How does Unlatches work?"
+              question="How does Forebearer work?"
               answer="Upload your files, choose recipients (trustees), and set when they should receive access. You can use time-lock (specific date) or heartbeat mode (checks in with you regularly, releases if you stop responding). Everything is encrypted on your device before upload."
             />
 
             <FAQItem
-              question="Who should use Unlatches?"
+              question="Who should use Forebearer?"
               answer="Anyone who wants to leave something meaningful behind. Parents creating messages for their children's future milestones, people with important documents or passwords to share, or anyone who wants to ensure their digital memories reach the right people at the right time."
             />
           </section>
@@ -86,7 +86,7 @@ export default function FAQPage() {
             />
 
             <FAQItem
-              question="Can Unlatches access my files?"
+              question="Can Forebearer access my files?"
               answer="No. All files are encrypted on your device before upload. We only store encrypted data and cannot decrypt or access your files without your passphrase."
             />
           </section>
@@ -96,7 +96,7 @@ export default function FAQPage() {
             <h2 className="text-2xl font-semibold text-graphite-900 mb-4 mt-12">Pricing & Storage</h2>
 
             <FAQItem
-              question="How much does Unlatches cost?"
+              question="How much does Forebearer cost?"
               answer="We offer a free tier with 300 MB of storage. Plus tier is $9/month with 2 GB of storage, unlimited trustees, and priority support. Both tiers support all file types and unlimited items within your storage limit."
             />
 
@@ -152,7 +152,7 @@ export default function FAQPage() {
 
             <FAQItem
               question="Do trustees need an account?"
-              answer="No! Trustees don't need an Unlatches account. When a release is triggered, they'll receive an email with a secure link to access their memories."
+              answer="No! Trustees don't need a Forebearer account. When a release is triggered, they'll receive an email with a secure link to access their memories."
             />
 
             <FAQItem
@@ -181,12 +181,12 @@ export default function FAQPage() {
             />
 
             <FAQItem
-              question="What encryption does Unlatches use?"
+              question="What encryption does Forebearer use?"
               answer="We use AES-256-GCM encryption for all data and RSA/PBKDF2 for key derivation. These are industry-standard, military-grade encryption algorithms."
             />
 
             <FAQItem
-              question="Is Unlatches open source?"
+              question="Is Forebearer open source?"
               answer="Not currently, but we're considering open-sourcing parts of our encryption implementation for transparency and community review."
             />
           </section>
