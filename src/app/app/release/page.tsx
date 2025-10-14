@@ -175,6 +175,9 @@ export default function ReleasePage() {
     return <div>Loading...</div>;
   }
 
+  const tier = (metadata.tier as TierName) || 'free';
+  const canCreate = canCreateBundle(tier, existingBundles.length);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -187,21 +190,48 @@ export default function ReleasePage() {
         </p>
       </div>
 
-      {/* Progress */}
-      <div className="flex items-center gap-2">
-        {[1, 2, 3, 4].map((s) => (
-          <div
-            key={s}
-            className={`
-              flex-1 h-2 rounded-full
-              ${s <= step ? 'bg-primary-600' : 'bg-gray-200'}
-            `}
-          />
-        ))}
-      </div>
+      {/* Bundle Limit Reached - Show Upgrade Prompt */}
+      {!canCreate && (
+        <Card className="bg-orange-50 border-orange-200">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
+              <Calendar className="w-6 h-6 text-orange-600" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold text-graphite-900 mb-2">
+                Bundle Limit Reached
+              </h2>
+              <p className="text-sm text-graphite-700 mb-4">
+                Free tier allows 1 active release bundle. You currently have {existingBundles.length} active {existingBundles.length === 1 ? 'bundle' : 'bundles'}. Upgrade to Plus for unlimited bundles to organize memories for different groups of loved ones.
+              </p>
+              <Button onClick={() => {
+                setUpgradeReason('bundle_limit');
+                setShowUpgradePrompt(true);
+              }}>
+                Upgrade to Plus
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Progress - Only show if can create */}
+      {canCreate && (
+        <div className="flex items-center gap-2">
+          {[1, 2, 3, 4].map((s) => (
+            <div
+              key={s}
+              className={`
+                flex-1 h-2 rounded-full
+                ${s <= step ? 'bg-primary-600' : 'bg-gray-200'}
+              `}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Step 1: Basic Info */}
-      {step === 1 && (
+      {canCreate && step === 1 && (
         <Card>
           <h2 className="text-xl font-semibold text-graphite-900 mb-4">
             Step 1: Basic Information
@@ -296,7 +326,7 @@ export default function ReleasePage() {
       )}
 
       {/* Step 2: Select Items */}
-      {step === 2 && (
+      {canCreate && step === 2 && (
         <Card>
           <h2 className="text-xl font-semibold text-graphite-900 mb-4">
             Step 2: Select Items
@@ -352,7 +382,7 @@ export default function ReleasePage() {
       )}
 
       {/* Step 3: Add Trustees */}
-      {step === 3 && (
+      {canCreate && step === 3 && (
         <Card>
           <h2 className="text-xl font-semibold text-graphite-900 mb-4">
             Step 3: Who Should Receive This?
@@ -434,7 +464,7 @@ export default function ReleasePage() {
       )}
 
       {/* Step 4: Review & Create */}
-      {step === 4 && (
+      {canCreate && step === 4 && (
         <Card>
           <h2 className="text-xl font-semibold text-graphite-900 mb-4">
             Step 4: Review & Create
