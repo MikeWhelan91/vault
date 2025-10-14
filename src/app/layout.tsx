@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { CryptoProvider } from "@/contexts/CryptoContext";
 import { ToastProvider } from "@/contexts/ToastContext";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Forebearer - Leave Something Behind | Secure Digital Legacy",
@@ -61,16 +62,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Plausible Analytics */}
-        <script defer data-domain="forebearer.app" src="https://plausible.io/js/script.js"></script>
-      </head>
       <body suppressHydrationWarning>
         <ToastProvider>
           <CryptoProvider>
             {children}
           </CryptoProvider>
         </ToastProvider>
+        <Analytics />
       </body>
     </html>
   );
