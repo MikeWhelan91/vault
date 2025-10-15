@@ -137,6 +137,13 @@ export async function GET(request: NextRequest) {
  */
 async function triggerRelease(bundle: any) {
   try {
+    console.log(`\n=== Triggering Release ===`);
+    console.log(`Bundle: ${bundle.name} (ID: ${bundle.id})`);
+    console.log(`Mode: ${bundle.mode}`);
+    console.log(`Owner: ${bundle.user.email}`);
+    console.log(`Trustees: ${bundle.trustees.length}`);
+    console.log(`Items: ${bundle.bundleItems.length}`);
+
     // Generate release token if it doesn't exist
     const releaseToken = bundle.releaseToken || crypto.randomUUID();
 
@@ -151,7 +158,9 @@ async function triggerRelease(bundle: any) {
 
     // Send email to each trustee
     for (const trustee of bundle.trustees) {
-      await sendReleaseNotification(
+      console.log(`Sending release notification to ${trustee.email} for bundle ${bundle.name}`);
+
+      const emailResult = await sendReleaseNotification(
         trustee.email,
         trustee.name,
         bundle.user.email,
@@ -159,6 +168,12 @@ async function triggerRelease(bundle: any) {
         releaseToken,
         bundle.bundleItems.length
       );
+
+      if (emailResult.success) {
+        console.log(`✓ Email sent successfully to ${trustee.email}`);
+      } else {
+        console.error(`✗ Failed to send email to ${trustee.email}:`, emailResult.error);
+      }
 
       // Mark trustee as notified
       await prisma.trustee.update({
