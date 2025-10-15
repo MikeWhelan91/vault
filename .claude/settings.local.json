@@ -30,7 +30,9 @@
       "Bash(npx tsx:*)",
       "Bash(git rm:*)",
       "Bash(python:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Read(//c/Users/admin/Desktop/**)",
+      "Bash(gh run list:*)"
     ],
     "deny": [],
     "ask": []

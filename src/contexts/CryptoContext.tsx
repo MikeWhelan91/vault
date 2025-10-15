@@ -298,7 +298,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
    */
   const getExtractableItemKey = useCallback(
     async (itemId: string): Promise<CryptoKey> => {
-      if (!session.dataKey) {
+      if (!session.dataKey || !session.dbUserId) {
         throw new Error('Vault is locked');
       }
 
@@ -312,12 +312,37 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
 
         // Return an extractable key that can be wrapped with bundle key
         return unwrapKey(wrappedKey, session.dataKey, ivBytes, ['encrypt', 'decrypt'], true);
-      } else {
-        // Generate new item key (will be stored when item is created)
-        return generateItemKey();
       }
+
+      // If not in sessionStorage, fetch from database
+      // This happens when creating a bundle with items from a previous session
+      const response = await fetch(`/api/items/${itemId}?userId=${session.dbUserId}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch item key for item ${itemId}`);
+      }
+
+      const data = await response.json();
+      if (!data.item.wrappedItemKey || !data.item.wrappedItemKeyIV) {
+        throw new Error(`Item ${itemId} is missing wrapped key data`);
+      }
+
+      // Unwrap the item key from the database
+      const wrappedKey = hexToBytes(data.item.wrappedItemKey);
+      const ivBytes = hexToBytes(data.item.wrappedItemKeyIV);
+
+      // Cache it in sessionStorage for future use
+      sessionStorage.setItem(
+        `vault_item_key_${itemId}`,
+        JSON.stringify({
+          wrapped: data.item.wrappedItemKey,
+          iv: data.item.wrappedItemKeyIV,
+        })
+      );
+
+      // Return an extractable key that can be wrapped with bundle key
+      return unwrapKey(wrappedKey, session.dataKey, ivBytes, ['encrypt', 'decrypt'], true);
     },
-    [session.dataKey]
+    [session.dataKey, session.dbUserId]
   );
 
   /**
