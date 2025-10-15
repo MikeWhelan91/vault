@@ -17,6 +17,21 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      console.log(`User ${userId} not found - may have been already deleted`);
+      return NextResponse.json(
+        { error: 'User not found or already deleted' },
+        { status: 404 }
+      );
+    }
+
+    console.log(`Starting account deletion for user ${userId} (${user.email})`);
+
     // Get all items to delete from R2
     const items = await prisma.item.findMany({
       where: { userId },
