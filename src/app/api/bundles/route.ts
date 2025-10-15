@@ -16,11 +16,13 @@ export async function POST(request: NextRequest) {
       releaseDate,
       heartbeatCadenceDays,
       releaseToken, // Client-generated token used for bundle key derivation
+      bundleNoteEncrypted, // Encrypted note for trustees
+      bundleNoteIV, // IV for note decryption
       items, // Now accepts array of {itemId, bundleWrappedKey, bundleWrappedKeyIV}
       trustees,
     } = body;
 
-    if (!userId || !name || !mode || !releaseToken || !items || !trustees) {
+    if (!userId || !name || !mode || !releaseToken || !bundleNoteEncrypted || !bundleNoteIV || !items || !trustees) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -81,6 +83,8 @@ export async function POST(request: NextRequest) {
         releaseDate: releaseDate ? new Date(releaseDate) : undefined,
         heartbeatCadenceDays,
         releaseToken,
+        bundleNoteEncrypted,
+        bundleNoteIV,
         bundleItems: {
           create: items.map((item: { itemId: string; bundleWrappedKey: string; bundleWrappedKeyIV: string }) => ({
             itemId: item.itemId,

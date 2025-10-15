@@ -61,6 +61,9 @@ export async function GET(
       bundle: {
         name: bundle.name,
         createdAt: bundle.createdAt.toISOString(),
+        // Bundle note (encrypted with bundle key for trustee access)
+        bundleNoteEncrypted: bundle.bundleNoteEncrypted,
+        bundleNoteIV: bundle.bundleNoteIV,
       },
       user: {
         email: bundle.user.email,

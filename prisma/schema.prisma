@@ -88,6 +88,10 @@ model ReleaseBundle {
   released    Boolean  @default(false)
   releaseToken String?  @unique
 
+  // Bundle note (encrypted with bundle key for trustee access)
+  bundleNoteEncrypted String? // Encrypted note content (hex-encoded)
+  bundleNoteIV        String? // IV for note encryption (hex-encoded)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

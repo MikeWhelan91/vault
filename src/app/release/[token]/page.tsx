@@ -10,6 +10,8 @@ interface ReleaseData {
   bundle: {
     name: string;
     createdAt: string;
+    bundleNoteEncrypted: string | null;
+    bundleNoteIV: string | null;
   };
   user: {
     email: string;
@@ -33,6 +35,7 @@ export default function ReleasePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [downloadingItem, setDownloadingItem] = useState<string | null>(null);
+  const [downloadingAll, setDownloadingAll] = useState(false);
 
   useEffect(() => {
     const fetchRelease = async () => {
@@ -110,6 +113,98 @@ export default function ReleasePage() {
     }
   };
 
+  const handleDownloadAll = async () => {
+    if (!release) return;
+
+    setDownloadingAll(true);
+
+    try {
+      const JSZip = (await import('jszip')).default;
+      const zip = new JSZip();
+
+      // Derive bundle key from token
+      const bundleKey = await deriveBundleKey(token);
+
+      // Decrypt and add the bundle note
+      if (release.bundle.bundleNoteEncrypted && release.bundle.bundleNoteIV) {
+        try {
+          const noteEncryptedBytes = hexToBytes(release.bundle.bundleNoteEncrypted);
+          const noteIVBytes = hexToBytes(release.bundle.bundleNoteIV);
+
+          const noteDecrypted = await crypto.subtle.decrypt(
+            // @ts-expect-error - TypeScript has issues with ArrayBuffer vs SharedArrayBuffer in crypto.subtle
+            { name: 'AES-GCM', iv: noteIVBytes },
+            bundleKey,
+            noteEncryptedBytes
+          );
+
+          const noteText = new TextDecoder().decode(noteDecrypted);
+          zip.file('README.txt', noteText);
+        } catch (err) {
+          console.error('Failed to decrypt note:', err);
+          alert('Failed to decrypt the message from your loved one. The bundle may be corrupted.');
+          setDownloadingAll(false);
+          return;
+        }
+      }
+
+      // Download and decrypt all items
+      const API_BASE_URL = process.env.NEXT_PUBLIC_WORKER_URL || 'https://vault-api.yourdomain.workers.dev';
+
+      for (const item of release.items) {
+        try {
+          if (!item.bundleWrappedKey || !item.bundleWrappedKeyIV) {
+            console.error(`Skipping ${item.name}: missing encryption keys`);
+            continue;
+          }
+
+          // Download encrypted data
+          const response = await fetch(`${API_BASE_URL}/r2/${item.r2Key}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/octet-stream' },
+            mode: 'cors',
+          });
+
+          if (!response.ok) {
+            console.error(`Failed to download ${item.name}`);
+            continue;
+          }
+
+          const encryptedData = await response.arrayBuffer();
+
+          // Unwrap item key with bundle key
+          const wrappedKeyBytes = hexToBytes(item.bundleWrappedKey);
+          const ivBytes = hexToBytes(item.bundleWrappedKeyIV);
+          const itemKey = await unwrapKey(wrappedKeyBytes, bundleKey, ivBytes);
+
+          // Decrypt the file
+          const decryptedData = await decryptFile(new Uint8Array(encryptedData), itemKey);
+
+          // Add to zip
+          zip.file(item.name, decryptedData);
+        } catch (err) {
+          console.error(`Failed to process ${item.name}:`, err);
+        }
+      }
+
+      // Generate and download ZIP
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${release.bundle.name}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Download all failed:', err);
+      alert(`Failed to create ZIP file: ${err instanceof Error ? err.message : 'Unknown error'}`);
+    } finally {
+      setDownloadingAll(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-primary-50 flex items-center justify-center">
@@ -177,9 +272,18 @@ export default function ReleasePage() {
 
         {/* Items List */}
         <Card>
-          <h2 className="text-xl font-semibold text-graphite-900 mb-4">
-            Shared Memories
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-graphite-900">
+              Shared Memories
+            </h2>
+            <Button
+              onClick={handleDownloadAll}
+              isLoading={downloadingAll}
+              disabled={downloadingAll || release.items.length === 0}
+            >
+              📦 Download All as ZIP
+            </Button>
+          </div>
 
           <div className="space-y-3">
             {release.items.map((item) => (

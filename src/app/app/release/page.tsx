@@ -16,6 +16,7 @@ export default function ReleasePage() {
   const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [bundleName, setBundleName] = useState('');
+  const [bundleNote, setBundleNote] = useState('');
   const [mode, setMode] = useState<ReleaseMode>('time-lock');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [releaseDate, setReleaseDate] = useState('');
@@ -96,6 +97,11 @@ export default function ReleasePage() {
       return;
     }
 
+    if (!bundleNote.trim()) {
+      showToast('Please enter a note for your trustees', 'error');
+      return;
+    }
+
     if (selectedItems.length === 0) {
       showToast('Please select at least one item', 'error');
       return;
@@ -122,13 +128,25 @@ export default function ReleasePage() {
     try {
       // IMPORTANT: Client-side key wrapping for zero-knowledge encryption
       // We need to wrap item keys with a bundle key so trustees can decrypt
-      const { deriveBundleKey, wrapKey, generateIV, bytesToHex } = await import('@/lib/crypto');
+      const { deriveBundleKey, wrapKey, generateIV, bytesToHex, encryptData } = await import('@/lib/crypto');
 
       // Generate a bundle token on the client
       const releaseToken = crypto.randomUUID();
 
       // Derive bundle key from token
       const bundleKey = await deriveBundleKey(releaseToken);
+
+      // Encrypt the bundle note with the bundle key
+      const noteData = new TextEncoder().encode(bundleNote);
+      const noteIV = generateIV();
+      const noteEncrypted = await crypto.subtle.encrypt(
+        // @ts-expect-error - TypeScript has issues with ArrayBuffer vs SharedArrayBuffer in crypto.subtle
+        { name: 'AES-GCM', iv: noteIV },
+        bundleKey,
+        noteData
+      );
+      const bundleNoteEncrypted = bytesToHex(new Uint8Array(noteEncrypted));
+      const bundleNoteIV = bytesToHex(noteIV);
 
       // Wrap each item key with the bundle key
       const itemsWithWrappedKeys = await Promise.all(
@@ -176,6 +194,8 @@ export default function ReleasePage() {
           releaseDate: releaseDateISO,
           heartbeatCadenceDays: mode === 'heartbeat' ? heartbeatCadence : undefined,
           releaseToken, // Send the token we generated
+          bundleNoteEncrypted, // Encrypted note for trustees
+          bundleNoteIV, // IV for note decryption
           items: itemsWithWrappedKeys,
           trustees: trustees.map(t => ({ email: t.email, name: t.name })),
         }),
@@ -207,6 +227,7 @@ export default function ReleasePage() {
 
       // Reset form
       setBundleName('');
+      setBundleNote('');
       setSelectedItems([]);
       setReleaseDate('');
       setTrustees([]);
@@ -289,6 +310,23 @@ export default function ReleasePage() {
               onChange={(e) => setBundleName(e.target.value)}
               placeholder="My Will & Testament"
             />
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Message to Your Trustees <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={bundleNote}
+                onChange={(e) => setBundleNote(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                rows={6}
+                placeholder="Write a message to your loved ones... This note will be included when they receive your memories."
+                required
+              />
+              <p className="text-xs text-graphite-500 mt-1">
+                This message will be encrypted and included in the download for your trustees
+              </p>
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
