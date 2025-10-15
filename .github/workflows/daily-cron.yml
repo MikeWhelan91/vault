@@ -1,0 +1,40 @@
+name: Daily Cleanup Cron Job
+
+on:
+  schedule:
+    # Run once daily at midnight UTC (may be delayed 5-15 minutes during peak times)
+    - cron: '0 0 * * *'
+
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  cleanup-expired-bundles:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Vercel Daily Cleanup Endpoint
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            https://forebearer.app/api/cron/daily)
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "HTTP Status: $http_code"
+          echo "Response: $body"
+
+          # Fail the job if the endpoint returns an error
+          if [ "$http_code" -ge 400 ]; then
+            echo "Error: Daily cleanup endpoint returned status $http_code"
+            exit 1
+          fi
+
+          echo "✅ Daily cleanup completed successfully"
+
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          echo "❌ Daily cleanup failed! Check the logs above for details."
+          echo "This will show up in the GitHub Actions tab as a failed run."
