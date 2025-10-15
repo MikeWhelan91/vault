@@ -27,6 +27,7 @@ interface CryptoContextType {
   metadata: VaultMetadata | null;
   isUnlocked: boolean;
   unlock: (passphrase: string, email: string) => Promise<void>;
+  signup: (passphrase: string, email: string, name?: string) => Promise<void>;
   lock: () => void;
   getItemKey: (itemId: string) => Promise<CryptoKey>;
   addItem: (item: Omit<VaultItem, 'id' | 'createdAt' | 'updatedAt' | 'version'>, itemKey: CryptoKey, mimeType?: string) => Promise<VaultItem>;
@@ -64,71 +65,61 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   /**
-   * Unlock vault with passphrase
+   * Unlock vault with passphrase (login)
    */
   const unlock = useCallback(
     async (passphrase: string, email: string) => {
       try {
-        // First, derive master key and prepare wrapped data key
-        const dataKeySalt = generateSalt();
-        const masterKey = await deriveMasterKey(passphrase, dataKeySalt);
-
-        // Generate data key (will be wrapped)
+        // First attempt to fetch user data (without creating account)
+        // We need to send some crypto data to match the API signature, but it won't be used
+        const tempSalt = generateSalt();
+        const tempMasterKey = await deriveMasterKey(passphrase, tempSalt);
         const tempDataKey = await generateDataKey();
-        const iv = generateIV();
-        const wrappedDataKey = await wrapKey(tempDataKey, masterKey, iv);
+        const tempIV = generateIV();
+        const tempWrappedKey = await wrapKey(tempDataKey, tempMasterKey, tempIV);
 
-        // Get name from localStorage if available (for new signups)
-        const name = typeof window !== 'undefined' ? localStorage.getItem('vault_user_name') : null;
-
-        // Call API to create or unlock user
+        // Call API to unlock existing user
         const response = await fetch('/api/auth/unlock', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email,
-            name: name || undefined,
-            dataKeySalt: bytesToHex(dataKeySalt),
-            wrappedDataKey: bytesToHex(wrappedDataKey),
-            wrappedDataKeyIV: bytesToHex(iv),
+            dataKeySalt: bytesToHex(tempSalt),
+            wrappedDataKey: bytesToHex(tempWrappedKey),
+            wrappedDataKeyIV: bytesToHex(tempIV),
           }),
         });
 
         if (!response.ok) {
-          throw new Error('Failed to unlock vault');
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to unlock vault');
         }
 
         const data = await response.json();
 
-        // If user exists, use their stored wrapped key
+        // Existing user - unwrap their stored data key
+        const storedSalt = hexToBytes(data.user.dataKeySalt);
+        const storedWrappedKey = hexToBytes(data.user.wrappedDataKey);
+        const storedIV = hexToBytes(data.user.wrappedDataKeyIV);
+
+        // Re-derive master key with stored salt
+        const userMasterKey = await deriveMasterKey(passphrase, storedSalt);
+
         let dataKey: CryptoKey;
-        if (!data.created) {
-          // Existing user - unwrap their stored data key
-          const storedSalt = hexToBytes(data.user.dataKeySalt);
-          const storedWrappedKey = hexToBytes(data.user.wrappedDataKey);
-          const storedIV = hexToBytes(data.user.wrappedDataKeyIV);
-
-          // Re-derive master key with stored salt
-          const userMasterKey = await deriveMasterKey(passphrase, storedSalt);
-
-          try {
-            dataKey = await unwrapKey(storedWrappedKey, userMasterKey, storedIV, [
-              'encrypt',
-              'decrypt',
-              'wrapKey',
-              'unwrapKey',
-            ]);
-          } catch (error) {
-            throw new Error('Invalid passphrase');
-          }
-        } else {
-          // New user - use the key we just created
-          dataKey = tempDataKey;
+        try {
+          dataKey = await unwrapKey(storedWrappedKey, userMasterKey, storedIV, [
+            'encrypt',
+            'decrypt',
+            'wrapKey',
+            'unwrapKey',
+          ]);
+        } catch (error) {
+          throw new Error('Invalid passphrase');
         }
 
         // Set up session
         setSession({
-          masterKey,
+          masterKey: userMasterKey,
           dataKey,
           userId: email,
           dbUserId: data.user.id,
@@ -160,11 +151,6 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           tier: data.user.tier || 'free',
         });
 
-        // Clean up name from localStorage after account creation
-        if (data.created && typeof window !== 'undefined') {
-          localStorage.removeItem('vault_user_name');
-        }
-
         // Store wrapped item keys in memory (for quick access)
         if (data.items) {
           for (const item of data.items) {
@@ -183,6 +169,73 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
         // Success - vault unlocked
       } catch (error) {
         console.error('Unlock failed:', error);
+        throw error;
+      }
+    },
+    []
+  );
+
+  /**
+   * Sign up (create new account)
+   */
+  const signup = useCallback(
+    async (passphrase: string, email: string, name?: string) => {
+      try {
+        // Generate crypto keys for new account
+        const dataKeySalt = generateSalt();
+        const masterKey = await deriveMasterKey(passphrase, dataKeySalt);
+        const dataKey = await generateDataKey();
+        const iv = generateIV();
+        const wrappedDataKey = await wrapKey(dataKey, masterKey, iv);
+
+        // Call API to create account
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name: name || undefined,
+            dataKeySalt: bytesToHex(dataKeySalt),
+            wrappedDataKey: bytesToHex(wrappedDataKey),
+            wrappedDataKeyIV: bytesToHex(iv),
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to create account');
+        }
+
+        const data = await response.json();
+
+        // Set up session with the newly created keys
+        setSession({
+          masterKey,
+          dataKey,
+          userId: email,
+          dbUserId: data.user.id,
+          unlocked: true,
+        });
+
+        // Persist session markers to sessionStorage
+        sessionStorage.setItem('vault_session_active', 'true');
+        sessionStorage.setItem('vault_user_id', email);
+        sessionStorage.setItem('vault_db_user_id', data.user.id);
+
+        // Set metadata from API response
+        setMetadata({
+          userId: email,
+          userName: data.user.name || '',
+          dataKeySalt: data.user.dataKeySalt,
+          items: [],
+          totalSize: parseInt(data.user.totalSize),
+          storageLimit: parseInt(data.user.storageLimit),
+          tier: data.user.tier || 'free',
+        });
+
+        // Success - account created and vault unlocked
+      } catch (error) {
+        console.error('Signup failed:', error);
         throw error;
       }
     },
@@ -376,6 +429,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
     metadata,
     isUnlocked: session.unlocked,
     unlock,
+    signup,
     lock,
     getItemKey,
     addItem,

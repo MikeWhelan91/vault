@@ -8,8 +8,10 @@ import { Button } from '@/components/ui/Button';
 import { validatePassphrase } from '@/lib/crypto';
 
 export function UnlockGate({ children }: { children: React.ReactNode }) {
-  const { isUnlocked, unlock } = useCrypto();
+  const { isUnlocked, unlock, signup } = useCrypto();
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [passphrase, setPassphrase] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,7 +29,7 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  const handleUnlock = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -37,17 +39,27 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Validate name for signup
+    if (mode === 'signup' && !name.trim()) {
+      setError('Please enter your name');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       // Save email for next time
       localStorage.setItem('vault_user_email', email.trim().toLowerCase());
 
-      // Use email as userId for encryption
-      await unlock(passphrase, email.trim().toLowerCase());
+      if (mode === 'signup') {
+        await signup(passphrase, email.trim().toLowerCase(), name.trim());
+      } else {
+        await unlock(passphrase, email.trim().toLowerCase());
+      }
+
       setPassphrase('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to unlock vault');
+      setError(err instanceof Error ? err.message : `Failed to ${mode === 'signup' ? 'create account' : 'unlock vault'}`);
     } finally {
       setIsLoading(false);
     }
@@ -66,15 +78,17 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
             </h1>
           </Link>
           <h2 className="text-3xl font-light text-graphite-900 dark:text-ivory-50 mb-2">
-            Access Your Vault
+            {mode === 'login' ? 'Access Your Vault' : 'Create Your Account'}
           </h2>
           <p className="text-graphite-600 dark:text-graphite-400 text-sm">
-            Enter your credentials to unlock
+            {mode === 'login'
+              ? 'Enter your credentials to unlock'
+              : 'Start protecting your digital legacy'}
           </p>
         </div>
 
         <div className="card p-8 animate-slide-up">
-          <form onSubmit={handleUnlock} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <Input
               type="email"
               label="Email Address"
@@ -89,6 +103,21 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
               autoFocus={!email}
             />
 
+            {mode === 'signup' && (
+              <Input
+                type="text"
+                label="Name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setError('');
+                }}
+                placeholder="Your name"
+                disabled={isLoading}
+                autoComplete="name"
+              />
+            )}
+
             <Input
               type="password"
               label="Password"
@@ -97,15 +126,15 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
                 setPassphrase(e.target.value);
                 setError('');
               }}
-              onBlur={() => setShowValidation(true)}
+              onBlur={() => setShowValidation(mode === 'signup')}
               placeholder="Enter your password"
               error={error}
               disabled={isLoading}
-              autoComplete="current-password"
-              autoFocus={!!email}
+              autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+              autoFocus={!!email && mode === 'login'}
             />
 
-            {showErrors && (
+            {showErrors && mode === 'signup' && (
               <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                 <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
                   Weak password:
@@ -124,20 +153,52 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || passphrase.length === 0 || email.length === 0}
+              disabled={isLoading || passphrase.length === 0 || email.length === 0 || (mode === 'signup' && name.length === 0)}
               isLoading={isLoading}
             >
-              Unlock Vault
+              {mode === 'login' ? 'Log In' : 'Create Account'}
             </Button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-graphite-200 dark:border-graphite-700">
-            <p className="text-xs text-graphite-600 dark:text-graphite-400 leading-relaxed">
-              <strong className="text-graphite-900 dark:text-ivory-50">First time?</strong> Enter your email and create a strong password.
-              Your password encrypts all your data - we can never access it.
-            </p>
-            <p className="text-xs text-red-600 dark:text-red-400 mt-3 leading-relaxed">
-              If you forget your password, your data cannot be recovered.
+            {mode === 'signup' && (
+              <p className="text-xs text-red-600 dark:text-red-400 mb-3 leading-relaxed">
+                <strong>Important:</strong> Your password encrypts all your data. We can never access it.
+                If you forget your password, your data cannot be recovered.
+              </p>
+            )}
+            <p className="text-xs text-graphite-600 dark:text-graphite-400 text-center">
+              {mode === 'login' ? (
+                <>
+                  Don&apos;t have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode('signup');
+                      setError('');
+                      setShowValidation(false);
+                    }}
+                    className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
+                  >
+                    Sign up
+                  </button>
+                </>
+              ) : (
+                <>
+                  Already have an account?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMode('login');
+                      setError('');
+                      setShowValidation(false);
+                    }}
+                    className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
+                  >
+                    Log in
+                  </button>
+                </>
+              )}
             </p>
           </div>
         </div>
