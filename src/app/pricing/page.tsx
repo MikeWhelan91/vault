@@ -1,252 +1,203 @@
-import React from 'react';
-import Link from 'next/link';
-import { Metadata } from 'next';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Footer } from '@/components/Footer';
-import { Check } from 'lucide-react';
+import Link from "next/link";
+import { Metadata } from "next";
+import { Check, Sparkles } from "lucide-react";
+
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Footer } from "@/components/Footer";
+import { SiteHeader } from "@/components/marketing/SiteHeader";
 
 export const metadata: Metadata = {
-  title: 'Pricing - Simple & Transparent | Forebearer',
-  description: 'Choose the plan that works for you. Free tier with 300 MB storage or Plus tier with 5 GB and unlimited bundles. No hidden fees.',
+  title: "Pricing - Plans for Every Legacy | Forebearer",
+  description:
+    "Choose the Forebearer plan that fits your digital legacy. Start free with 300 MB or go Plus for 5 GB, unlimited bundles, and advanced release controls.",
+  alternates: {
+    canonical: "https://forebearer.app/pricing",
+  },
+  openGraph: {
+    title: "Forebearer Pricing",
+    description:
+      "Transparent plans for encrypted digital legacy storage. Start free or upgrade for advanced automations and analytics.",
+    url: "https://forebearer.app/pricing",
+  },
 };
+
+const plans = [
+  {
+    name: "Free",
+    price: "$0",
+    cadence: "forever",
+    badge: "Start here",
+    description: "Perfect for capturing your first memories and testing our workflow.",
+    highlight: false,
+    features: [
+      "300 MB encrypted storage",
+      "1 active release bundle",
+      "Up to 10 trustees",
+      "Unlimited file types",
+      "Monthly heartbeat reminders",
+      "Email notifications",
+      "End-to-end encryption",
+    ],
+    cta: {
+      label: "Create free account",
+      href: "/signup",
+    },
+  },
+  {
+    name: "Plus",
+    price: "$9",
+    cadence: "per month",
+    badge: "Most popular",
+    description: "Unlock more storage, unlimited bundles, and deeper delivery insights.",
+    highlight: true,
+    features: [
+      "5 GB encrypted storage",
+      "Unlimited release bundles",
+      "Unlimited trustees",
+      "All file types + large uploads",
+      "Custom heartbeat cadence",
+      "Delivery analytics and receipts",
+      "Priority email support",
+    ],
+    cta: {
+      label: "Start 14-day trial",
+      href: "/signup",
+    },
+    footnote: "Or $99/year — two months free",
+  },
+];
+
+const differentiators = [
+  {
+    title: "Only encrypted copies stored",
+    detail: "Everything is encrypted locally before upload. We never see your files or your passphrase.",
+  },
+  {
+    title: "Trustee experience that guides them",
+    detail: "Recipients get step-by-step instructions and confirmation receipts the moment a release arrives.",
+  },
+  {
+    title: "Heartbeat automation without stress",
+    detail: "Set flexible grace periods, pause notifications while travelling, and resume with one click.",
+  },
+];
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-primary-50">
-      {/* Header */}
-      <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
-        <nav className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-lg sm:text-xl font-semibold text-graphite-900 tracking-tight">
-            Forebearer
-          </Link>
-          <div className="flex gap-2 sm:gap-3">
-            <Link href="/signin">
-              <Button variant="ghost" size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
-                Get Started
-              </Button>
+    <div className="min-h-screen bg-graphite-50">
+      <SiteHeader />
+
+      <main className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-8">
+        <section className="py-16 sm:py-20 lg:py-24">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              Simple pricing
+            </span>
+            <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-graphite-900 sm:text-5xl">
+              Secure storage and delivery that scales with your legacy
+            </h1>
+            <p className="max-w-2xl text-base text-graphite-600 sm:text-lg">
+              Start with a free vault and upgrade when you need more capacity or advanced automations. No hidden fees, no setup charges, cancel anytime.
+            </p>
+          </div>
+        </section>
+
+        <section className="grid gap-8 lg:grid-cols-2">
+          {plans.map((plan) => (
+            <Card
+              key={plan.name}
+              className={`flex h-full flex-col border-graphite-200/80 p-8 ${
+                plan.highlight
+                  ? "border-primary-300 bg-white shadow-xl ring-1 ring-primary-100"
+                  : "bg-white"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-primary-600">
+                    {plan.badge}
+                  </p>
+                  <h2 className="mt-2 text-3xl font-semibold text-graphite-900">{plan.name}</h2>
+                </div>
+                <div className="text-right">
+                  <p className="text-4xl font-semibold text-primary-600">{plan.price}</p>
+                  <p className="text-xs uppercase tracking-wide text-graphite-500">{plan.cadence}</p>
+                </div>
+              </div>
+
+              <p className="mt-6 text-sm text-graphite-600">{plan.description}</p>
+
+              <ul className="mt-8 flex flex-1 flex-col gap-3 text-sm text-graphite-700">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 rounded-lg border border-graphite-200/70 bg-graphite-50/60 px-4 py-3">
+                    <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                      <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                    </span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-8 space-y-3">
+                <Link href={plan.cta.href}>
+                  <Button className="w-full" variant={plan.highlight ? "primary" : "secondary"}>
+                    {plan.cta.label}
+                  </Button>
+                </Link>
+                {plan.footnote ? (
+                  <p className="text-xs text-graphite-500">{plan.footnote}</p>
+                ) : null}
+              </div>
+            </Card>
+          ))}
+        </section>
+
+        <section className="mt-20 grid gap-8 lg:grid-cols-[1.2fr,1fr]">
+          <div className="rounded-3xl border border-graphite-200 bg-white/90 p-10 shadow-lg">
+            <h2 className="text-2xl font-semibold text-graphite-900 sm:text-3xl">Need a custom arrangement?</h2>
+            <p className="mt-4 text-base text-graphite-600">
+              Planning to archive large media libraries or coordinate releases for an estate? Talk to us about volume discounts, concierge onboarding, and bespoke support.
+            </p>
+            <Link
+              href="mailto:hello@forebearer.app"
+              className="mt-6 inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+            >
+              Email hello@forebearer.app &rarr;
             </Link>
           </div>
-        </nav>
-      </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-6 py-16 max-w-6xl">
-        {/* Hero */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-graphite-900 mb-4">
-            Simple, Transparent Pricing
-          </h1>
-          <p className="text-lg md:text-xl text-graphite-600 max-w-2xl mx-auto">
-            Start free and upgrade when you need more storage and features. No hidden fees, cancel anytime.
-          </p>
-        </div>
+          <div className="space-y-5">
+            {differentiators.map((item) => (
+              <Card key={item.title} className="border-graphite-200/70 bg-white p-6">
+                <h3 className="text-lg font-semibold text-graphite-900">{item.title}</h3>
+                <p className="mt-2 text-sm text-graphite-600">{item.detail}</p>
+              </Card>
+            ))}
+          </div>
+        </section>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
-          {/* Free Tier */}
-          <Card className="border-2 border-graphite-200 hover:border-graphite-300 transition-colors">
-            <div className="p-8">
-              <h2 className="text-2xl font-bold text-graphite-900 mb-2">Free</h2>
-              <div className="mb-6">
-                <span className="text-5xl font-bold text-graphite-900">$0</span>
-                <span className="text-graphite-600 ml-2">/month</span>
-              </div>
-              <p className="text-graphite-600 mb-8">
-                Perfect for getting started with digital legacy planning
-              </p>
-
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">300 MB of storage</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">1 active release bundle</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">Up to 10 trustees per bundle</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">Unlimited items</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">Upload any file type</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">Monthly heartbeat check-ins</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">Email notifications</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-700">End-to-end encryption</span>
-                </li>
-              </ul>
-
-              <Link href="/signup">
-                <Button variant="secondary" className="w-full">
-                  Start Free
-                </Button>
-              </Link>
-            </div>
-          </Card>
-
-          {/* Plus Tier */}
-          <Card className="border-2 border-primary-500 hover:border-primary-600 transition-colors relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-lg">
-              POPULAR
-            </div>
-            <div className="p-8 mt-2">
-              <h2 className="text-2xl font-bold text-graphite-900 mb-2">Plus</h2>
-              <div className="mb-2">
-                <span className="text-5xl font-bold text-graphite-900">$9</span>
-                <span className="text-graphite-600 ml-2">/month</span>
-              </div>
-              <p className="text-sm text-primary-600 font-medium mb-6">
-                or $99/year (save $9)
-              </p>
-              <p className="text-graphite-600 mb-8">
-                For those who want more storage and advanced features
-              </p>
-
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">5 GB of storage</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">Unlimited release bundles</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">Unlimited trustees</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">Unlimited items</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">All file types</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">Custom heartbeat schedules</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">Release analytics</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">Priority support</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-graphite-900 font-medium">End-to-end encryption</span>
-                </li>
-              </ul>
-
-              <Link href="/signup">
-                <Button variant="primary" className="w-full">
-                  Start Free Trial
-                </Button>
-              </Link>
-              <p className="text-xs text-center text-graphite-500 mt-3">
-                Start with free tier, upgrade anytime
-              </p>
-            </div>
-          </Card>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-graphite-900 mb-8 text-center">
-            Frequently Asked Questions
+        <section className="mt-20 rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-lg sm:px-12 lg:px-16">
+          <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+            Try Forebearer free and upgrade when you are ready
           </h2>
-          <div className="space-y-6">
-            <Card>
-              <h3 className="text-lg font-semibold text-graphite-900 mb-2">
-                Can I upgrade or downgrade my plan?
-              </h3>
-              <p className="text-graphite-600">
-                Yes! You can upgrade to Plus at any time from your account settings. If you downgrade from Plus to Free, you&apos;ll need to ensure you&apos;re within the free tier limits (1 active bundle, 10 trustees per bundle, 300 MB storage).
-              </p>
-            </Card>
-
-            <Card>
-              <h3 className="text-lg font-semibold text-graphite-900 mb-2">
-                What happens if I cancel my Plus subscription?
-              </h3>
-              <p className="text-graphite-600">
-                If you cancel your Plus subscription, you&apos;ll be moved to the Free tier at the end of your billing period. You&apos;ll need to ensure your account is within free tier limits. Your data will remain accessible.
-              </p>
-            </Card>
-
-            <Card>
-              <h3 className="text-lg font-semibold text-graphite-900 mb-2">
-                What counts toward my storage limit?
-              </h3>
-              <p className="text-graphite-600">
-                Everything you upload counts toward your storage limit. This includes all files and notes. Encrypted files are slightly larger than originals due to encryption overhead.
-              </p>
-            </Card>
-
-            <Card>
-              <h3 className="text-lg font-semibold text-graphite-900 mb-2">
-                Is there a long-term commitment?
-              </h3>
-              <p className="text-graphite-600">
-                No! Both monthly and annual plans can be cancelled at any time. The annual plan offers a discount but is not required.
-              </p>
-            </Card>
-
-            <Card>
-              <h3 className="text-lg font-semibold text-graphite-900 mb-2">
-                Do you offer refunds?
-              </h3>
-              <p className="text-graphite-600">
-                We offer a 30-day money-back guarantee on annual subscriptions. Monthly subscriptions can be cancelled at any time and you won&apos;t be charged for the next month.
-              </p>
-            </Card>
+          <p className="mx-auto mt-4 max-w-2xl text-base text-graphite-600">
+            Create your vault in minutes. Add trustees, configure releases, and only upgrade once you are confident it fits your needs.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link href="/signup">
+              <Button size="lg" className="w-full sm:w-auto">
+                Start for free
+              </Button>
+            </Link>
+            <Link href="/faq" className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
+              Explore common questions
+            </Link>
           </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mt-16 text-center">
-          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-primary-50 to-secondary-50 border-primary-200">
-            <div className="p-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-graphite-900 mb-4">
-                Ready to Get Started?
-              </h2>
-              <p className="text-graphite-600 mb-6">
-                Start with the free tier and upgrade when you need more
-              </p>
-              <Link href="/signup">
-                <Button size="lg" className="text-base px-8">
-                  Create Your Free Account
-                </Button>
-              </Link>
-            </div>
-          </Card>
-        </div>
+        </section>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

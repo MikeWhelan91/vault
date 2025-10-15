@@ -11,9 +11,11 @@ import { useState } from 'react';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <UnlockGate>
-      <div className="min-h-screen bg-primary-50 text-graphite-900 transition-colors overflow-x-hidden flex flex-col">
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900">
         <AppNav />
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl w-full flex-1">{children}</main>
+        <main className="w-full flex-1 px-4 py-8 sm:px-6 lg:px-8">
+          {children}
+        </main>
         <Footer />
       </div>
     </UnlockGate>
@@ -41,104 +43,94 @@ function AppNav() {
   };
 
   return (
-    <nav className="border-b border-graphite-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link
-            href="/app"
-            className="text-xl font-semibold text-graphite-900 tracking-tight"
-          >
-            Forebearer
-          </Link>
+    <nav className="sticky top-0 z-50 border-b border-graphite-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        {/* Logo */}
+        <Link
+          href="/app"
+          className="text-lg font-semibold tracking-tight text-graphite-900"
+        >
+          Forebearer
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+        {/* Desktop Navigation */}
+        <div className="hidden items-center gap-2 md:flex">
+          {navigation.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`inline-flex items-center rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                isActive(item.href)
+                  ? 'bg-primary-50 text-primary-700'
+                  : 'text-graphite-600 hover:bg-graphite-100 hover:text-graphite-900'
+              }`}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop User actions */}
+        <div className="hidden items-center gap-4 md:flex">
+          <span className="max-w-[200px] truncate text-sm text-graphite-500">
+            {session.userId || metadata?.userId || 'User'}
+          </span>
+          <Button variant="ghost" size="sm" onClick={lock}>
+            Lock vault
+          </Button>
+        </div>
+
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="rounded-full border border-graphite-200 p-2 text-graphite-600 hover:text-graphite-900 md:hidden"
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? (
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="border-t border-graphite-200 bg-white md:hidden">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4">
             {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`
-                  text-sm font-medium transition-colors
-                  ${
-                    isActive(item.href)
-                      ? 'text-primary-600'
-                      : 'text-graphite-600 hover:text-graphite-900'
-                  }
-                `}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive(item.href)
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-graphite-600 hover:bg-graphite-100 hover:text-graphite-900'
+                }`}
               >
                 {item.name}
               </Link>
             ))}
-          </div>
-
-          {/* Desktop User actions */}
-          <div className="hidden md:flex items-center gap-4">
-            <span className="text-sm text-graphite-600 truncate max-w-[200px]">
-              {session.userId || metadata?.userId || 'User'}
-            </span>
-            <Button variant="ghost" size="sm" onClick={lock}>
-              Lock
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-graphite-600 hover:text-graphite-900"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        </div>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-graphite-200">
-            <div className="flex flex-col space-y-3">
-              {navigation.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`
-                    px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                    ${
-                      isActive(item.href)
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-graphite-600 hover:bg-graphite-50 hover:text-graphite-900'
-                    }
-                  `}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <div className="border-t border-graphite-200 pt-3 mt-3">
-                <div className="px-3 py-2 text-sm text-graphite-600 truncate">
-                  {session.userId || metadata?.userId || 'User'}
-                </div>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    lock();
-                  }}
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-graphite-600 hover:bg-graphite-50 hover:text-graphite-900"
-                >
-                  Lock
-                </button>
-              </div>
+            <div className="rounded-xl border border-graphite-200 px-3 py-2 text-sm text-graphite-600">
+              <p className="truncate font-medium">{session.userId || metadata?.userId || 'User'}</p>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  lock();
+                }}
+                className="mt-2 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
+              >
+                Lock vault
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </nav>
   );
 }
