@@ -246,7 +246,7 @@ export default function ReleasePage() {
   const canCreate = canCreateBundle(tier, existingBundles.length);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-graphite-900">
