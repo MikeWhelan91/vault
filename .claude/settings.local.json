@@ -32,7 +32,8 @@
       "Bash(python:*)",
       "Bash(npx tsc:*)",
       "Read(//c/Users/admin/Desktop/**)",
-      "Bash(gh run list:*)"
+      "Bash(gh run list:*)",
+      "Bash(underlying object\" error when creating bundles with notes.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []

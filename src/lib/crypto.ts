@@ -96,13 +96,13 @@ export async function deriveBundleKey(releaseToken: string): Promise<CryptoKey> 
     dkLen: KEY_LENGTH,
   });
 
-  // Import as CryptoKey
+  // Import as CryptoKey with encrypt/decrypt for bundle note encryption
   return crypto.subtle.importKey(
     'raw',
     keyMaterial.buffer as ArrayBuffer,
     { name: 'AES-GCM', length: 256 },
     false, // not extractable
-    ['wrapKey', 'unwrapKey']
+    ['encrypt', 'decrypt', 'wrapKey', 'unwrapKey']
   );
 }
 
