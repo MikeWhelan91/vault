@@ -79,6 +79,15 @@ export default function SettingsPage() {
       });
 
       if (!response.ok) {
+        // If account not found (404), it was already deleted - clear session and redirect
+        if (response.status === 404) {
+          console.log('Account already deleted, clearing session');
+          localStorage.clear();
+          sessionStorage.clear();
+          showToast('Account was already deleted', 'info');
+          router.push('/');
+          return;
+        }
         throw new Error('Failed to delete account');
       }
 
