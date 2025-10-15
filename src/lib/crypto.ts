@@ -130,7 +130,8 @@ export async function unwrapKey(
   wrappedKey: Uint8Array,
   unwrappingKey: CryptoKey,
   iv: Uint8Array,
-  keyUsages: KeyUsage[] = ['encrypt', 'decrypt']
+  keyUsages: KeyUsage[] = ['encrypt', 'decrypt'],
+  extractable: boolean = false
 ): Promise<CryptoKey> {
   return crypto.subtle.unwrapKey(
     'raw',
@@ -138,7 +139,7 @@ export async function unwrapKey(
     unwrappingKey,
     { name: 'AES-GCM', iv },
     { name: 'AES-GCM', length: 256 },
-    false, // not extractable
+    extractable,
     keyUsages
   );
 }

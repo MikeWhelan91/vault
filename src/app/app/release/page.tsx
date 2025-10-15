@@ -12,7 +12,7 @@ import { UpgradePrompt, type UpgradeReason } from '@/components/UpgradePrompt';
 import { canCreateBundle, canAddTrustee, getTierLimits, type TierName } from '@/lib/pricing';
 
 export default function ReleasePage() {
-  const { metadata, session, getItemKey } = useCrypto();
+  const { metadata, session, getExtractableItemKey } = useCrypto();
   const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [bundleName, setBundleName] = useState('');
@@ -134,8 +134,8 @@ export default function ReleasePage() {
       const itemsWithWrappedKeys = await Promise.all(
         selectedItems.map(async (itemId) => {
           try {
-            // Get the item key (unwrapped with user's data key)
-            const itemKey = await getItemKey(itemId);
+            // Get the extractable item key (unwrapped with user's data key)
+            const itemKey = await getExtractableItemKey(itemId);
 
             // Generate IV for wrapping
             const iv = generateIV();

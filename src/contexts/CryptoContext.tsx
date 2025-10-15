@@ -30,6 +30,7 @@ interface CryptoContextType {
   signup: (passphrase: string, email: string, name?: string) => Promise<void>;
   lock: () => void;
   getItemKey: (itemId: string) => Promise<CryptoKey>;
+  getExtractableItemKey: (itemId: string) => Promise<CryptoKey>;
   addItem: (item: Omit<VaultItem, 'id' | 'createdAt' | 'updatedAt' | 'version'>, itemKey: CryptoKey, mimeType?: string) => Promise<VaultItem>;
   removeItem: (itemId: string) => Promise<void>;
   updateMetadata: (updates: Partial<VaultMetadata>) => void;
@@ -293,6 +294,33 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
   );
 
   /**
+   * Get an extractable item key (for bundle creation/key wrapping)
+   */
+  const getExtractableItemKey = useCallback(
+    async (itemId: string): Promise<CryptoKey> => {
+      if (!session.dataKey) {
+        throw new Error('Vault is locked');
+      }
+
+      // Check sessionStorage first
+      const stored = sessionStorage.getItem(`vault_item_key_${itemId}`);
+
+      if (stored) {
+        const { wrapped, iv } = JSON.parse(stored);
+        const wrappedKey = hexToBytes(wrapped);
+        const ivBytes = hexToBytes(iv);
+
+        // Return an extractable key that can be wrapped with bundle key
+        return unwrapKey(wrappedKey, session.dataKey, ivBytes, ['encrypt', 'decrypt'], true);
+      } else {
+        // Generate new item key (will be stored when item is created)
+        return generateItemKey();
+      }
+    },
+    [session.dataKey]
+  );
+
+  /**
    * Add new item to vault
    */
   const addItem = useCallback(
@@ -432,6 +460,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
     signup,
     lock,
     getItemKey,
+    getExtractableItemKey,
     addItem,
     removeItem,
     updateMetadata,
