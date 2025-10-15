@@ -5,11 +5,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #fcf0ee; /* warm peachy background */
-  --foreground: #0d0202; /* deep brownish black text */
-  --card: #ffffff; /* pure white */
-  --border: #fdd6d6; /* soft coral border */
-  --muted: #fef5f5; /* pale pink */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --muted: #f1f5f9;
 }
 
 body {
@@ -20,6 +20,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   max-width: 100vw;
+  line-height: 1.6;
 }
 
 * {
@@ -37,26 +38,26 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
-  -webkit-text-fill-color: #0d0202 !important;
+  -webkit-text-fill-color: #0f172a !important;
 }
 
 /* Ensure password dots are visible */
 input[type="password"] {
-  color: #0d0202 !important;
-  -webkit-text-fill-color: #0d0202 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
 }
 
 
 @layer components {
   .card {
-    background-color: #ffffff; /* pure white */
-    border: 1px solid #fdd6d6;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 0.75rem;
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   }
 
   .placeholder-box {
-    background-color: #fef5f5; /* pale pink */
+    background-color: #f1f5f9;
     border-radius: 0.5rem;
   }
 }

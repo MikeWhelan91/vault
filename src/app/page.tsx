@@ -1,436 +1,410 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
-import { Footer } from '@/components/Footer';
+import Image from "next/image";
+import Link from "next/link";
+import { Check } from "lucide-react";
+
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Footer } from "@/components/Footer";
+import { SiteHeader } from "@/components/marketing/SiteHeader";
+
+const bulletPoints = [
+  "AES-256 end-to-end encryption on every upload",
+  "Time-lock and heartbeat releases you fully control",
+  "Automatic delivery with receipt tracking for trustees",
+];
+
+const featureHighlights = [
+  {
+    title: "Upload once",
+    description:
+      "Organise photos, videos, letters, and essential files into dedicated bundles that stay encrypted at rest.",
+    image: "/upload.jpg",
+  },
+  {
+    title: "Decide the moment",
+    description:
+      "Schedule a delivery date or use heartbeat mode to release items when check-ins stop, no manual follow-up required.",
+    image: "/decide.jpg",
+  },
+  {
+    title: "We handle the delivery",
+    description:
+      "Trustees receive secure links, access logs, and guidance the instant a release is triggered—no account needed.",
+    image: "/handle.jpg",
+  },
+];
+
+const timeline = [
+  {
+    title: "Bundle what matters",
+    description:
+      "Drag in photos, videos, password files, or letters. Everything is encrypted locally before it ever leaves your device.",
+  },
+  {
+    title: "Choose trustees & timing",
+    description:
+      "Add as many recipients as you need, set a specific future date, or enable heartbeat mode with custom check-in cadence.",
+  },
+  {
+    title: "Confirm and relax",
+    description:
+      "We keep your bundles secure, remind you about upcoming releases, and deliver automatically with full audit trails.",
+  },
+];
+
+const securityFeatures = [
+  {
+    title: "Zero-knowledge architecture",
+    description:
+      "Forebearer never has access to your passphrase. Files are encrypted client-side and stored as unreadable shards.",
+  },
+  {
+    title: "Proactive monitoring",
+    description:
+      "Heartbeat pings, delivery verification, and access receipts ensure you always know when a bundle moves.",
+  },
+  {
+    title: "Redundant storage",
+    description:
+      "Backed by Cloudflare R2 with automatic replication, ensuring your legacy is preserved without single points of failure.",
+  },
+];
+
+const faqPreview = [
+  {
+    question: "What happens if I stop responding to heartbeat check-ins?",
+    answer:
+      "Heartbeat releases automatically notify trustees after the grace period you define. You can reset or pause at any time.",
+  },
+  {
+    question: "Do recipients need a Forebearer account?",
+    answer:
+      "No. Trustees receive a secure delivery link with built-in guidance, even if they have never used Forebearer before.",
+  },
+  {
+    question: "Can I edit bundles after uploading?",
+    answer:
+      "Yes. Add, remove, or reorder items whenever you like. Changes are synced instantly with your encryption keys.",
+  },
+];
 
 export default function LandingPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Forebearer",
-    "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "Web",
-    "offers": [
+    name: "Forebearer",
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Web",
+    offers: [
       {
         "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "name": "Free Plan",
-        "description": "300 MB storage for photos, videos, and messages"
+        price: "0",
+        priceCurrency: "USD",
+        name: "Free Plan",
+        description: "300 MB storage for photos, videos, and messages",
       },
       {
         "@type": "Offer",
-        "price": "9",
-        "priceCurrency": "USD",
-        "name": "Plus Plan",
-        "description": "5 GB storage with unlimited bundles and trustees"
-      }
+        price: "9",
+        priceCurrency: "USD",
+        name: "Plus Plan",
+        description: "5 GB storage with unlimited bundles and trustees",
+      },
     ],
-    "description": "Store photos, videos, and messages safely. Share them with loved ones at the right time. End-to-end encrypted digital memory vault.",
-    "featureList": [
+    description:
+      "Forebearer is the secure way to store and deliver digital memories. Encrypt, schedule, and release important files and messages with zero-knowledge privacy.",
+    featureList: [
       "End-to-end encryption",
       "Time-lock releases",
       "Heartbeat monitoring",
       "Secure file storage",
       "Automatic delivery to trustees",
-      "Zero-knowledge privacy"
+      "Zero-knowledge privacy",
     ],
-    "screenshot": "https://forebearer.app/hero.jpg",
-    "aggregateRating": {
+    screenshot: "https://forebearer.app/hero.jpg",
+    aggregateRating: {
       "@type": "AggregateRating",
-      "ratingValue": "5.0",
-      "ratingCount": "1"
-    }
+      ratingValue: "5.0",
+      ratingCount: "1",
+    },
   };
 
   const organizationData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Forebearer",
-    "url": "https://forebearer.app",
-    "logo": "https://forebearer.app/logo.png",
-    "description": "Secure digital legacy and memory storage platform",
-    "contactPoint": {
+    name: "Forebearer",
+    url: "https://forebearer.app",
+    logo: "https://forebearer.app/logo.png",
+    description: "Secure digital legacy and memory storage platform",
+    contactPoint: {
       "@type": "ContactPoint",
-      "email": "hello@forebearer.app",
-      "contactType": "Customer Support"
-    }
+      email: "hello@forebearer.app",
+      contactType: "Customer Support",
+    },
+  };
+
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqPreview.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
   };
 
   return (
-    <div className="min-h-screen bg-primary-50">
-      {/* Structured Data for SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
-      />
-      {/* Header */}
-      <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
-        <nav className="container mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="text-lg sm:text-xl font-semibold text-graphite-900 tracking-tight">
-            Forebearer
-          </div>
-          <div className="flex gap-2 sm:gap-3">
-            <Link href="/signin">
-              <Button variant="ghost" size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button size="sm" className="text-xs sm:text-sm px-3 sm:px-4">
-                Get Started
-              </Button>
-            </Link>
-          </div>
-        </nav>
-      </header>
+    <div className="min-h-screen bg-graphite-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
 
-      {/* Hero Section */}
-      <section className="relative min-h-[450px] md:min-h-[550px] flex items-center overflow-hidden">
-        {/* Background Image with Dimming */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/hero.jpg"
-            alt="Hero background"
-            fill
-            priority
-            className="object-cover"
-            quality={90}
-          />
-          <div className="absolute inset-0 bg-black/40"></div>
-        </div>
+      <SiteHeader />
 
-        {/* Content Overlay - Left Side */}
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-2xl text-center">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-white mb-6 tracking-tight animate-fade-in">
-              Leave Something Behind
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 mb-10 leading-relaxed animate-slide-up">
-              Store memories, messages, and meaningful things. Share them with loved ones when the time is right.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
-              <Link href="/signup">
-                <Button size="lg" className="min-w-[160px]">Start Free</Button>
-              </Link>
-              <a href="#features">
-                <Button size="lg" variant="secondary" className="min-w-[160px]">
-                  Learn More
-                </Button>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Value Proposition Section - Image/Text Split */}
-      <section className="py-20 md:py-32 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center max-w-7xl mx-auto">
-            {/* Text Content */}
-            <div className="order-2 md:order-1">
-              <h2 className="text-4xl md:text-5xl font-semibold text-graphite-900 mb-6 leading-tight">
-                Your memories, safely stored for the people who matter
-              </h2>
-              <p className="text-lg text-graphite-600 mb-8 leading-relaxed">
-                Life moves fast. We help you capture what&apos;s important and make sure it reaches the right people at the right time—whether that&apos;s a birthday message for your daughter&apos;s 18th, or important information your family might need someday.
+      <main className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-8">
+        <section className="py-16 sm:py-20 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr,0.95fr]">
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
+                Secure digital legacy
+              </div>
+              <h1 className="text-4xl font-semibold tracking-tight text-graphite-900 sm:text-5xl lg:text-6xl">
+                Leave memories that arrive exactly when they should
+              </h1>
+              <p className="max-w-xl text-lg text-graphite-600 lg:text-xl">
+                Forebearer encrypts and safeguards your most meaningful files, then delivers them automatically to the right people exactly when you decide.
               </p>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center mt-1">
-                    <svg className="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                    </svg>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {bulletPoints.map((point) => (
+                  <div key={point} className="flex items-start gap-3 rounded-xl border border-graphite-200 bg-white/80 p-4 shadow-sm">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                      <Check className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    <p className="text-sm font-medium text-graphite-700">{point}</p>
                   </div>
-                  <div>
-                    <h3 className="font-medium text-graphite-900 mb-1">Photos, videos, letters—anything that matters</h3>
-                    <p className="text-graphite-600">Upload memories in any format and keep them safe forever.</p>
-                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Link href="/signup">
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Start for free
+                  </Button>
+                </Link>
+                <Link href="/pricing" className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-700">
+                  View pricing &rarr;
+                </Link>
+              </div>
+              <div className="flex flex-wrap gap-8 pt-4 text-sm text-graphite-600">
+                <div>
+                  <p className="text-3xl font-semibold text-primary-600">0</p>
+                  <p className="mt-1 max-w-[14ch] text-xs uppercase tracking-wide text-graphite-500">Unencrypted copies stored</p>
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center mt-1">
-                    <svg className="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-graphite-900 mb-1">Set it and forget it</h3>
-                    <p className="text-graphite-600">Once it&apos;s uploaded, we&apos;ll handle everything—reminders, delivery, the works.</p>
-                  </div>
+                <div>
+                  <p className="text-3xl font-semibold text-primary-600">100%</p>
+                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-500">Control over delivery timing</p>
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center mt-1">
-                    <svg className="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-graphite-900 mb-1">Private and encrypted</h3>
-                    <p className="text-graphite-600">Your memories are for you and the people you choose—no one else.</p>
-                  </div>
+                <div>
+                  <p className="text-3xl font-semibold text-primary-600">24/7</p>
+                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-500">Monitoring and notifications</p>
                 </div>
               </div>
             </div>
-            {/* Image */}
-            <div className="order-1 md:order-2">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+
+            <div className="relative">
+              <div className="relative overflow-hidden rounded-3xl border border-graphite-200/80 bg-white shadow-2xl">
                 <Image
-                  src="/Your-memories.jpg"
-                  alt="Memories being shared"
-                  fill
-                  className="object-cover"
-                  quality={90}
+                  src="/hero.jpg"
+                  alt="Forebearer dashboard showcasing scheduled releases"
+                  width={1120}
+                  height={900}
+                  className="h-full w-full object-cover"
+                  priority
                 />
+                <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-3 bg-white/90 px-6 py-6 backdrop-blur">
+                  <p className="text-sm font-semibold uppercase tracking-wide text-graphite-500">
+                    At-a-glance
+                  </p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-xl border border-primary-100 bg-primary-50/70 px-4 py-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-primary-600">Upcoming releases</p>
+                      <p className="text-lg font-semibold text-graphite-900">Heartbeat bundle – 3 days</p>
+                    </div>
+                    <div className="rounded-xl border border-graphite-200 bg-white px-4 py-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-graphite-500">Trustee delivery</p>
+                      <p className="text-lg font-semibold text-graphite-900">Confirmed 2 minutes ago</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* How It Works - Visual Steps */}
-      <section className="py-20 md:py-32 bg-primary-50">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-semibold text-graphite-900 mb-6">
-              Three simple steps
+        <section id="features" className="space-y-12 py-20">
+          <div className="flex flex-col gap-4 text-center">
+            <span className="mx-auto inline-flex items-center justify-center rounded-full border border-secondary-200 bg-secondary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-700">
+              Built for every legacy
+            </span>
+            <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+              A guided path from upload to delivery
             </h2>
-            <p className="text-xl text-graphite-600">
-              No complicated setup. Just you, your memories, and the people you care about.
+            <p className="mx-auto max-w-2xl text-base text-graphite-600">
+              Whether you are organising a lifetime of photos or critical instructions, Forebearer keeps everything in motion with
+              structured workflows and complete transparency.
             </p>
           </div>
 
-          <div className="max-w-6xl mx-auto space-y-24">
-            {/* Step 1 */}
-            <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="/upload.jpg"
-                  alt="Upload memories"
-                  fill
-                  className="object-cover"
-                  quality={90}
-                />
-                <div className="absolute top-6 left-6 w-12 h-12 bg-primary-500 text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
-                  1
+          <div className="grid gap-8 lg:grid-cols-3">
+            {featureHighlights.map((feature) => (
+              <Card key={feature.title} className="flex h-full flex-col overflow-hidden border-graphite-200/80">
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                  />
                 </div>
-              </div>
-              <div>
-                <h3 className="text-3xl font-semibold text-graphite-900 mb-4">
-                  Upload what you want to share
-                </h3>
-                <p className="text-lg text-graphite-600 leading-relaxed">
-                  Photos from that trip you took together. A video message for their wedding day. The password to your email. Whatever matters to you.
-                </p>
-              </div>
+                <div className="flex flex-1 flex-col gap-3 p-6">
+                  <h3 className="text-xl font-semibold text-graphite-900">{feature.title}</h3>
+                  <p className="text-sm text-graphite-600">{feature.description}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        <section className="py-20">
+          <div className="grid gap-10 lg:grid-cols-[1fr,1.1fr] lg:gap-16">
+            <div className="space-y-4">
+              <span className="inline-flex rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
+                How it works
+              </span>
+              <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+                Designed for confidence at every step
+              </h2>
+              <p className="text-base text-graphite-600">
+                You stay in control while Forebearer handles the encryption, reminders, and delivery logistics. It is a dedicated
+                co-pilot for your digital legacy.
+              </p>
+              <Link
+                href="/faq"
+                className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+              >
+                Explore the FAQ &rarr;
+              </Link>
             </div>
 
-            {/* Step 2 */}
-            <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-              <div className="md:order-2 relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="/decide.jpg"
-                  alt="Choose recipients"
-                  fill
-                  className="object-cover"
-                  quality={90}
-                />
-                <div className="absolute top-6 left-6 w-12 h-12 bg-primary-500 text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
-                  2
-                </div>
-              </div>
-              <div className="md:order-1">
-                <h3 className="text-3xl font-semibold text-graphite-900 mb-4">
-                  Decide when and who
-                </h3>
-                <p className="text-lg text-graphite-600 leading-relaxed">
-                  Choose who receives what. Set a specific date, or use check-ins so things are shared automatically if you stop responding. You&apos;re in control.
-                </p>
-              </div>
-            </div>
+            <ol className="space-y-6">
+              {timeline.map((item, index) => (
+                <li key={item.title} className="flex gap-5 rounded-2xl border border-graphite-200 bg-white/90 p-6 shadow-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary-200 bg-primary-50 text-base font-semibold text-primary-700">
+                    {index + 1}
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-graphite-900">{item.title}</h3>
+                    <p className="text-sm text-graphite-600">{item.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
 
-            {/* Step 3 */}
-            <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="/handle.jpg"
-                  alt="Live your life"
-                  fill
-                  className="object-cover"
-                  quality={90}
-                />
-                <div className="absolute top-6 left-6 w-12 h-12 bg-primary-500 text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
-                  3
-                </div>
-              </div>
-              <div>
-                <h3 className="text-3xl font-semibold text-graphite-900 mb-4">
-                  We&apos;ll handle the rest
-                </h3>
-                <p className="text-lg text-graphite-600 leading-relaxed">
-                  Live your life. We&apos;ll send you gentle reminders to check in, and make sure everything reaches the right people at exactly the right time.
+        <section className="py-20">
+          <div className="rounded-3xl border border-graphite-200 bg-white/90 p-10 shadow-lg">
+            <div className="grid gap-12 lg:grid-cols-2">
+              <div className="space-y-4">
+                <span className="inline-flex rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-700">
+                  Security &amp; reliability
+                </span>
+                <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+                  Enterprise-grade protection for personal stories
+                </h2>
+                <p className="text-base text-graphite-600">
+                  Forebearer combines zero-knowledge encryption, redundant storage, and continuous monitoring so your files stay
+                  safe without compromise.
                 </p>
+                <Link
+                  href="/support"
+                  className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+                >
+                  Learn more about our approach &rarr;
+                </Link>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                {securityFeatures.map((feature) => (
+                  <Card key={feature.title} className="flex h-full flex-col gap-2 border-graphite-200/70 bg-white p-6">
+                    <h3 className="text-lg font-semibold text-graphite-900">{feature.title}</h3>
+                    <p className="text-sm text-graphite-600">{feature.description}</p>
+                  </Card>
+                ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Social Proof / Trust Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-semibold text-graphite-900 mb-12">
-              Built with care, security, and privacy
+        <section className="py-20">
+          <div className="flex flex-col gap-4 text-center">
+            <span className="mx-auto inline-flex rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
+              Answers at the ready
+            </span>
+            <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+              Everything you need to know before you share
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="p-6">
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-graphite-900 mb-2">End-to-end encrypted</h3>
-                <p className="text-graphite-600">Your memories are encrypted on your device before upload. We can&apos;t see them—only you and your chosen recipients can.</p>
-              </div>
-              <div className="p-6">
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-graphite-900 mb-2">Reliably stored</h3>
-                <p className="text-graphite-600">Your data is stored on Cloudflare&apos;s global network with 99.9% uptime and automatic backups.</p>
-              </div>
-              <div className="p-6">
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-graphite-900 mb-2">Made with purpose</h3>
-                <p className="text-graphite-600">We built this because everyone deserves an easy way to leave something meaningful behind.</p>
-              </div>
+              <p className="mx-auto max-w-2xl text-base text-graphite-600">
+                Here are the questions people ask most before trusting Forebearer with their vault. Dive deeper on our dedicated FAQ page for more guidance.
+              </p>
+          </div>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {faqPreview.map((faq) => (
+              <Card key={faq.question} className="h-full border-graphite-200/70 p-6">
+                <h3 className="text-lg font-semibold text-graphite-900">{faq.question}</h3>
+                <p className="mt-3 text-sm text-graphite-600">{faq.answer}</p>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link
+              href="/faq"
+              className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+            >
+              Visit the full FAQ &rarr;
+            </Link>
+          </div>
+        </section>
+
+        <section className="py-24">
+          <div className="rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-lg sm:px-12 lg:px-16">
+            <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+              Be remembered for the stories you choose to share
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-graphite-600">
+              Start with 300 MB of secure storage, invite trustees, and experience how effortless it feels to organise your digital
+              legacy.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link href="/signup">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Create your vault
+                </Button>
+              </Link>
+              <Link href="/signin" className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
+                Already have an account? Sign in
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Pricing */}
-      <section id="pricing" className="bg-white py-24">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-light text-graphite-900 text-center mb-16 tracking-tight">
-            Start Free, Upgrade When You Need
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <PricingCard
-              name="Free"
-              price="$0"
-              features={[
-                '300 MB storage',
-                '1 active release bundle',
-                'Up to 10 trustees per bundle',
-                'Unlimited items',
-                'Upload any file type',
-                'Monthly heartbeat check-ins',
-                'Email notifications',
-              ]}
-              ctaText="Get Started"
-              ctaLink="/signup"
-            />
-            <PricingCard
-              name="Plus"
-              price="$9"
-              period="/month"
-              annual="$99/year"
-              features={[
-                '5 GB storage',
-                'Unlimited release bundles',
-                'Unlimited trustees',
-                'Custom heartbeat schedules',
-                'Release analytics',
-                'Priority support',
-                'All file types',
-              ]}
-              ctaText="Coming Soon"
-              ctaLink="#"
-              highlighted
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
       <Footer />
-    </div>
-  );
-}
-
-function PricingCard({
-  name,
-  price,
-  period,
-  annual,
-  features,
-  ctaText,
-  ctaLink,
-  highlighted = false,
-}: {
-  name: string;
-  price: string;
-  period?: string;
-  annual?: string;
-  features: string[];
-  ctaText: string;
-  ctaLink: string;
-  highlighted?: boolean;
-}) {
-  return (
-    <div
-      className={`
-        card p-8 transition-all duration-300
-        ${
-          highlighted
-            ? 'border-accent-500 shadow-lg scale-105'
-            : 'hover:shadow-md'
-        }
-      `}
-    >
-      <h3 className="text-xl font-medium text-graphite-900 mb-2">
-        {name}
-      </h3>
-      <div className="mb-6">
-        <span className="text-4xl font-light text-graphite-900">
-          {price}
-        </span>
-        {period && (
-          <span className="text-graphite-600 text-sm">{period}</span>
-        )}
-        {annual && (
-          <p className="text-xs text-graphite-500 mt-1">or {annual}</p>
-        )}
-      </div>
-      <ul className="space-y-3 mb-8">
-        {features.map((feature, i) => (
-          <li key={i} className="flex items-start gap-3 text-sm">
-            <svg className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <span className="text-graphite-600">{feature}</span>
-          </li>
-        ))}
-      </ul>
-      <Link href={ctaLink}>
-        <Button
-          className="w-full"
-          variant={highlighted ? 'primary' : 'secondary'}
-        >
-          {ctaText}
-        </Button>
-      </Link>
     </div>
   );
 }
