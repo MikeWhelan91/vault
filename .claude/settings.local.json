@@ -29,7 +29,8 @@
       "Bash(taskkill:*)",
       "Bash(npx tsx:*)",
       "Bash(git rm:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

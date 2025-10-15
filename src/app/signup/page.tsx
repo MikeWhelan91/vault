@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { validatePassphrase } from '@/lib/crypto';
+import { useCrypto } from '@/contexts/CryptoContext';
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { signup } = useCrypto();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,26 +52,25 @@ export default function SignUpPage() {
     setIsLoading(true);
 
     try {
-      // Save email and name for signin
-      localStorage.setItem('vault_user_email', email.trim().toLowerCase());
-      localStorage.setItem('vault_user_name', name.trim());
+      // Create account using signup function
+      await signup(password, email.trim().toLowerCase(), name.trim());
 
-      // Send welcome email
-      try {
-        await fetch('/api/email/welcome', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email.trim().toLowerCase(),
-            name: name.trim()
-          }),
-        });
-      } catch (emailError) {
+      // Send welcome email (don't block on this)
+      fetch('/api/email/welcome', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          name: name.trim()
+        }),
+      }).catch(emailError => {
         console.error('Failed to send welcome email:', emailError);
-        // Don't block signup if email fails
-      }
+      });
 
-      // Redirect to app to set up vault
+      // Save email for future logins
+      localStorage.setItem('vault_user_email', email.trim().toLowerCase());
+
+      // Redirect to app (account is now created and unlocked)
       router.push('/app');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create account');
