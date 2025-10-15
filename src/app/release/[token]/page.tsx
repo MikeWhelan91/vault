@@ -10,6 +10,7 @@ interface ReleaseData {
   bundle: {
     name: string;
     createdAt: string;
+    expiresAt: string;
     bundleNoteEncrypted: string | null;
     bundleNoteIV: string | null;
   };
@@ -43,7 +44,14 @@ export default function ReleasePage() {
         const response = await fetch(`/api/release/${token}`);
 
         if (!response.ok) {
-          throw new Error('Release not found');
+          const errorData = await response.json().catch(() => ({}));
+
+          if (response.status === 410) {
+            // Bundle expired
+            throw new Error(errorData.message || 'This release has expired and is no longer accessible.');
+          }
+
+          throw new Error(errorData.error || 'Release not found');
         }
 
         const data = await response.json();
@@ -264,6 +272,21 @@ export default function ReleasePage() {
                 <p className="text-sm text-graphite-600">Items</p>
                 <p className="font-semibold text-graphite-900">
                   {release.items.length} {release.items.length === 1 ? 'memory' : 'memories'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Expiration Notice */}
+          <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <div>
+                <p className="text-sm font-medium text-orange-900">Access expires in 24 hours</p>
+                <p className="text-xs text-orange-800 mt-1">
+                  This release will be accessible until {new Date(release.bundle.expiresAt).toLocaleString()}
                 </p>
               </div>
             </div>

@@ -87,6 +87,7 @@ model ReleaseBundle {
   // Status
   released    Boolean  @default(false)
   releaseToken String?  @unique
+  firstAccessedAt DateTime? // When a trustee first accessed this bundle (starts 24hr timer)
 
   // Bundle note (encrypted with bundle key for trustee access)
   bundleNoteEncrypted String? // Encrypted note content (hex-encoded)

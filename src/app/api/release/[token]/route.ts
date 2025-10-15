@@ -56,11 +56,41 @@ export async function GET(
       );
     }
 
+    const now = new Date();
+
+    // Check if bundle has expired (24 hours after first access)
+    if (bundle.firstAccessedAt) {
+      const expirationTime = new Date(bundle.firstAccessedAt);
+      expirationTime.setHours(expirationTime.getHours() + 24);
+
+      if (now > expirationTime) {
+        return NextResponse.json(
+          {
+            error: 'This release has expired',
+            message: 'This release was accessible for 24 hours after first access and is no longer available.'
+          },
+          { status: 410 } // 410 Gone
+        );
+      }
+    } else {
+      // First access - record the timestamp
+      await prisma.releaseBundle.update({
+        where: { id: bundle.id },
+        data: { firstAccessedAt: now },
+      });
+    }
+
+    // Calculate expiration time
+    const expiresAt = bundle.firstAccessedAt
+      ? new Date(new Date(bundle.firstAccessedAt).getTime() + 24 * 60 * 60 * 1000)
+      : new Date(now.getTime() + 24 * 60 * 60 * 1000); // If just accessed now
+
     // Format response
     const response = {
       bundle: {
         name: bundle.name,
         createdAt: bundle.createdAt.toISOString(),
+        expiresAt: expiresAt.toISOString(),
         // Bundle note (encrypted with bundle key for trustee access)
         bundleNoteEncrypted: bundle.bundleNoteEncrypted,
         bundleNoteIV: bundle.bundleNoteIV,
