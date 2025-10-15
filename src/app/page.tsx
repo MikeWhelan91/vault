@@ -214,7 +214,7 @@ export default function LandingPage() {
             </div>
 
             <div className="relative">
-              <div className="relative overflow-hidden rounded-3xl border border-graphite-200/80 bg-white shadow-2xl">
+              <div className="relative overflow-hidden rounded-3xl border border-graphite-200/80 shadow-2xl">
                 <Image
                   src="/hero.jpg"
                   alt="Forebearer dashboard showcasing scheduled releases"
@@ -223,21 +223,6 @@ export default function LandingPage() {
                   className="h-full w-full object-cover"
                   priority
                 />
-                <div className="absolute bottom-0 left-0 right-0 flex flex-col gap-3 bg-white/90 px-6 py-6 backdrop-blur">
-                  <p className="text-sm font-semibold uppercase tracking-wide text-graphite-500">
-                    At-a-glance
-                  </p>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-xl border border-primary-100 bg-primary-50/70 px-4 py-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-primary-600">Upcoming releases</p>
-                      <p className="text-lg font-semibold text-graphite-900">Heartbeat bundle – 3 days</p>
-                    </div>
-                    <div className="rounded-xl border border-graphite-200 bg-white px-4 py-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-graphite-500">Trustee delivery</p>
-                      <p className="text-lg font-semibold text-graphite-900">Confirmed 2 minutes ago</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
