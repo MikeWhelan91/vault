@@ -351,9 +351,9 @@ export async function sendReleaseNotification(
   releaseToken: string,
   itemCount: number
 ) {
-  // Use environment variable for flexibility (localhost in dev, production in prod)
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app';
-  const releaseUrl = `${baseUrl}/release/${releaseToken}`;
+  // Release links must always use production URL (they need to work forever, not just in dev)
+  // Never use localhost for release links, even when testing locally
+  const releaseUrl = `https://forebearer.app/release/${releaseToken}`;
 
   try {
     await resend.emails.send({

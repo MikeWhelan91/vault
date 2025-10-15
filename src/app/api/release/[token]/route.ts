@@ -69,7 +69,7 @@ export async function GET(
         id: bundleItem.item.id,
         name: bundleItem.item.name,
         type: bundleItem.item.type,
-        size: bundleItem.item.size,
+        size: Number(bundleItem.item.size), // Convert BigInt to number for JSON serialization
         r2Key: bundleItem.item.r2Key,
       })),
     };
