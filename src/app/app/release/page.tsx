@@ -12,7 +12,7 @@ import { UpgradePrompt, type UpgradeReason } from '@/components/UpgradePrompt';
 import { canCreateBundle, canAddTrustee, getTierLimits, type TierName } from '@/lib/pricing';
 
 export default function ReleasePage() {
-  const { metadata, session } = useCrypto();
+  const { metadata, session, getItemKey } = useCrypto();
   const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [bundleName, setBundleName] = useState('');
@@ -120,7 +120,42 @@ export default function ReleasePage() {
     }
 
     try {
-      // Call API to create bundle
+      // IMPORTANT: Client-side key wrapping for zero-knowledge encryption
+      // We need to wrap item keys with a bundle key so trustees can decrypt
+      const { deriveBundleKey, wrapKey, generateIV, bytesToHex } = await import('@/lib/crypto');
+
+      // Generate a bundle token on the client
+      const releaseToken = crypto.randomUUID();
+
+      // Derive bundle key from token
+      const bundleKey = await deriveBundleKey(releaseToken);
+
+      // Wrap each item key with the bundle key
+      const itemsWithWrappedKeys = await Promise.all(
+        selectedItems.map(async (itemId) => {
+          try {
+            // Get the item key (unwrapped with user's data key)
+            const itemKey = await getItemKey(itemId);
+
+            // Generate IV for wrapping
+            const iv = generateIV();
+
+            // Wrap item key with bundle key
+            const wrappedKey = await wrapKey(itemKey, bundleKey, iv);
+
+            return {
+              itemId,
+              bundleWrappedKey: bytesToHex(wrappedKey),
+              bundleWrappedKeyIV: bytesToHex(iv),
+            };
+          } catch (error) {
+            console.error(`Failed to wrap key for item ${itemId}:`, error);
+            throw error;
+          }
+        })
+      );
+
+      // Call API to create bundle with wrapped keys
       const response = await fetch('/api/bundles', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -130,7 +165,8 @@ export default function ReleasePage() {
           mode,
           releaseDate: mode === 'time-lock' ? releaseDate : undefined,
           heartbeatCadenceDays: mode === 'heartbeat' ? heartbeatCadence : undefined,
-          itemIds: selectedItems,
+          releaseToken, // Send the token we generated
+          items: itemsWithWrappedKeys,
           trustees: trustees.map(t => ({ email: t.email, name: t.name })),
         }),
       });

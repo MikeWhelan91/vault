@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { decryptFile } from '@/lib/crypto';
+import { decryptFile, deriveBundleKey, unwrapKey, hexToBytes } from '@/lib/crypto';
 
 interface ReleaseData {
   bundle: {
@@ -20,6 +20,8 @@ interface ReleaseData {
     type: 'file' | 'note';
     size: string;
     r2Key: string;
+    bundleWrappedKey: string | null;
+    bundleWrappedKeyIV: string | null;
   }>;
 }
 
@@ -57,6 +59,11 @@ export default function ReleasePage() {
     setDownloadingItem(item.id);
 
     try {
+      // Check if we have the wrapped keys needed for decryption
+      if (!item.bundleWrappedKey || !item.bundleWrappedKeyIV) {
+        throw new Error('Decryption keys not available for this item');
+      }
+
       // Download encrypted data from R2 via API
       const API_BASE_URL = process.env.NEXT_PUBLIC_WORKER_URL || 'https://vault-api.yourdomain.workers.dev';
       const response = await fetch(`${API_BASE_URL}/r2/${item.r2Key}`, {
@@ -73,20 +80,31 @@ export default function ReleasePage() {
 
       const encryptedData = await response.arrayBuffer();
 
-      // For now, download as-is (encrypted)
-      // In production with Option A (auto-decrypt), we'd include the decryption key
-      const blob = new Blob([encryptedData]);
+      // Decrypt the file using the release token
+      // 1. Derive bundle key from release token
+      const bundleKey = await deriveBundleKey(token);
+
+      // 2. Unwrap the item key using the bundle key
+      const wrappedKeyBytes = hexToBytes(item.bundleWrappedKey);
+      const ivBytes = hexToBytes(item.bundleWrappedKeyIV);
+      const itemKey = await unwrapKey(wrappedKeyBytes, bundleKey, ivBytes);
+
+      // 3. Decrypt the file content with the item key
+      const decryptedData = await decryptFile(new Uint8Array(encryptedData), itemKey);
+
+      // 4. Download the decrypted file
+      const blob = new Blob([new Uint8Array(decryptedData)]);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${item.name}.encrypted`;
+      a.download = item.name; // Original filename, no .encrypted extension
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Download failed:', err);
-      alert('Failed to download item');
+      alert(`Failed to download item: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setDownloadingItem(null);
     }
@@ -203,8 +221,8 @@ export default function ReleasePage() {
                 About These Memories
               </h3>
               <p className="text-sm text-primary-800">
-                These files were shared with you by {release.user.email}. The files are encrypted
-                and will be downloaded to your device. You can access this page anytime.
+                These files were shared with you by {release.user.email}. Files are automatically
+                decrypted when downloaded using zero-knowledge encryption. You can access this page anytime.
               </p>
             </div>
           </div>

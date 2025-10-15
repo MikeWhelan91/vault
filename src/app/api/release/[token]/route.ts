@@ -71,6 +71,9 @@ export async function GET(
         type: bundleItem.item.type,
         size: Number(bundleItem.item.size), // Convert BigInt to number for JSON serialization
         r2Key: bundleItem.item.r2Key,
+        // Bundle-wrapped keys for decryption (trustees can use these with the release token)
+        bundleWrappedKey: bundleItem.bundleWrappedKey,
+        bundleWrappedKeyIV: bundleItem.bundleWrappedKeyIV,
       })),
     };
 

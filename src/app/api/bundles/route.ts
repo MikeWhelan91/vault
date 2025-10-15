@@ -15,11 +15,12 @@ export async function POST(request: NextRequest) {
       mode,
       releaseDate,
       heartbeatCadenceDays,
-      itemIds,
+      releaseToken, // Client-generated token used for bundle key derivation
+      items, // Now accepts array of {itemId, bundleWrappedKey, bundleWrappedKeyIV}
       trustees,
     } = body;
 
-    if (!userId || !name || !mode || !itemIds || !trustees) {
+    if (!userId || !name || !mode || !releaseToken || !items || !trustees) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -69,8 +70,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate a unique release token
-    const releaseToken = crypto.randomUUID();
+    // releaseToken is now provided by client (generated client-side for zero-knowledge crypto)
 
     // Create bundle with items and trustees in a transaction
     const bundle = await prisma.releaseBundle.create({
@@ -82,8 +82,10 @@ export async function POST(request: NextRequest) {
         heartbeatCadenceDays,
         releaseToken,
         bundleItems: {
-          create: itemIds.map((itemId: string) => ({
-            itemId,
+          create: items.map((item: { itemId: string; bundleWrappedKey: string; bundleWrappedKeyIV: string }) => ({
+            itemId: item.itemId,
+            bundleWrappedKey: item.bundleWrappedKey,
+            bundleWrappedKeyIV: item.bundleWrappedKeyIV,
           })),
         },
         trustees: {
@@ -110,6 +112,7 @@ export async function POST(request: NextRequest) {
         mode: bundle.mode,
         releaseDate: bundle.releaseDate?.toISOString(),
         heartbeatCadenceDays: bundle.heartbeatCadenceDays,
+        releaseToken: bundle.releaseToken, // Return the token so frontend knows it
         items: bundle.bundleItems.map(bi => ({
           id: bi.item.id,
           name: bi.item.name,

@@ -80,6 +80,33 @@ export async function generateItemKey(): Promise<CryptoKey> {
 }
 
 /**
+ * Derive a bundle key from a release token
+ * This allows trustees to decrypt items using only the release token
+ */
+export async function deriveBundleKey(releaseToken: string): Promise<CryptoKey> {
+  const tokenBytes = new TextEncoder().encode(releaseToken);
+
+  // Use a fixed salt for bundle keys (derived from token itself)
+  // This makes the bundle key deterministic from the token
+  const salt = sha256(tokenBytes).slice(0, SALT_LENGTH);
+
+  // Derive key using PBKDF2
+  const keyMaterial = pbkdf2(sha256, tokenBytes, salt, {
+    c: MASTER_KEY_ITERATIONS,
+    dkLen: KEY_LENGTH,
+  });
+
+  // Import as CryptoKey
+  return crypto.subtle.importKey(
+    'raw',
+    keyMaterial.buffer as ArrayBuffer,
+    { name: 'AES-GCM', length: 256 },
+    false, // not extractable
+    ['wrapKey', 'unwrapKey']
+  );
+}
+
+/**
  * Wrap (encrypt) a key with another key
  */
 export async function wrapKey(

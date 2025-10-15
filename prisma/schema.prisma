@@ -108,6 +108,11 @@ model BundleItem {
   itemId   String
   item     Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
+  // Bundle-wrapped keys for trustee access (hex-encoded)
+  // These allow trustees to decrypt items without the owner's data key
+  bundleWrappedKey   String? // Item key wrapped with bundle key
+  bundleWrappedKeyIV String? // IV for unwrapping
+
   createdAt DateTime @default(now())
 
   @@unique([bundleId, itemId])
