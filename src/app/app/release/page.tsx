@@ -155,6 +155,16 @@ export default function ReleasePage() {
         })
       );
 
+      // Convert release date from local time to ISO string
+      let releaseDateISO: string | undefined = undefined;
+      if (mode === 'time-lock' && releaseDate) {
+        // datetime-local gives us "YYYY-MM-DDTHH:mm" in local time
+        // Create a Date object which interprets this as local time
+        const localDate = new Date(releaseDate);
+        // Convert to ISO string (which is in UTC)
+        releaseDateISO = localDate.toISOString();
+      }
+
       // Call API to create bundle with wrapped keys
       const response = await fetch('/api/bundles', {
         method: 'POST',
@@ -163,7 +173,7 @@ export default function ReleasePage() {
           userId: session.dbUserId,
           name: bundleName,
           mode,
-          releaseDate: mode === 'time-lock' ? releaseDate : undefined,
+          releaseDate: releaseDateISO,
           heartbeatCadenceDays: mode === 'heartbeat' ? heartbeatCadence : undefined,
           releaseToken, // Send the token we generated
           items: itemsWithWrappedKeys,
@@ -334,7 +344,7 @@ export default function ReleasePage() {
                   label="When should this be shared?"
                   value={releaseDate}
                   onChange={(e) => setReleaseDate(e.target.value)}
-                  helperText="Your memories will be sent at this date and time"
+                  helperText="Your memories will be sent at this date and time (in your local timezone)"
                 />
                 <p className="text-xs text-graphite-500 mt-1">
                   Releases are checked every hour
