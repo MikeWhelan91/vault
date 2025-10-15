@@ -13,11 +13,32 @@ import { Progress } from '@/components/ui/Progress';
 import { encryptFile } from '@/lib/crypto';
 import { uploadObject } from '@/lib/r2-client';
 import type { ItemType } from '@/types';
-import { FileText, StickyNote, Plus, Archive, Image, Video, Music, File, ArrowRight, ChevronDown } from 'lucide-react';
+import {
+  FileText,
+  StickyNote,
+  Plus,
+  Archive,
+  Image as ImageIcon,
+  Video as VideoIcon,
+  Music as MusicIcon,
+  File as FileIcon,
+  ArrowRight,
+  ChevronDown,
+} from 'lucide-react';
 import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
+import type { FileCategory } from '@/lib/file-types';
 import { StorageIndicator } from '@/components/StorageIndicator';
 import type { TierName } from '@/lib/pricing';
 import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
+
+const CATEGORY_LABELS: Record<FileCategory, string> = {
+  image: 'Image file',
+  video: 'Video file',
+  audio: 'Audio file',
+  text: 'Document',
+  pdf: 'PDF document',
+  other: 'File',
+};
 
 export default function ItemsPageClient() {
   const { metadata, addItem, getItemKey, session } = useCrypto();
@@ -28,6 +49,8 @@ export default function ItemsPageClient() {
   if (!metadata) {
     return <div>Loading...</div>;
   }
+
+  const tier = (metadata.tier as TierName) || 'free';
 
   const items = metadata.items.sort((a, b) =>
     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
@@ -103,7 +126,7 @@ export default function ItemsPageClient() {
 
       {/* Storage Indicator */}
       <StorageIndicator
-        tier={(metadata.tier as TierName) || 'free'}
+        tier={tier}
         usedBytes={metadata.totalSize}
         limitBytes={metadata.storageLimit}
       />
@@ -141,7 +164,7 @@ export default function ItemsPageClient() {
           {categorizedItems.images.length > 0 && (
             <CategorySection
               title="Images"
-              icon={<Image className="w-5 h-5" />}
+              icon={<ImageIcon className="w-5 h-5" />}
               items={categorizedItems.images}
               count={categorizedItems.images.length}
             />
@@ -151,7 +174,7 @@ export default function ItemsPageClient() {
           {categorizedItems.videos.length > 0 && (
             <CategorySection
               title="Videos"
-              icon={<Video className="w-5 h-5" />}
+              icon={<VideoIcon className="w-5 h-5" />}
               items={categorizedItems.videos}
               count={categorizedItems.videos.length}
             />
@@ -161,7 +184,7 @@ export default function ItemsPageClient() {
           {categorizedItems.audio.length > 0 && (
             <CategorySection
               title="Audio"
-              icon={<Music className="w-5 h-5" />}
+              icon={<MusicIcon className="w-5 h-5" />}
               items={categorizedItems.audio}
               count={categorizedItems.audio.length}
             />
@@ -181,7 +204,7 @@ export default function ItemsPageClient() {
           {categorizedItems.other.length > 0 && (
             <CategorySection
               title="Other Files"
-              icon={<File className="w-5 h-5" />}
+              icon={<FileIcon className="w-5 h-5" />}
               items={categorizedItems.other}
               count={categorizedItems.other.length}
             />
@@ -249,6 +272,11 @@ function CategorySection({
 function ItemCard({ item }: { item: any }) {
   const fileInfo = item.type === 'file' ? getFileTypeInfo(item.name) : null;
   const hasPreview = item.type === 'note' || (item.type === 'file' && canPreviewFile(item.name));
+  const fileDescription = item.type === 'note'
+    ? 'Secure note'
+    : fileInfo
+      ? CATEGORY_LABELS[fileInfo.category]
+      : 'File';
 
   const getIcon = () => {
     if (item.type === 'note') {
@@ -257,15 +285,15 @@ function ItemCard({ item }: { item: any }) {
     if (fileInfo) {
       switch (fileInfo.category) {
         case 'image':
-          return <Image className="w-4 h-4 text-graphite-500" />;
+          return <ImageIcon className="w-4 h-4 text-graphite-500" />;
         case 'video':
-          return <Video className="w-4 h-4 text-graphite-500" />;
+          return <VideoIcon className="w-4 h-4 text-graphite-500" />;
         case 'audio':
-          return <Music className="w-4 h-4 text-graphite-500" />;
+          return <MusicIcon className="w-4 h-4 text-graphite-500" />;
         case 'text':
           return <FileText className="w-4 h-4 text-graphite-500" />;
         default:
-          return <File className="w-4 h-4 text-graphite-500" />;
+          return <FileIcon className="w-4 h-4 text-graphite-500" />;
       }
     }
     return <FileText className="w-4 h-4 text-graphite-500" />;
@@ -280,9 +308,7 @@ function ItemCard({ item }: { item: any }) {
         <div className="flex min-w-0 flex-1 items-center gap-6">
           <div className="min-w-0">
             <h3 className="truncate text-sm font-medium text-graphite-900">{item.name}</h3>
-            <p className="mt-1 text-xs text-graphite-500">
-              {item.type === 'note' ? 'Secure note' : fileInfo?.displayName || 'File'}
-            </p>
+            <p className="mt-1 text-xs text-graphite-500">{fileDescription}</p>
           </div>
           <div className="hidden shrink-0 items-center gap-6 text-xs text-graphite-500 md:flex">
             <span className="w-20 text-right font-medium text-graphite-700">{formatFileSize(item.size)}</span>

@@ -69,7 +69,7 @@ export default function SupportPage() {
           <Card className="border-graphite-200/80 bg-white/95 p-8 shadow-lg">
             <h2 className="text-2xl font-semibold text-graphite-900">Send us a message</h2>
             <p className="mt-2 text-sm text-graphite-600">
-              We read every message. If your request is urgent, add "URGENT" to the subject line.
+              We read every message. If your request is urgent, add &ldquo;URGENT&rdquo; to the subject line.
             </p>
 
             {status === "success" && (
