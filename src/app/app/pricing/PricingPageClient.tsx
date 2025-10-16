@@ -134,11 +134,11 @@ export default function PricingPageClient() {
           <div className="p-6 mt-2">
             <h2 className="text-2xl font-bold text-graphite-900 mb-2">Plus</h2>
             <div className="mb-2">
-              <span className="text-5xl font-bold text-graphite-900">$9</span>
+              <span className="text-5xl font-bold text-graphite-900">$9.99</span>
               <span className="text-graphite-600 ml-2">/month</span>
             </div>
             <p className="text-sm text-primary-600 font-medium mb-6">
-              or $99/year (save $9)
+              or $89.99/year (save $30)
             </p>
 
             <ul className="space-y-3 mb-8">
@@ -173,14 +173,11 @@ export default function PricingPageClient() {
             </ul>
 
             {tier === 'free' ? (
-              <>
-                <Button variant="primary" className="w-full mb-3">
-                  Coming Soon
+              <Link href="/app/settings/billing">
+                <Button variant="primary" className="w-full">
+                  Upgrade to Plus
                 </Button>
-                <p className="text-xs text-center text-graphite-500">
-                  Stripe integration in Phase 2
-                </p>
-              </>
+              </Link>
             ) : (
               <Button variant="primary" className="w-full" disabled>
                 Current Plan
