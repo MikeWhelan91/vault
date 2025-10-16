@@ -281,7 +281,7 @@ export default function DashboardPageClient() {
             </span>
             <div>
               <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">
-                {metadata.userName ? `Welcome back, ${metadata.userName}` : 'Welcome back'}
+                {metadata.userName ? `Welcome back, ${metadata.userName.split(' ')[0]}` : 'Welcome back'}
               </h1>
               <p className="mt-3 text-base text-graphite-600">
                 Monitor your encrypted storage, track release readiness, and keep every trustee in the loop from one private dashboard.
