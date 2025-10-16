@@ -38,12 +38,6 @@ export function Footer() {
               <a href="mailto:hello@forebearer.app" className="transition-colors hover:text-primary-600">
                 hello@forebearer.app
               </a>
-              <span className="hidden text-graphite-300 sm:inline" aria-hidden="true">
-                |
-              </span>
-              <Link href={toMarketingPath("/support")} className="transition-colors hover:text-primary-600">
-                Contact support
-              </Link>
             </div>
           </div>
 
@@ -56,13 +50,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={toMarketingPath("/release")} className="transition-colors hover:text-primary-600">
-                  Release notes
+                <Link href={toMarketingPath("/signin")} className="transition-colors hover:text-primary-600">
+                  Sign in
                 </Link>
               </li>
               <li>
-                <Link href={toMarketingPath("/unlock")} className="transition-colors hover:text-primary-600">
-                  Unlock a delivery
+                <Link href={toMarketingPath("/signup")} className="transition-colors hover:text-primary-600">
+                  Get started
                 </Link>
               </li>
             </ul>
@@ -78,12 +72,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href={toMarketingPath("/support")} className="transition-colors hover:text-primary-600">
-                  Support centre
-                </Link>
-              </li>
-              <li>
-                <Link href={toMarketingPath("/pricing")} className="transition-colors hover:text-primary-600">
-                  Compare plans
+                  Support
                 </Link>
               </li>
             </ul>
@@ -109,9 +98,6 @@ export function Footer() {
             >
               Terms
             </a>
-            <Link href={toMarketingPath("/support")} className="transition-colors hover:text-primary-600">
-              Status &amp; support
-            </Link>
           </div>
         </div>
       </div>

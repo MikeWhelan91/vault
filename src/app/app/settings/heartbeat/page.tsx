@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useToast } from '@/contexts/ToastContext';
 import { useCrypto } from '@/contexts/CryptoContext';
+import { Crown } from 'lucide-react';
+import type { TierName } from '@/lib/pricing';
 
 interface HeartbeatData {
   enabled: boolean;
@@ -16,13 +19,16 @@ interface HeartbeatData {
 
 export default function HeartbeatSettingsPage() {
   const { showToast } = useToast();
-  const { session } = useCrypto();
+  const { session, metadata } = useCrypto();
   const [heartbeat, setHeartbeat] = useState<HeartbeatData>({
     enabled: false,
     cadenceDays: 30,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+
+  const tier = (metadata?.tier as TierName) || 'free';
+  const isPaidUser = tier !== 'free';
 
   // Fetch heartbeat settings on mount
   useEffect(() => {
@@ -32,7 +38,12 @@ export default function HeartbeatSettingsPage() {
         if (response.ok) {
           const data = await response.json();
           if (data.heartbeat) {
-            setHeartbeat(data.heartbeat);
+            // Force free users to 30 days
+            const heartbeatData = {
+              ...data.heartbeat,
+              cadenceDays: isPaidUser ? data.heartbeat.cadenceDays : 30
+            };
+            setHeartbeat(heartbeatData);
           }
         }
       } catch (error) {
@@ -45,14 +56,17 @@ export default function HeartbeatSettingsPage() {
     if (session.dbUserId) {
       fetchHeartbeat();
     }
-  }, [session.dbUserId]);
+  }, [session.dbUserId, isPaidUser]);
 
   const handleSave = async () => {
     setIsLoading(true);
 
     try {
+      // For free users, force 30 days
+      const cadenceDays = isPaidUser ? heartbeat.cadenceDays : 30;
+
       // Validate
-      if (heartbeat.cadenceDays < 1 || heartbeat.cadenceDays > 365) {
+      if (cadenceDays < 1 || cadenceDays > 365) {
         showToast('Check-in frequency must be between 1 and 365 days', 'error');
         return;
       }
@@ -63,7 +77,7 @@ export default function HeartbeatSettingsPage() {
         body: JSON.stringify({
           userId: session.dbUserId,
           enabled: heartbeat.enabled,
-          cadenceDays: heartbeat.cadenceDays,
+          cadenceDays: cadenceDays,
         }),
       });
 
@@ -238,16 +252,52 @@ export default function HeartbeatSettingsPage() {
           </div>
 
           {/* Cadence */}
-          <Input
-            type="number"
-            label="How often should you check in? (days)"
-            value={heartbeat.cadenceDays}
-            onChange={(e) => setHeartbeat({ ...heartbeat, cadenceDays: parseInt(e.target.value) || 1 })}
-            helperText="If you don't check in for this long, your releases will be triggered"
-            min={1}
-            max={365}
-            disabled={!heartbeat.enabled}
-          />
+          {isPaidUser ? (
+            <Input
+              type="number"
+              label="How often should you check in? (days)"
+              value={heartbeat.cadenceDays}
+              onChange={(e) => setHeartbeat({ ...heartbeat, cadenceDays: parseInt(e.target.value) || 1 })}
+              helperText="If you don't check in for this long, your releases will be triggered"
+              min={1}
+              max={365}
+              disabled={!heartbeat.enabled}
+            />
+          ) : (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-sm font-medium text-gray-700">
+                    Check-in frequency
+                  </label>
+                  <p className="text-sm text-graphite-500">
+                    Free users check in every 30 days
+                  </p>
+                </div>
+                <div className="text-2xl font-semibold text-graphite-900">
+                  30 days
+                </div>
+              </div>
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                <div className="flex items-start gap-3">
+                  <Crown className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-amber-900 mb-1">
+                      Want custom check-in schedules?
+                    </p>
+                    <p className="text-sm text-amber-800 mb-3">
+                      Plus members can choose any check-in frequency from 1 to 365 days.
+                    </p>
+                    <Link href="/app/pricing">
+                      <Button size="sm" variant="secondary" className="bg-white hover:bg-amber-50">
+                        Upgrade to Plus
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Save Button */}
           <Button onClick={handleSave} isLoading={isLoading} className="w-full">

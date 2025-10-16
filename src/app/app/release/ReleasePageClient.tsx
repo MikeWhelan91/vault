@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { useToast } from '@/contexts/ToastContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import type { ReleaseMode, ReleaseBundle, Trustee } from '@/types';
-import { Calendar, Heart, FileText, StickyNote, Plus, X } from 'lucide-react';
+import { Calendar, Heart, FileText, StickyNote, Plus, X, Crown } from 'lucide-react';
 import { UpgradePrompt, type UpgradeReason } from '@/components/UpgradePrompt';
 import { canCreateBundle, canAddTrustee, getTierLimits, type TierName } from '@/lib/pricing';
 
@@ -183,6 +184,11 @@ export default function ReleasePageClient() {
         releaseDateISO = localDate.toISOString();
       }
 
+      // Force free users to 30 days for heartbeat
+      const finalHeartbeatCadence = mode === 'heartbeat'
+        ? (isPaidUser ? heartbeatCadence : 30)
+        : undefined;
+
       // Call API to create bundle with wrapped keys
       const response = await fetch('/api/bundles', {
         method: 'POST',
@@ -192,7 +198,7 @@ export default function ReleasePageClient() {
           name: bundleName,
           mode,
           releaseDate: releaseDateISO,
-          heartbeatCadenceDays: mode === 'heartbeat' ? heartbeatCadence : undefined,
+          heartbeatCadenceDays: finalHeartbeatCadence,
           releaseToken, // Send the token we generated
           bundleNoteEncrypted, // Encrypted note for trustees
           bundleNoteIV, // IV for note decryption
@@ -243,6 +249,7 @@ export default function ReleasePageClient() {
   }
 
   const tier = (metadata.tier as TierName) || 'free';
+  const isPaidUser = tier !== 'free';
   const canCreate = canCreateBundle(tier, existingBundles.length);
 
   return (
@@ -391,15 +398,51 @@ export default function ReleasePageClient() {
             )}
 
             {mode === 'heartbeat' && (
-              <Input
-                type="number"
-                label="How long between check-ins? (days)"
-                value={heartbeatCadence}
-                onChange={(e) => setHeartbeatCadence(parseInt(e.target.value) || 1)}
-                helperText="If you don't check in for this long, memories will be shared"
-                min={1}
-                max={365}
-              />
+              isPaidUser ? (
+                <Input
+                  type="number"
+                  label="How long between check-ins? (days)"
+                  value={heartbeatCadence}
+                  onChange={(e) => setHeartbeatCadence(parseInt(e.target.value) || 1)}
+                  helperText="If you don't check in for this long, memories will be shared"
+                  min={1}
+                  max={365}
+                />
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between rounded-xl border border-graphite-200 bg-graphite-50 p-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700">
+                        Check-in frequency
+                      </label>
+                      <p className="text-sm text-graphite-500">
+                        Free users check in every 30 days
+                      </p>
+                    </div>
+                    <div className="text-2xl font-semibold text-graphite-900">
+                      30 days
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <div className="flex items-start gap-3">
+                      <Crown className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-amber-900 mb-1">
+                          Want custom check-in schedules?
+                        </p>
+                        <p className="text-sm text-amber-800 mb-3">
+                          Plus members can choose any check-in frequency from 1 to 365 days.
+                        </p>
+                        <Link href="/app/pricing">
+                          <Button size="sm" variant="secondary" className="bg-white hover:bg-amber-50">
+                            Upgrade to Plus
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
             )}
 
             <div className="flex justify-end">

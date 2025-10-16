@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
@@ -8,65 +11,65 @@ import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/marketing/SiteHeader";
 
 const bulletPoints = [
-  "AES-256 end-to-end encryption on every upload",
-  "Time-lock and heartbeat releases you fully control",
-  "Automatic delivery with receipt tracking for trustees",
+  "Keep birthday messages, family photos, and love letters safe",
+  "Choose exactly when your memories reach the right people",
+  "Rest easy knowing everything is protected and preserved",
 ];
 
 const featureHighlights = [
   {
-    title: "Upload once",
+    title: "Collect your memories",
     description:
-      "Organise photos, videos, letters, and essential files into dedicated bundles that stay encrypted at rest.",
+      "Gather photos, videos, voice recordings, and handwritten letters. Create beautiful collections for different people or occasions.",
     image: "/upload.jpg",
   },
   {
-    title: "Decide the moment",
+    title: "Choose the perfect moment",
     description:
-      "Schedule a delivery date or use heartbeat mode to release items when check-ins stop, no manual follow-up required.",
+      "Schedule a surprise for a birthday or anniversary. Or set up heartbeat check-ins so your memories are shared if you're gone.",
     image: "/decide.jpg",
   },
   {
-    title: "We handle the delivery",
+    title: "They receive your gift",
     description:
-      "Trustees receive secure links, access logs, and guidance the instant a release is triggered—no account needed.",
+      "Your loved ones get a secure link with your memories, ready to open and cherish. No complicated setup needed.",
     image: "/handle.jpg",
   },
 ];
 
 const timeline = [
   {
-    title: "Bundle what matters",
+    title: "Create your memory bundles",
     description:
-      "Drag in photos, videos, password files, or letters. Everything is encrypted locally before it ever leaves your device.",
+      "Upload your favorite photos, write heartfelt messages, or record voice notes. Organize them into meaningful collections for the people you love.",
   },
   {
-    title: "Choose trustees & timing",
+    title: "Pick who and when",
     description:
-      "Add as many recipients as you need, set a specific future date, or enable heartbeat mode with custom check-in cadence.",
+      "Choose who receives each bundle and when. Set a future date for celebrations, or use heartbeat mode for peace of mind.",
   },
   {
-    title: "Confirm and relax",
+    title: "Let us take care of the rest",
     description:
-      "We keep your bundles secure, remind you about upcoming releases, and deliver automatically with full audit trails.",
+      "We'll keep your memories safe and deliver them at just the right time. You'll get reminders and can make changes anytime.",
   },
 ];
 
 const securityFeatures = [
   {
-    title: "Zero-knowledge architecture",
+    title: "Private by design",
     description:
-      "Forebearer never has access to your passphrase. Files are encrypted client-side and stored as unreadable shards.",
+      "Your memories are encrypted before they leave your device. Only you and your chosen recipients can ever see them.",
   },
   {
-    title: "Proactive monitoring",
+    title: "Always reliable",
     description:
-      "Heartbeat pings, delivery verification, and access receipts ensure you always know when a bundle moves.",
+      "Your precious memories are safely stored with automatic backups, so they'll be there when it matters most.",
   },
   {
-    title: "Redundant storage",
+    title: "Stay in control",
     description:
-      "Backed by Cloudflare R2 with automatic replication, ensuring your legacy is preserved without single points of failure.",
+      "Change your mind anytime. Update bundles, adjust delivery dates, or add new recipients whenever you want.",
   },
 ];
 
@@ -89,6 +92,37 @@ const faqPreview = [
 ];
 
 export default function LandingPage() {
+  const [scrollY, setScrollY] = useState(0);
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set(prev).add(entry.target.id));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('[data-animate]').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -164,93 +198,109 @@ export default function LandingPage() {
 
       <SiteHeader />
 
-      <main className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-8">
-        <section className="py-16 sm:py-20 lg:py-24">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr,0.95fr]">
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-                Secure digital legacy
-              </div>
-              <h1 className="text-4xl font-semibold tracking-tight text-graphite-900 sm:text-5xl lg:text-6xl">
-                Leave memories that arrive exactly when they should
+      <main className="w-full pb-24">
+        <section className="relative min-h-[85vh] overflow-hidden">
+          {/* Background Image with Parallax */}
+          <div
+            className="absolute inset-0"
+            style={{
+              transform: `translateY(${scrollY * 0.5}px)`,
+              willChange: 'transform',
+            }}
+          >
+            <Image
+              src="/hero.jpg"
+              alt="Forebearer dashboard showcasing scheduled releases"
+              fill
+              className="object-cover"
+              priority
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-graphite-900/85 via-graphite-900/70 to-graphite-900/60" />
+          </div>
+
+          {/* Content */}
+          <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+            <div className="max-w-3xl space-y-8">
+              <h1 className="animate-fade-in-down text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                A memory box for the moments that matter most
               </h1>
-              <p className="max-w-xl text-lg text-graphite-600 lg:text-xl">
-                Forebearer encrypts and safeguards your most meaningful files, then delivers them automatically to the right people exactly when you decide.
+              <p className="animate-fade-in-up max-w-2xl text-lg text-graphite-100 lg:text-xl" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+                Store your cherished photos, heartfelt letters, and precious memories in one beautiful place. Share them with loved ones when the time is right—whether that&apos;s a special date or when you&apos;re no longer around.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
-                {bulletPoints.map((point) => (
-                  <div key={point} className="flex items-start gap-3 rounded-xl border border-graphite-200 bg-white/80 p-4 shadow-sm">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                {bulletPoints.map((point, index) => (
+                  <div
+                    key={point}
+                    className="animate-fade-in-up flex items-start gap-3 rounded-xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-white/15"
+                    style={{
+                      animationDelay: `${0.4 + index * 0.1}s`,
+                      animationFillMode: 'backwards'
+                    }}
+                  >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500/80 text-white">
                       <Check className="h-4 w-4" aria-hidden="true" />
                     </span>
-                    <p className="text-sm font-medium text-graphite-700">{point}</p>
+                    <p className="text-sm font-medium text-white">{point}</p>
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="animate-fade-in-up flex flex-col gap-3 sm:flex-row sm:items-center" style={{ animationDelay: '0.7s', animationFillMode: 'backwards' }}>
                 <Link href="/signup">
-                  <Button size="lg" className="w-full sm:w-auto">
+                  <Button size="lg" className="w-full transition-transform hover:scale-105 sm:w-auto">
                     Start for free
                   </Button>
                 </Link>
-                <Link href="/pricing" className="text-sm font-medium text-primary-600 transition-colors hover:text-primary-700">
+                <Link href="/pricing" className="text-sm font-medium text-primary-200 transition-colors hover:text-primary-100">
                   View pricing &rarr;
                 </Link>
               </div>
-              <div className="flex flex-wrap gap-8 pt-4 text-sm text-graphite-600">
-                <div>
-                  <p className="text-3xl font-semibold text-primary-600">0</p>
-                  <p className="mt-1 max-w-[14ch] text-xs uppercase tracking-wide text-graphite-500">Unencrypted copies stored</p>
+              <div className="animate-fade-in-up flex flex-wrap gap-8 pt-4 text-sm" style={{ animationDelay: '0.9s', animationFillMode: 'backwards' }}>
+                <div className="transition-transform hover:scale-105">
+                  <p className="text-3xl font-semibold text-primary-300">Unlimited</p>
+                  <p className="mt-1 max-w-[14ch] text-xs uppercase tracking-wide text-graphite-200">Bundles you can create</p>
                 </div>
-                <div>
-                  <p className="text-3xl font-semibold text-primary-600">100%</p>
-                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-500">Control over delivery timing</p>
+                <div className="transition-transform hover:scale-105">
+                  <p className="text-3xl font-semibold text-primary-300">Forever</p>
+                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-200">Your memories are safe</p>
                 </div>
-                <div>
-                  <p className="text-3xl font-semibold text-primary-600">24/7</p>
-                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-500">Monitoring and notifications</p>
+                <div className="transition-transform hover:scale-105">
+                  <p className="text-3xl font-semibold text-primary-300">Simple</p>
+                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-200">To set up and share</p>
                 </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="relative overflow-hidden rounded-3xl border border-graphite-200/80 shadow-2xl">
-                <Image
-                  src="/hero.jpg"
-                  alt="Forebearer dashboard showcasing scheduled releases"
-                  width={1120}
-                  height={900}
-                  className="h-full w-full object-cover"
-                  priority
-                />
               </div>
             </div>
           </div>
         </section>
 
-        <section id="features" className="space-y-12 py-20">
-          <div className="flex flex-col gap-4 text-center">
-            <span className="mx-auto inline-flex items-center justify-center rounded-full border border-secondary-200 bg-secondary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-700">
-              Built for every legacy
-            </span>
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+
+        <section id="features" data-animate className="space-y-12 py-20">
+          <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('features') ? 'animate-fade-in-up' : 'opacity-0'}`}>
             <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-              A guided path from upload to delivery
+              From your heart to theirs, in three simple steps
             </h2>
             <p className="mx-auto max-w-2xl text-base text-graphite-600">
-              Whether you are organising a lifetime of photos or critical instructions, Forebearer keeps everything in motion with
-              structured workflows and complete transparency.
+              Whether it&apos;s a birthday surprise, anniversary gift, or a message for when you&apos;re gone—Forebearer makes it easy to share what matters most.
             </p>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">
-            {featureHighlights.map((feature) => (
-              <Card key={feature.title} className="flex h-full flex-col overflow-hidden border-graphite-200/80">
+            {featureHighlights.map((feature, index) => (
+              <Card
+                key={feature.title}
+                className={`flex h-full flex-col overflow-hidden border-graphite-200/80 transition-all duration-700 hover:scale-105 hover:shadow-2xl ${visibleSections.has('features') ? 'animate-fade-in-up' : 'opacity-0'}`}
+                style={{
+                  animationDelay: `${index * 0.2}s`,
+                  animationFillMode: 'backwards'
+                }}
+              >
                 <div className="relative aspect-[4/3] w-full overflow-hidden">
                   <Image
                     src={feature.image}
                     alt={feature.title}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-500 hover:scale-110"
                     sizes="(min-width: 1024px) 33vw, 100vw"
                   />
                 </div>
@@ -263,100 +313,124 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20">
-          <div className="grid gap-10 lg:grid-cols-[1fr,1.1fr] lg:gap-16">
-            <div className="space-y-4">
-              <span className="inline-flex rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-                How it works
-              </span>
-              <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-                Designed for confidence at every step
-              </h2>
-              <p className="text-base text-graphite-600">
-                You stay in control while Forebearer handles the encryption, reminders, and delivery logistics. It is a dedicated
-                co-pilot for your digital legacy.
-              </p>
-              <Link
-                href="/faq"
-                className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
-              >
-                Explore the FAQ &rarr;
-              </Link>
-            </div>
+        <section id="how-it-works" data-animate className="py-20">
+          <div className={`rounded-3xl overflow-hidden border border-graphite-200 bg-white shadow-lg transition-all duration-700 ${visibleSections.has('how-it-works') ? 'animate-scale-in' : 'opacity-0'}`}>
+            <div className="grid lg:grid-cols-2">
+              {/* Image Side */}
+              <div className="relative h-64 lg:h-auto">
+                <Image
+                  src="/nostalgia.jpg"
+                  alt="Cherished memories and moments"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                />
+              </div>
 
-            <ol className="space-y-6">
-              {timeline.map((item, index) => (
-                <li key={item.title} className="flex gap-5 rounded-2xl border border-graphite-200 bg-white/90 p-6 shadow-sm">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary-200 bg-primary-50 text-base font-semibold text-primary-700">
-                    {index + 1}
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold text-graphite-900">{item.title}</h3>
-                    <p className="text-sm text-graphite-600">{item.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
+              {/* Content Side */}
+              <div className="p-8 lg:p-12 space-y-8">
+                <div className="space-y-4">
+                  <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+                    How it works
+                  </h2>
+                  <p className="text-base text-graphite-600">
+                    Creating and sharing your memory bundles is simple. Just follow these three steps.
+                  </p>
+                </div>
 
-        <section className="py-20">
-          <div className="rounded-3xl border border-graphite-200 bg-white/90 p-10 shadow-lg">
-            <div className="grid gap-12 lg:grid-cols-2">
-              <div className="space-y-4">
-                <span className="inline-flex rounded-full border border-accent-200 bg-accent-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-700">
-                  Security &amp; reliability
-                </span>
-                <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-                  Enterprise-grade protection for personal stories
-                </h2>
-                <p className="text-base text-graphite-600">
-                  Forebearer combines zero-knowledge encryption, redundant storage, and continuous monitoring so your files stay
-                  safe without compromise.
-                </p>
+                <ol className="space-y-6">
+                  {timeline.map((item, index) => (
+                    <li
+                      key={item.title}
+                      className="flex gap-4 transition-all duration-300 hover:translate-x-2"
+                    >
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary-500 bg-primary-50 text-base font-semibold text-primary-700">
+                        {index + 1}
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-semibold text-graphite-900">{item.title}</h3>
+                        <p className="text-sm text-graphite-600">{item.description}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+
                 <Link
-                  href="/support"
+                  href="/faq"
                   className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
                 >
-                  Learn more about our approach &rarr;
+                  Learn more &rarr;
                 </Link>
-              </div>
-
-              <div className="grid gap-6 sm:grid-cols-2">
-                {securityFeatures.map((feature) => (
-                  <Card key={feature.title} className="flex h-full flex-col gap-2 border-graphite-200/70 bg-white p-6">
-                    <h3 className="text-lg font-semibold text-graphite-900">{feature.title}</h3>
-                    <p className="text-sm text-graphite-600">{feature.description}</p>
-                  </Card>
-                ))}
               </div>
             </div>
           </div>
         </section>
 
-        <section className="py-20">
-          <div className="flex flex-col gap-4 text-center">
-            <span className="mx-auto inline-flex rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-              Answers at the ready
-            </span>
+        <section id="security" data-animate className="py-20">
+          <div className={`rounded-3xl border border-graphite-200 bg-white/90 p-8 sm:p-10 lg:p-12 shadow-lg transition-all duration-700 ${visibleSections.has('security') ? 'animate-scale-in' : 'opacity-0'}`}>
+            <div className="mx-auto max-w-4xl space-y-8 text-center">
+              <div className="space-y-3">
+                <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+                  Your memories, safe and sound
+                </h2>
+                <p className="mx-auto max-w-2xl text-base text-graphite-600">
+                  We protect your precious moments with care. Everything is encrypted, backed up, and ready to share when the time comes.
+                </p>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-3">
+                {securityFeatures.map((feature, index) => (
+                  <div
+                    key={feature.title}
+                    className={`rounded-2xl border border-graphite-200/70 bg-white p-6 text-center transition-all duration-700 hover:scale-105 hover:shadow-lg ${visibleSections.has('security') ? 'animate-fade-in-up' : 'opacity-0'}`}
+                    style={{
+                      animationDelay: `${index * 0.15}s`,
+                      animationFillMode: 'backwards'
+                    }}
+                  >
+                    <h3 className="text-lg font-semibold text-graphite-900 mb-2">{feature.title}</h3>
+                    <p className="text-sm text-graphite-600">{feature.description}</p>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/support"
+                className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+              >
+                Learn how we keep things safe &rarr;
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section id="faq" data-animate className="py-20">
+          <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}>
             <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-              Everything you need to know before you share
+              Questions? We&apos;ve got answers
             </h2>
               <p className="mx-auto max-w-2xl text-base text-graphite-600">
-                Here are the questions people ask most before trusting Forebearer with their vault. Dive deeper on our dedicated FAQ page for more guidance.
+                Here&apos;s what people usually want to know about creating and sharing their memory bundles.
               </p>
           </div>
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {faqPreview.map((faq) => (
-              <Card key={faq.question} className="h-full border-graphite-200/70 p-6">
+            {faqPreview.map((faq, index) => (
+              <Card
+                key={faq.question}
+                className={`h-full border-graphite-200/70 p-6 transition-all duration-700 hover:scale-105 hover:shadow-lg ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}
+                style={{
+                  animationDelay: `${0.2 + index * 0.1}s`,
+                  animationFillMode: 'backwards'
+                }}
+              >
                 <h3 className="text-lg font-semibold text-graphite-900">{faq.question}</h3>
                 <p className="mt-3 text-sm text-graphite-600">{faq.answer}</p>
               </Card>
             ))}
           </div>
 
-          <div className="mt-10 text-center">
+          <div className={`mt-10 text-center transition-all duration-700 ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.5s', animationFillMode: 'backwards' }}>
             <Link
               href="/faq"
               className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
@@ -366,19 +440,18 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-24">
-          <div className="rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-lg sm:px-12 lg:px-16">
+        <section id="cta" data-animate className="py-24">
+          <div className={`rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-lg sm:px-12 lg:px-16 transition-all duration-700 ${visibleSections.has('cta') ? 'animate-scale-in' : 'opacity-0'}`}>
             <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-              Be remembered for the stories you choose to share
+              Start sharing the memories that matter
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-graphite-600">
-              Start with 300 MB of secure storage, invite trustees, and experience how effortless it feels to organise your digital
-              legacy.
+              Create your first memory bundle with 300 MB of free storage. Upload photos, write messages, and choose when to share them with the people you love.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/signup">
-                <Button size="lg" className="w-full sm:w-auto">
-                  Create your vault
+                <Button size="lg" className="w-full transition-transform hover:scale-110 sm:w-auto">
+                  Create your memory box
                 </Button>
               </Link>
               <Link href="/signin" className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
@@ -387,6 +460,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+        </div>
       </main>
 
       <Footer />

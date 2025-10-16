@@ -101,37 +101,37 @@ export default function DashboardPageClient() {
       name: 'Images',
       value: itemsByType.images.reduce((acc, item) => acc + item.size, 0),
       count: itemsByType.images.length,
-      color: '#2563eb'
+      color: '#ff7451' // Coral - primary color
     },
     {
       name: 'Videos',
       value: itemsByType.videos.reduce((acc, item) => acc + item.size, 0),
       count: itemsByType.videos.length,
-      color: '#0e7490'
+      color: '#f05a39' // Deeper coral
     },
     {
       name: 'Audio',
       value: itemsByType.audio.reduce((acc, item) => acc + item.size, 0),
       count: itemsByType.audio.length,
-      color: '#059669'
+      color: '#ffb8a3' // Light peach
     },
     {
       name: 'Documents',
       value: itemsByType.documents.reduce((acc, item) => acc + item.size, 0),
       count: itemsByType.documents.length,
-      color: '#f97316'
+      color: '#d44729' // Burnt orange
     },
     {
       name: 'Notes',
       value: itemsByType.notes.reduce((acc, item) => acc + item.size, 0),
       count: itemsByType.notes.length,
-      color: '#facc15'
+      color: '#ffd4c8' // Soft pink
     },
     {
       name: 'Other',
       value: itemsByType.other.reduce((acc, item) => acc + item.size, 0),
       count: itemsByType.other.length,
-      color: '#475569'
+      color: '#913324' // Deep warm brown
     },
   ].filter(item => item.value > 0);
 
