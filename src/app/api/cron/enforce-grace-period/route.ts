@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 /**
  * Cron job to enforce grace period expiration
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     const now = new Date();
 
     // Find users whose grace period has expired
-    const expiredUsers = await db.user.findMany({
+    const expiredUsers = await prisma.user.findMany({
       where: {
         tier: 'free',
         gracePeriodEndsAt: {
@@ -80,13 +80,13 @@ export async function POST(request: NextRequest) {
 
         // Delete items and update user's total size
         if (itemsToDelete.length > 0) {
-          await db.item.deleteMany({
+          await prisma.item.deleteMany({
             where: {
               id: { in: itemsToDelete },
             },
           });
 
-          await db.user.update({
+          await prisma.user.update({
             where: { id: user.id },
             data: {
               totalSize: {
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
         // Keep the oldest bundle (first in the sorted list), disable the rest
         const bundlesToDisable = user.releaseBundles.slice(1).map(b => b.id);
 
-        await db.releaseBundle.updateMany({
+        await prisma.releaseBundle.updateMany({
           where: {
             id: { in: bundlesToDisable },
           },
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
       }
 
       // 3. Clear grace period
-      await db.user.update({
+      await prisma.user.update({
         where: { id: user.id },
         data: {
           gracePeriodEndsAt: null,

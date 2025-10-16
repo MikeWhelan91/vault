@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia',
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find the user in database by email
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: userEmail },
       select: { id: true, email: true },
     });

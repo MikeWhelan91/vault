@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { db } from '@/lib/db';
+import { prisma } from '@/lib/prisma';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia',
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
         if (dbUserId) {
           // Update user to Plus tier and clear grace period
-          await db.user.update({
+          await prisma.user.update({
             where: { id: dbUserId },
             data: {
               tier: 'plus',
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         const dbUserId = subscription.metadata.dbUserId;
 
         if (dbUserId && subscription.status === 'active') {
-          await db.user.update({
+          await prisma.user.update({
             where: { id: dbUserId },
             data: {
               tier: 'plus',
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         const dbUserId = subscription.metadata.dbUserId;
 
         if (dbUserId && subscription.status === 'active') {
-          await db.user.update({
+          await prisma.user.update({
             where: { id: dbUserId },
             data: {
               tier: 'plus',
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
         if (dbUserId) {
           // Get user's current usage before downgrade
-          const user = await db.user.findUnique({
+          const user = await prisma.user.findUnique({
             where: { id: dbUserId },
             select: { totalSize: true, email: true },
             include: {
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
             : null;
 
           // Downgrade user to Free tier with grace period
-          await db.user.update({
+          await prisma.user.update({
             where: { id: dbUserId },
             data: {
               tier: 'free',
