@@ -46,7 +46,7 @@ const plans = [
   },
   {
     name: "Plus",
-    price: "$9",
+    price: "$9.99",
     cadence: "per month",
     badge: "Most popular",
     description: "Unlock more storage, unlimited bundles, and deeper delivery insights.",
@@ -61,10 +61,10 @@ const plans = [
       "Priority email support",
     ],
     cta: {
-      label: "Start 14-day trial",
+      label: "Upgrade to Plus",
       href: "/signup",
     },
-    footnote: "Or $99/year — two months free",
+    footnote: "Or $89.99/year (save $30)",
   },
 ];
 

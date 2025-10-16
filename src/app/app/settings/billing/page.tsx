@@ -157,7 +157,7 @@ export default function BillingPage() {
                 <p className="text-2xl font-bold text-graphite-900">$0/month</p>
               ) : (
                 <p className="text-2xl font-bold text-graphite-900">
-                  $9<span className="text-base font-normal text-graphite-600">/month</span>
+                  $9.99<span className="text-base font-normal text-graphite-600">/month</span>
                 </p>
               )}
             </div>
@@ -264,11 +264,11 @@ export default function BillingPage() {
                 <h3 className="text-xl font-bold text-graphite-900 mb-1">Plus</h3>
                 <div className="flex items-baseline gap-2 mb-1">
                   <p className="text-3xl font-bold text-graphite-900">
-                    $9<span className="text-base font-normal text-graphite-600">/month</span>
+                    $9.99<span className="text-base font-normal text-graphite-600">/month</span>
                   </p>
                   <p className="text-sm text-graphite-500">or $89.99/year</p>
                 </div>
-                <p className="text-sm text-primary-600 font-medium">Save $18 with annual billing</p>
+                <p className="text-sm text-primary-600 font-medium">Save $30 with annual billing</p>
               </div>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-start gap-2 text-sm">
@@ -324,7 +324,7 @@ export default function BillingPage() {
                       Processing...
                     </>
                   ) : (
-                    'Subscribe Annually (Save $18)'
+                    'Subscribe Annually (Save $30)'
                   )}
                 </Button>
               </div>
