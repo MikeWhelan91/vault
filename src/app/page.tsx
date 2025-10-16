@@ -11,8 +11,8 @@ import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/marketing/SiteHeader";
 
 const bulletPoints = [
-  "Keep birthday messages, family photos, and love letters safe",
-  "Choose exactly when your memories reach the right people",
+  "Store memories, passwords, and important documents securely",
+  "Share them with loved ones when the time is right",
   "Rest easy knowing everything is protected and preserved",
 ];
 
@@ -20,7 +20,7 @@ const featureHighlights = [
   {
     title: "Collect your memories",
     description:
-      "Gather photos, videos, voice recordings, and handwritten letters. Create beautiful collections for different people or occasions.",
+      "Gather photos, videos, voice recordings, handwritten letters, and important account information. Create beautiful collections for different people or occasions.",
     image: "/upload.jpg",
   },
   {
@@ -41,7 +41,7 @@ const timeline = [
   {
     title: "Create your memory bundles",
     description:
-      "Upload your favorite photos, write heartfelt messages, or record voice notes. Organize them into meaningful collections for the people you love.",
+      "Upload your favorite photos, write heartfelt messages, record voice notes, or store important account details. Organize them into meaningful collections for the people you love.",
   },
   {
     title: "Pick who and when",
@@ -226,7 +226,7 @@ export default function LandingPage() {
                 A memory box for the moments that matter most
               </h1>
               <p className="animate-fade-in-up max-w-2xl text-lg text-graphite-100 lg:text-xl" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
-                Store your cherished photos, heartfelt letters, and precious memories in one beautiful place. Share them with loved ones when the time is right—whether that&apos;s a special date or when you&apos;re no longer around.
+                Store your cherished photos, heartfelt letters, important passwords, and account details in one secure place. Share them with loved ones when the time is right—whether that&apos;s a special date or when you&apos;re no longer around.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {bulletPoints.map((point, index) => (
@@ -281,7 +281,7 @@ export default function LandingPage() {
               From your heart to theirs, in three simple steps
             </h2>
             <p className="mx-auto max-w-2xl text-base text-graphite-600">
-              Whether it&apos;s a birthday surprise, anniversary gift, or a message for when you&apos;re gone—Forebearer makes it easy to share what matters most.
+              Whether it&apos;s a birthday surprise, anniversary gift, critical account access for your family, or a message for when you&apos;re gone—Forebearer makes it easy to share what matters most.
             </p>
           </div>
 
@@ -446,7 +446,7 @@ export default function LandingPage() {
               Start sharing the memories that matter
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-graphite-600">
-              Create your first memory bundle with 300 MB of free storage. Upload photos, write messages, and choose when to share them with the people you love.
+              Create your first memory bundle with 300 MB of free storage. Upload photos, write messages, store passwords and account details, and choose when to share them with the people you love.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/signup">
