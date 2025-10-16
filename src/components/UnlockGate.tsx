@@ -16,12 +16,21 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showValidation, setShowValidation] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Load saved email on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem('vault_user_email');
     if (savedEmail) {
       setEmail(savedEmail);
+    }
+
+    // Check if user just completed a payment
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      setSuccessMessage('Payment successful! Your account has been upgraded to Plus. Please enter your password to access your vault.');
+      // Clear the success param to avoid showing message on refresh
+      window.history.replaceState({}, '', window.location.pathname);
     }
   }, []);
 
@@ -88,6 +97,11 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="card p-8 animate-slide-up">
+          {successMessage && (
+            <div className="mb-5 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+              <p className="text-sm text-green-800 dark:text-green-200">{successMessage}</p>
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
               type="email"
