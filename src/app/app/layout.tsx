@@ -7,6 +7,8 @@ import { usePathname } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
+import { Crown } from 'lucide-react';
+import type { TierName } from '@/lib/pricing';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -71,7 +73,13 @@ function AppNav() {
         </div>
 
         {/* Desktop User actions */}
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
+          {metadata?.tier === 'plus' && (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+              <Crown className="h-3.5 w-3.5" />
+              Plus
+            </div>
+          )}
           <span className="max-w-[200px] truncate text-sm text-graphite-500">
             {session.userId || metadata?.userId || 'User'}
           </span>
@@ -117,13 +125,21 @@ function AppNav() {
               </Link>
             ))}
             <div className="rounded-xl border border-graphite-200 px-3 py-2 text-sm text-graphite-600">
-              <p className="truncate font-medium">{session.userId || metadata?.userId || 'User'}</p>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <p className="truncate font-medium">{session.userId || metadata?.userId || 'User'}</p>
+                {metadata?.tier === 'plus' && (
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
+                    <Crown className="h-3 w-3" />
+                    Plus
+                  </div>
+                )}
+              </div>
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   lock();
                 }}
-                className="mt-2 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
+                className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
               >
                 Lock vault
               </button>

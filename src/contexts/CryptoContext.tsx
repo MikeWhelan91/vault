@@ -150,6 +150,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           totalSize: parseInt(data.user.totalSize),
           storageLimit: parseInt(data.user.storageLimit),
           tier: data.user.tier || 'free',
+          gracePeriodEndsAt: data.user.gracePeriodEndsAt || null,
         });
 
         // Store wrapped item keys in memory (for quick access)
@@ -232,6 +233,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
           totalSize: parseInt(data.user.totalSize),
           storageLimit: parseInt(data.user.storageLimit),
           tier: data.user.tier || 'free',
+          gracePeriodEndsAt: data.user.gracePeriodEndsAt || null,
         });
 
         // Success - account created and vault unlocked

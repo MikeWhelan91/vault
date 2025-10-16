@@ -1,16 +1,30 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { getTierLimits, type TierName } from '@/lib/pricing';
-import { CreditCard, Check, ArrowLeft, Crown } from 'lucide-react';
+import { CreditCard, Check, ArrowLeft, Crown, Loader2 } from 'lucide-react';
+import { getStripe, STRIPE_PRICES } from '@/lib/stripe';
 
 export default function BillingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { metadata } = useCrypto();
+  const [isLoadingMonthly, setIsLoadingMonthly] = useState(false);
+  const [isLoadingAnnual, setIsLoadingAnnual] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+  useEffect(() => {
+    // Check for success/canceled query params
+    if (searchParams?.get('success')) {
+      setMessage({ type: 'success', text: 'Subscription activated! Your account has been upgraded.' });
+    } else if (searchParams?.get('canceled')) {
+      setMessage({ type: 'error', text: 'Checkout canceled. No charges were made.' });
+    }
+  }, [searchParams]);
 
   if (!metadata) {
     return <div>Loading...</div>;
@@ -19,6 +33,63 @@ export default function BillingPage() {
   const tier = (metadata.tier as TierName) || 'free';
   const tierLimits = getTierLimits(tier);
   const storagePercentage = (metadata.totalSize / metadata.storageLimit) * 100;
+
+  const handleCheckout = async (billingPeriod: 'monthly' | 'annual') => {
+    const setLoading = billingPeriod === 'monthly' ? setIsLoadingMonthly : setIsLoadingAnnual;
+
+    try {
+      setLoading(true);
+      setMessage(null);
+
+      const priceId = billingPeriod === 'monthly' ? STRIPE_PRICES.monthly : STRIPE_PRICES.annual;
+
+      if (!priceId) {
+        throw new Error('Price ID not configured. Please contact support.');
+      }
+
+      if (!metadata?.userId) {
+        throw new Error('User information not available. Please refresh and try again.');
+      }
+
+      // Create checkout session
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: metadata.userId,
+          userEmail: metadata.userId, // userId is the email in your system
+          priceId,
+          billingPeriod
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      // Redirect to Stripe Checkout
+      const stripe = await getStripe();
+      if (!stripe) {
+        throw new Error('Failed to load Stripe');
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      setMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to start checkout',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const formatBytes = (bytes: number): string => {
     if (bytes < 1024) return `${bytes} B`;
@@ -41,6 +112,15 @@ export default function BillingPage() {
           Back
         </Button>
       </div>
+
+      {/* Success/Error Messages */}
+      {message && (
+        <Card className={message.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}>
+          <p className={message.type === 'success' ? 'text-green-800' : 'text-red-800'}>
+            {message.text}
+          </p>
+        </Card>
+      )}
 
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-graphite-900">Billing & Subscription</h1>
@@ -191,9 +271,9 @@ export default function BillingPage() {
                   <p className="text-3xl font-bold text-graphite-900">
                     $9<span className="text-base font-normal text-graphite-600">/month</span>
                   </p>
-                  <p className="text-sm text-graphite-500">or $99/year</p>
+                  <p className="text-sm text-graphite-500">or $89.99/year</p>
                 </div>
-                <p className="text-sm text-primary-600 font-medium">Save $9 with annual billing</p>
+                <p className="text-sm text-primary-600 font-medium">Save $18 with annual billing</p>
               </div>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-start gap-2 text-sm">
@@ -221,12 +301,38 @@ export default function BillingPage() {
                   <span className="text-graphite-900 font-medium">Priority support</span>
                 </li>
               </ul>
-              <Button variant="primary" className="w-full">
-                Coming Soon
-              </Button>
-              <p className="text-xs text-center text-graphite-500 mt-2">
-                Stripe integration in Phase 2
-              </p>
+              <div className="space-y-2">
+                <Button
+                  variant="primary"
+                  className="w-full"
+                  onClick={() => handleCheckout('monthly')}
+                  disabled={isLoadingMonthly || isLoadingAnnual}
+                >
+                  {isLoadingMonthly ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    'Subscribe Monthly'
+                  )}
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-full"
+                  onClick={() => handleCheckout('annual')}
+                  disabled={isLoadingMonthly || isLoadingAnnual}
+                >
+                  {isLoadingAnnual ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    'Subscribe Annually (Save $18)'
+                  )}
+                </Button>
+              </div>
             </Card>
           </div>
         </div>

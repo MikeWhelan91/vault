@@ -33,8 +33,28 @@ jobs:
 
           echo "✅ Daily cleanup completed successfully"
 
+      - name: Enforce Grace Period Expiration
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            https://forebearer.app/api/cron/enforce-grace-period)
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "HTTP Status: $http_code"
+          echo "Response: $body"
+
+          # Fail the job if the endpoint returns an error
+          if [ "$http_code" -ge 400 ]; then
+            echo "Error: Grace period enforcement endpoint returned status $http_code"
+            exit 1
+          fi
+
+          echo "✅ Grace period enforcement completed successfully"
+
       - name: Notify on Failure
         if: failure()
         run: |
-          echo "❌ Daily cleanup failed! Check the logs above for details."
+          echo "❌ Daily cron job failed! Check the logs above for details."
           echo "This will show up in the GitHub Actions tab as a failed run."

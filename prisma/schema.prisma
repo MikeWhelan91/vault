@@ -27,6 +27,9 @@ model User {
   // Subscription tier
   tier String @default("free") // 'free' | 'plus'
 
+  // Grace period tracking (for downgraded users)
+  gracePeriodEndsAt DateTime? // When excess data will be deleted (null if not in grace period)
+
   // Storage tracking
   totalSize    BigInt @default(0) // bytes used
   storageLimit BigInt @default(314572800) // 300MB default for free tier (2GB for plus)

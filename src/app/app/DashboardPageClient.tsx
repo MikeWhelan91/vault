@@ -157,8 +157,121 @@ export default function DashboardPageClient() {
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 5);
 
+  const isOverStorageLimit = tier === 'free' && metadata.totalSize > metadata.storageLimit;
+  const isOverBundleLimit = tier === 'free' && activeBundles.length > (tierLimits.bundles.max || 0);
+
+  // Calculate grace period days remaining
+  const gracePeriodEndsAt = metadata.gracePeriodEndsAt ? new Date(metadata.gracePeriodEndsAt) : null;
+  const daysRemaining = gracePeriodEndsAt
+    ? Math.ceil((gracePeriodEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
+
   return (
     <div className="mx-auto max-w-6xl space-y-8">
+      {/* Grace Period Warning Banner (Critical - data will be deleted) */}
+      {metadata.gracePeriodEndsAt && daysRemaining !== null && (
+        <div className="rounded-2xl border-2 border-red-300 bg-red-50 p-5 shadow-lg">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <AlertCircle className="h-7 w-7 text-red-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-red-900">
+                {daysRemaining <= 3 ? '⚠️ ' : ''}
+                Data Deletion Warning - {daysRemaining} {daysRemaining === 1 ? 'Day' : 'Days'} Remaining
+              </h3>
+              <div className="mt-2 space-y-2 text-sm text-red-800">
+                <p className="font-semibold">
+                  Your subscription was cancelled and you're currently over the free tier limits.
+                </p>
+                {isOverStorageLimit && (
+                  <p>
+                    • Storage: Using {formatBytes(metadata.totalSize)} / {tierLimits.storage.display} limit
+                  </p>
+                )}
+                {isOverBundleLimit && (
+                  <p>
+                    • Bundles: {activeBundles.length} active / {tierLimits.bundles.max} limit
+                  </p>
+                )}
+                <p className="mt-3 font-bold text-red-900">
+                  On {gracePeriodEndsAt.toLocaleDateString()}, the following will happen automatically:
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-5 font-medium">
+                  {isOverStorageLimit && (
+                    <li>Your <strong>newest files</strong> will be permanently deleted until storage is under 300MB (oldest files are kept)</li>
+                  )}
+                  {isOverBundleLimit && (
+                    <li>Excess bundles will be disabled (only your oldest bundle will remain active)</li>
+                  )}
+                </ul>
+                <p className="mt-3 font-semibold">
+                  To prevent data loss, you can:
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-5">
+                  <li>Upgrade to Plus to keep everything (recommended)</li>
+                  <li>Delete items manually to get under 300MB</li>
+                  <li>Download important files before {gracePeriodEndsAt.toLocaleDateString()}</li>
+                </ul>
+              </div>
+              <div className="mt-4 flex gap-3">
+                <Link href="/app/settings/billing">
+                  <Button size="sm" className="bg-red-600 hover:bg-red-700">
+                    Upgrade Now to Save Your Data
+                  </Button>
+                </Link>
+                <Link href="/app/items">
+                  <Button size="sm" variant="secondary">
+                    Manage Files
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Regular Read-Only Mode Banner (no grace period, just over limits) */}
+      {!metadata.gracePeriodEndsAt && (isOverStorageLimit || isOverBundleLimit) && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <AlertCircle className="h-6 w-6 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-base font-semibold text-amber-900">Account in Read-Only Mode</h3>
+              <div className="mt-2 space-y-1 text-sm text-amber-800">
+                {isOverStorageLimit && (
+                  <p>
+                    You're using {formatBytes(metadata.totalSize)} of storage, which exceeds the free tier limit of {tierLimits.storage.display}.
+                  </p>
+                )}
+                {isOverBundleLimit && (
+                  <p>
+                    You have {activeBundles.length} active bundles, which exceeds the free tier limit of {tierLimits.bundles.max}.
+                  </p>
+                )}
+                <p className="mt-3 font-medium">
+                  Your existing data and bundles remain secure and accessible, but you cannot upload new items or create new bundles until you:
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-5">
+                  {isOverStorageLimit && <li>Delete items to free up storage, or</li>}
+                  {isOverBundleLimit && <li>Remove excess bundles, or</li>}
+                  <li>Upgrade to Plus for unlimited access</li>
+                </ul>
+              </div>
+              <div className="mt-4">
+                <Link href="/app/settings/billing">
+                  <Button size="sm" className="bg-amber-600 hover:bg-amber-700">
+                    Upgrade to Plus
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="rounded-3xl border border-primary-100 bg-white px-6 py-8 shadow-sm sm:px-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">

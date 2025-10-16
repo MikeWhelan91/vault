@@ -28,6 +28,7 @@ export interface VaultMetadata {
   totalSize: number; // total bytes used
   storageLimit: number; // bytes allowed
   tier: UserTier;
+  gracePeriodEndsAt?: string | null; // ISO timestamp when excess data will be deleted
 }
 
 export interface ReleaseBundle {
