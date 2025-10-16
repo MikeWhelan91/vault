@@ -12,6 +12,6 @@ export const getStripe = () => {
 };
 
 export const STRIPE_PRICES = {
-  monthly: process.env.STRIPE_PRICE_ID_MONTHLY || '',
-  annual: process.env.STRIPE_PRICE_ID_ANNUAL || '',
+  monthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY || 'price_1SIwcIADpUZ7irH3G7Gy1tGd',
+  annual: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ANNUAL || 'price_1SIwdTADpUZ7irH3mwQDVILf',
 };
