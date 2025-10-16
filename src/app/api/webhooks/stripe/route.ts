@@ -89,7 +89,6 @@ export async function POST(request: NextRequest) {
           // Get user's current usage before downgrade
           const user = await prisma.user.findUnique({
             where: { id: dbUserId },
-            select: { totalSize: true, email: true },
             include: {
               releaseBundles: {
                 where: { released: false },
