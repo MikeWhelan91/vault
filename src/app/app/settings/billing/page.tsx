@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { getTierLimits, type TierName } from '@/lib/pricing';
 import { CreditCard, Check, ArrowLeft, Crown, Loader2 } from 'lucide-react';
-import { getStripe, STRIPE_PRICES } from '@/lib/stripe';
+import { STRIPE_PRICES } from '@/lib/stripe';
 
 export default function BillingPage() {
   const router = useRouter();
@@ -69,16 +69,11 @@ export default function BillingPage() {
         throw new Error(data.error || 'Failed to create checkout session');
       }
 
-      // Redirect to Stripe Checkout
-      const stripe = await getStripe();
-      if (!stripe) {
-        throw new Error('Failed to load Stripe');
-      }
-
-      const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
-
-      if (error) {
-        throw new Error(error.message);
+      // Redirect to Stripe Checkout using the session URL
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
       }
     } catch (error) {
       console.error('Checkout error:', error);
