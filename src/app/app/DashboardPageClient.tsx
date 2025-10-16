@@ -182,7 +182,7 @@ export default function DashboardPageClient() {
               </h3>
               <div className="mt-2 space-y-2 text-sm text-red-800">
                 <p className="font-semibold">
-                  Your subscription was cancelled and you're currently over the free tier limits.
+                  Your subscription was cancelled and you&apos;re currently over the free tier limits.
                 </p>
                 {isOverStorageLimit && (
                   <p>
@@ -243,7 +243,7 @@ export default function DashboardPageClient() {
               <div className="mt-2 space-y-1 text-sm text-amber-800">
                 {isOverStorageLimit && (
                   <p>
-                    You're using {formatBytes(metadata.totalSize)} of storage, which exceeds the free tier limit of {tierLimits.storage.display}.
+                    You&apos;re using {formatBytes(metadata.totalSize)} of storage, which exceeds the free tier limit of {tierLimits.storage.display}.
                   </p>
                 )}
                 {isOverBundleLimit && (
