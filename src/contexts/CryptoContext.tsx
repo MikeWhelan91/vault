@@ -26,8 +26,8 @@ interface CryptoContextType {
   session: CryptoSession;
   metadata: VaultMetadata | null;
   isUnlocked: boolean;
-  unlock: (passphrase: string, email: string) => Promise<void>;
-  signup: (passphrase: string, email: string, name?: string) => Promise<void>;
+  unlock: (password: string, email: string) => Promise<void>;
+  signup: (password: string, email: string, name?: string) => Promise<void>;
   lock: () => void;
   getItemKey: (itemId: string) => Promise<CryptoKey>;
   getExtractableItemKey: (itemId: string) => Promise<CryptoKey>;
@@ -66,15 +66,15 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   /**
-   * Unlock vault with passphrase (login)
+   * Unlock vault with password (login)
    */
   const unlock = useCallback(
-    async (passphrase: string, email: string) => {
+    async (password: string, email: string) => {
       try {
         // First attempt to fetch user data (without creating account)
         // We need to send some crypto data to match the API signature, but it won't be used
         const tempSalt = generateSalt();
-        const tempMasterKey = await deriveMasterKey(passphrase, tempSalt);
+        const tempMasterKey = await deriveMasterKey(password, tempSalt);
         const tempDataKey = await generateDataKey();
         const tempIV = generateIV();
         const tempWrappedKey = await wrapKey(tempDataKey, tempMasterKey, tempIV);
@@ -104,7 +104,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
         const storedIV = hexToBytes(data.user.wrappedDataKeyIV);
 
         // Re-derive master key with stored salt
-        const userMasterKey = await deriveMasterKey(passphrase, storedSalt);
+        const userMasterKey = await deriveMasterKey(password, storedSalt);
 
         let dataKey: CryptoKey;
         try {
@@ -115,7 +115,7 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
             'unwrapKey',
           ]);
         } catch (error) {
-          throw new Error('Invalid passphrase');
+          throw new Error('Invalid password');
         }
 
         // Set up session
@@ -181,11 +181,11 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
    * Sign up (create new account)
    */
   const signup = useCallback(
-    async (passphrase: string, email: string, name?: string) => {
+    async (password: string, email: string, name?: string) => {
       try {
         // Generate crypto keys for new account
         const dataKeySalt = generateSalt();
-        const masterKey = await deriveMasterKey(passphrase, dataKeySalt);
+        const masterKey = await deriveMasterKey(password, dataKeySalt);
         const dataKey = await generateDataKey();
         const iv = generateIV();
         const wrappedDataKey = await wrapKey(dataKey, masterKey, iv);

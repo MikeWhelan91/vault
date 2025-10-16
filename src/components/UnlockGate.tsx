@@ -12,7 +12,7 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [passphrase, setPassphrase] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showValidation, setShowValidation] = useState(false);
@@ -61,12 +61,12 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
       localStorage.setItem('vault_user_email', email.trim().toLowerCase());
 
       if (mode === 'signup') {
-        await signup(passphrase, email.trim().toLowerCase(), name.trim());
+        await signup(password, email.trim().toLowerCase(), name.trim());
       } else {
-        await unlock(passphrase, email.trim().toLowerCase());
+        await unlock(password, email.trim().toLowerCase());
       }
 
-      setPassphrase('');
+      setPassword('');
     } catch (err) {
       setError(err instanceof Error ? err.message : `Failed to ${mode === 'signup' ? 'create account' : 'unlock vault'}`);
     } finally {
@@ -74,8 +74,8 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const validation = validatePassphrase(passphrase);
-  const showErrors = showValidation && !validation.valid && passphrase.length > 0;
+  const validation = validatePassphrase(password);
+  const showErrors = showValidation && !validation.valid && password.length > 0;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-ivory-50 dark:bg-graphite-900 px-4">
@@ -135,9 +135,9 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
             <Input
               type="password"
               label="Password"
-              value={passphrase}
+              value={password}
               onChange={(e) => {
-                setPassphrase(e.target.value);
+                setPassword(e.target.value);
                 setError('');
               }}
               onBlur={() => setShowValidation(mode === 'signup')}
@@ -167,7 +167,7 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading || passphrase.length === 0 || email.length === 0 || (mode === 'signup' && name.length === 0)}
+              disabled={isLoading || password.length === 0 || email.length === 0 || (mode === 'signup' && name.length === 0)}
               isLoading={isLoading}
             >
               {mode === 'login' ? 'Log In' : 'Create Account'}
