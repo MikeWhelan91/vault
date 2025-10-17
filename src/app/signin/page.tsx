@@ -145,10 +145,11 @@ export default function SignInPage() {
       // On mobile, offer to enable biometric after successful login
       if (isNativeApp && biometricAvailable && !hasSavedCredentials) {
         setShowEnableBiometric(true);
+        // Don't redirect - let the modal handle it
+      } else {
+        // Redirect to app immediately if not showing biometric prompt
+        router.push('/app');
       }
-
-      // Redirect to app
-      router.push('/app');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to unlock vault');
     } finally {
