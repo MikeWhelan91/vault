@@ -6,22 +6,56 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useCrypto } from '@/contexts/CryptoContext';
+import { useIsNativeApp } from '@/lib/platform';
+import { biometric, haptics } from '@/lib/mobile';
+import {
+  hasBiometricCredentials,
+  retrieveBiometricCredentials,
+  storeBiometricCredentials,
+  getStoredEmail,
+  clearBiometricCredentials,
+} from '@/lib/biometric-storage';
+import { Fingerprint } from 'lucide-react';
 
 export default function SignInPage() {
   const router = useRouter();
   const { unlock, isUnlocked } = useCrypto();
+  const isNativeApp = useIsNativeApp();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [hasSavedCredentials, setHasSavedCredentials] = useState(false);
+  const [showEnableBiometric, setShowEnableBiometric] = useState(false);
 
-  // Load saved email on mount
+  // Check biometric availability and saved credentials on mount
   useEffect(() => {
-    const savedEmail = localStorage.getItem('vault_user_email');
-    if (savedEmail) {
-      setEmail(savedEmail);
+    async function init() {
+      if (isNativeApp) {
+        const available = await biometric.isAvailable();
+        setBiometricAvailable(available);
+
+        const hasCredentials = hasBiometricCredentials();
+        setHasSavedCredentials(hasCredentials);
+
+        if (hasCredentials) {
+          const storedEmail = getStoredEmail();
+          if (storedEmail) {
+            setEmail(storedEmail);
+          }
+        }
+      } else {
+        // Web fallback - load saved email
+        const savedEmail = localStorage.getItem('vault_user_email');
+        if (savedEmail) {
+          setEmail(savedEmail);
+        }
+      }
     }
-  }, []);
+
+    init();
+  }, [isNativeApp]);
 
   // Redirect if already unlocked
   useEffect(() => {
@@ -29,6 +63,60 @@ export default function SignInPage() {
       router.push('/app');
     }
   }, [isUnlocked, router]);
+
+  const handleBiometricSignIn = async () => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      await haptics.light();
+
+      // Authenticate with biometrics
+      const authenticated = await biometric.authenticate('Sign in to Forebearer');
+
+      if (!authenticated) {
+        await haptics.error();
+        setError('Biometric authentication failed');
+        setIsLoading(false);
+        return;
+      }
+
+      await haptics.success();
+
+      // Retrieve stored credentials
+      const credentials = await retrieveBiometricCredentials();
+
+      if (!credentials) {
+        setError('Failed to retrieve credentials. Please sign in with password.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Unlock vault with stored credentials
+      await unlock(credentials.password, credentials.email);
+
+      // Redirect to app
+      router.push('/app');
+    } catch (err) {
+      await haptics.error();
+      setError(err instanceof Error ? err.message : 'Biometric sign in failed');
+      setIsLoading(false);
+    }
+  };
+
+  const handleEnableBiometric = async () => {
+    if (!email || !password) return;
+
+    try {
+      await haptics.medium();
+      await storeBiometricCredentials(email, password);
+      await haptics.success();
+      setShowEnableBiometric(false);
+      setHasSavedCredentials(true);
+    } catch (error) {
+      console.error('Failed to enable biometric:', error);
+    }
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +141,11 @@ export default function SignInPage() {
 
       // Unlock vault
       await unlock(password, email.trim().toLowerCase());
+
+      // On mobile, offer to enable biometric after successful login
+      if (isNativeApp && biometricAvailable && !hasSavedCredentials) {
+        setShowEnableBiometric(true);
+      }
 
       // Redirect to app
       router.push('/app');
@@ -85,6 +178,31 @@ export default function SignInPage() {
 
         {/* Form */}
         <div className="card p-8 animate-slide-up">
+          {/* Biometric Sign In Button - Show if credentials are saved */}
+          {isNativeApp && biometricAvailable && hasSavedCredentials && (
+            <div className="mb-6">
+              <Button
+                type="button"
+                onClick={handleBiometricSignIn}
+                className="w-full flex items-center justify-center gap-2"
+                variant="secondary"
+                size="lg"
+                disabled={isLoading}
+              >
+                <Fingerprint className="w-5 h-5" />
+                Sign in with Biometrics
+              </Button>
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-graphite-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-graphite-500">Or sign in with password</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSignIn} className="space-y-5">
             <Input
               type="email"
@@ -154,6 +272,48 @@ export default function SignInPage() {
           </Link>
         </div>
       </div>
+
+      {/* Biometric Enrollment Modal */}
+      {showEnableBiometric && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl animate-slide-up">
+            <div className="mb-4 flex justify-center">
+              <div className="rounded-full bg-primary-100 p-3">
+                <Fingerprint className="h-8 w-8 text-primary-600" />
+              </div>
+            </div>
+            <h3 className="mb-2 text-center text-xl font-semibold text-graphite-900">
+              Enable Biometric Login?
+            </h3>
+            <p className="mb-6 text-center text-sm text-graphite-600">
+              Sign in faster next time using your fingerprint or face recognition
+            </p>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="secondary"
+                className="flex-1"
+                onClick={() => {
+                  setShowEnableBiometric(false);
+                  router.push('/app');
+                }}
+              >
+                Skip
+              </Button>
+              <Button
+                type="button"
+                className="flex-1"
+                onClick={async () => {
+                  await handleEnableBiometric();
+                  router.push('/app');
+                }}
+              >
+                Enable
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
