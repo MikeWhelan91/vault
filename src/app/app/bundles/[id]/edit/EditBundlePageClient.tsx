@@ -279,15 +279,15 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
               {bundle.trustees.map((trustee) => (
                 <div
                   key={trustee.id}
-                  className="flex items-center justify-between rounded-2xl border border-graphite-100 bg-graphite-50/80 px-4 py-3"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-graphite-100 bg-graphite-50/80 px-4 py-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-primary-600 font-semibold">
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600 font-semibold">
                       {(trustee.name || trustee.email).charAt(0).toUpperCase()}
                     </span>
-                    <div>
-                      <p className="font-medium text-graphite-900">{trustee.name || trustee.email}</p>
-                      <p className="text-sm text-graphite-500">{trustee.email}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words font-medium text-graphite-900">{trustee.name || trustee.email}</p>
+                      <p className="break-all text-sm text-graphite-500">{trustee.email}</p>
                     </div>
                   </div>
                   {!bundle.released && (
@@ -295,7 +295,7 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
                       variant="ghost"
                       size="sm"
                       onClick={() => setTrusteeToRemove({ id: trustee.id, name: trustee.name || '', email: trustee.email })}
-                      className="text-red-600 hover:text-red-700"
+                      className="flex-shrink-0 text-red-600 hover:text-red-700"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -343,14 +343,14 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
               {bundle.items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between rounded-2xl border border-graphite-100 bg-graphite-50/80 px-4 py-3"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-graphite-100 bg-graphite-50/80 px-4 py-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-primary-600">
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600">
                       {item.type === 'file' ? <FileText className="h-5 w-5" /> : <StickyNote className="h-5 w-5" />}
                     </span>
-                    <div>
-                      <p className="font-medium text-graphite-900">{item.name}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="break-words font-medium text-graphite-900">{item.name}</p>
                       <p className="text-xs text-graphite-500">{item.type === 'file' ? 'File' : 'Note'}</p>
                     </div>
                   </div>
@@ -359,7 +359,7 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
                       variant="ghost"
                       size="sm"
                       onClick={() => setItemToRemove({ id: item.id, name: item.name })}
-                      className="text-red-600 hover:text-red-700"
+                      className="flex-shrink-0 text-red-600 hover:text-red-700"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -397,14 +397,14 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
                     .map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-center justify-between rounded-xl border border-graphite-200 bg-white px-4 py-3 hover:border-primary-300 hover:bg-primary-50/50 transition-colors"
+                        className="flex items-center justify-between gap-3 rounded-xl border border-graphite-200 bg-white px-4 py-3 hover:border-primary-300 hover:bg-primary-50/50 transition-colors"
                       >
-                        <div className="flex items-center gap-3">
-                          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-graphite-100">
+                        <div className="flex min-w-0 flex-1 items-center gap-3">
+                          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-graphite-100">
                             {item.type === 'file' ? <FileText className="h-4 w-4 text-graphite-600" /> : <StickyNote className="h-4 w-4 text-graphite-600" />}
                           </span>
-                          <div>
-                            <p className="text-sm font-medium text-graphite-900">{item.name}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="break-words text-sm font-medium text-graphite-900">{item.name}</p>
                             <p className="text-xs text-graphite-500">{item.type === 'file' ? 'File' : 'Note'}</p>
                           </div>
                         </div>
@@ -412,7 +412,7 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
                           size="sm"
                           onClick={() => handleAddItem(item.id)}
                           disabled={isSaving}
-                          className="flex items-center gap-1"
+                          className="flex flex-shrink-0 items-center gap-1"
                         >
                           <Plus className="h-4 w-4" />
                           <span className="hidden sm:inline">Add</span>

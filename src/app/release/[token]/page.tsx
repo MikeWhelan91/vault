@@ -195,23 +195,23 @@ export default function ReleasePage() {
       </header>
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-12 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-4xl sm:px-6 sm:py-12">
         {/* Info Card */}
         <Card className="mb-8">
           <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-graphite-900 mb-2">
+            <h1 className="text-2xl font-bold text-graphite-900 mb-2 sm:text-3xl">
               You&apos;ve Received Memories
             </h1>
-            <p className="text-lg text-graphite-600">
-              From <strong>{release.user.name}</strong> ({release.user.email})
+            <p className="text-base text-graphite-600 break-words sm:text-lg">
+              From <strong className="break-words">{release.user.name}</strong> (<span className="break-all">{release.user.email}</span>)
             </p>
           </div>
 
-          <div className="bg-primary-50 rounded-lg p-6">
-            <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-primary-50 rounded-lg p-4 sm:p-6">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <p className="text-sm text-graphite-600">Release Name</p>
-                <p className="font-semibold text-graphite-900">{release.bundle.name}</p>
+                <p className="font-semibold text-graphite-900 break-words">{release.bundle.name}</p>
               </div>
               <div>
                 <p className="text-sm text-graphite-600">Items</p>
@@ -253,13 +253,13 @@ export default function ReleasePage() {
             {release.items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 p-4 bg-graphite-50 rounded-lg"
+                className="flex items-center gap-3 p-3 bg-graphite-50 rounded-lg sm:p-4"
               >
-                <span className="text-2xl">
+                <span className="text-xl flex-shrink-0 sm:text-2xl">
                   {item.type === 'file' ? '📄' : '📝'}
                 </span>
-                <div className="flex-1">
-                  <p className="font-medium text-graphite-900">{item.name}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-graphite-900 break-words">{item.name}</p>
                   <p className="text-sm text-graphite-600">
                     {item.type === 'file' ? 'File' : 'Note'} • {formatFileSize(parseInt(item.size))}
                   </p>
@@ -282,15 +282,15 @@ export default function ReleasePage() {
         {/* Info Notice */}
         <Card className="mt-8 bg-primary-50 border-primary-200">
           <div className="flex gap-3">
-            <svg className="w-6 h-6 text-primary-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-primary-900 mb-1">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold text-primary-900 mb-1 sm:text-lg">
                 About These Memories
               </h3>
-              <p className="text-sm text-primary-800">
-                These files were shared with you by {release.user.name} ({release.user.email}). Files are automatically
+              <p className="text-sm text-primary-800 break-words">
+                These files were shared with you by {release.user.name} (<span className="break-all">{release.user.email}</span>). Files are automatically
                 decrypted when downloaded using zero-knowledge encryption. You can access this page anytime.
               </p>
             </div>

@@ -233,35 +233,37 @@ export default function LettersPageClient() {
         <div className="space-y-4">
           {letters.map((letter) => (
             <Card key={letter.id} className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex gap-4 flex-1">
+              <div className="flex items-start justify-between gap-3 sm:gap-4">
+                <div className="flex min-w-0 flex-1 gap-3 sm:gap-4">
                   <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
                     <Mail className="h-6 w-6" />
                   </div>
-                  <div className="min-w-0 space-y-2">
+                  <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-lg font-semibold text-graphite-900">{letter.title}</h3>
+                      <h3 className="break-words text-base font-semibold text-graphite-900 sm:text-lg">{letter.title}</h3>
                       {letter.sent ? (
-                        <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                        <span className="whitespace-nowrap rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
                           Sent
                         </span>
                       ) : (
-                        <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                        <span className="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-700">
                           Scheduled
                         </span>
                       )}
                     </div>
                     <div className="flex flex-col gap-1 text-sm text-graphite-600">
                       <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-graphite-400" />
-                        To: {letter.recipientName || letter.recipient}
+                        <Mail className="h-4 w-4 flex-shrink-0 text-graphite-400" />
+                        <span className="break-words">To: {letter.recipientName || letter.recipient}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-graphite-400" />
-                        {letter.sent
-                          ? `Sent ${new Date(letter.sentAt!).toLocaleDateString()}`
-                          : `Scheduled for ${new Date(letter.scheduleDate).toLocaleDateString()}`
-                        }
+                        <Calendar className="h-4 w-4 flex-shrink-0 text-graphite-400" />
+                        <span className="break-words">
+                          {letter.sent
+                            ? `Sent ${new Date(letter.sentAt!).toLocaleDateString()}`
+                            : `Scheduled for ${new Date(letter.scheduleDate).toLocaleDateString()}`
+                          }
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -271,7 +273,7 @@ export default function LettersPageClient() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDeleteLetter(letter.id)}
-                    className="text-red-600 hover:text-red-700"
+                    className="flex-shrink-0 text-red-600 hover:text-red-700"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

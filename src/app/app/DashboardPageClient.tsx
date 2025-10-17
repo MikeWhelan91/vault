@@ -518,19 +518,19 @@ export default function DashboardPageClient() {
                       className="rounded-2xl border border-graphite-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-md"
                     >
                       {/* Header */}
-                      <div className="mb-4 flex items-start gap-4">
+                      <div className="mb-4 flex items-start gap-3 sm:gap-4">
                         <div
-                          className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl ${
+                          className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl sm:h-14 sm:w-14 ${
                             isTimeLock ? 'bg-blue-50 text-blue-600' : 'bg-rose-50 text-rose-600'
                           }`}
                         >
-                          {isTimeLock ? <Calendar className="h-7 w-7" /> : <Heart className="h-7 w-7" />}
+                          {isTimeLock ? <Calendar className="h-6 w-6 sm:h-7 sm:w-7" /> : <Heart className="h-6 w-6 sm:h-7 sm:w-7" />}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <div className="mb-2 flex items-start justify-between gap-2">
-                            <h3 className="truncate text-lg font-semibold text-graphite-900">{bundle.name}</h3>
+                          <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                            <h3 className="break-words text-base font-semibold text-graphite-900 sm:text-lg">{bundle.name}</h3>
                             <div
-                              className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${
+                              className={`w-fit whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${
                                 isTimeLock ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-700'
                               }`}
                             >

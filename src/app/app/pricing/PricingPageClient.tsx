@@ -61,10 +61,10 @@ export default function PricingPageClient() {
       </Card>
 
       {/* Pricing Cards */}
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="grid gap-6 max-w-4xl mx-auto md:grid-cols-2 md:gap-8">
         {/* Free Tier */}
         <Card className={`rounded-3xl border ${tier === 'free' ? 'border-primary-400 bg-primary-50/60' : 'border-graphite-200'} shadow-sm`}>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {tier === 'free' && (
               <div className="mb-4">
                 <span className="px-3 py-1 text-xs font-bold bg-primary-500 text-white rounded-full">
@@ -120,7 +120,7 @@ export default function PricingPageClient() {
         {/* Plus Tier */}
         <Card className={`relative overflow-hidden rounded-3xl border ${tier === 'plus' ? 'border-primary-400 bg-primary-50/60' : 'border-primary-500'} shadow-sm`}>
           {tier === 'free' && (
-            <div className="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-lg">
+            <div className="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg sm:px-4 sm:py-1.5">
               RECOMMENDED
             </div>
           )}
@@ -131,7 +131,7 @@ export default function PricingPageClient() {
               </span>
             </div>
           )}
-          <div className="p-6 mt-2">
+          <div className="p-4 mt-2 sm:p-6">
             <h2 className="text-2xl font-bold text-graphite-900 mb-2">Plus</h2>
             <div className="mb-2">
               <span className="text-5xl font-bold text-graphite-900">$9.99</span>
@@ -201,10 +201,10 @@ export default function PricingPageClient() {
 
       {/* Benefits Section */}
       <div className="max-w-4xl mx-auto mt-12">
-        <h2 className="text-2xl font-bold text-graphite-900 mb-6 text-center">
+        <h2 className="text-xl font-bold text-graphite-900 mb-6 text-center sm:text-2xl">
           Why Upgrade to Plus?
         </h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
           <Card>
             <div className="text-center">
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
@@ -245,10 +245,10 @@ export default function PricingPageClient() {
 
       {/* FAQ */}
       <div className="max-w-3xl mx-auto mt-12">
-        <h2 className="text-2xl font-bold text-graphite-900 mb-6 text-center">
+        <h2 className="text-xl font-bold text-graphite-900 mb-6 text-center sm:text-2xl">
           Common Questions
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <Card>
             <h3 className="font-semibold text-graphite-900 mb-2">Can I cancel anytime?</h3>
             <p className="text-sm text-graphite-600">
