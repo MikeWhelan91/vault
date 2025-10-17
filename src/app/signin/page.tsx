@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -68,10 +69,15 @@ export default function SignInPage() {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block mb-6">
-            <h1 className="text-2xl font-semibold text-graphite-900">
-              Forebearer
-            </h1>
+          <Link href="/" className="inline-block mb-6 transition-opacity hover:opacity-80">
+            <Image
+              src="/logotextslim.png"
+              alt="Forebearer"
+              width={200}
+              height={40}
+              className="h-10 w-auto mx-auto"
+              priority
+            />
           </Link>
           <h2 className="text-3xl font-light text-graphite-900 mb-2">
             Welcome Back
