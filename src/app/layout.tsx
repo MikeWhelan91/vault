@@ -23,6 +23,16 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Forebearer" }],
   metadataBase: new URL("https://forebearer.app"),
+  icons: {
+    icon: [
+      { url: "/logoonly.png" },
+      { url: "/logoonly.png", sizes: "32x32", type: "image/png" },
+      { url: "/logoonly.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [
+      { url: "/logoonly.png" },
+    ],
+  },
   openGraph: {
     title: "Forebearer - Leave Something Behind",
     description:

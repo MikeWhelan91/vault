@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -35,10 +36,17 @@ export function SiteHeader() {
         <div className="flex items-center gap-10">
           <Link
             href={resolveHref("/")}
-            className="text-lg font-semibold tracking-tight text-graphite-900 transition-colors hover:text-primary-600 sm:text-xl"
+            className="transition-opacity hover:opacity-80"
             onClick={() => setIsOpen(false)}
           >
-            Forebearer
+            <Image
+              src="/logotext.png"
+              alt="Forebearer"
+              width={150}
+              height={40}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           <div className="hidden items-center gap-8 text-sm font-medium text-graphite-600 lg:flex">

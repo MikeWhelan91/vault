@@ -3,6 +3,7 @@
 import { UnlockGate } from '@/components/UnlockGate';
 import { Footer } from '@/components/Footer';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Button } from '@/components/ui/Button';
@@ -67,9 +68,16 @@ function AppNav() {
         {/* Logo */}
         <Link
           href="/app"
-          className="text-lg font-semibold tracking-tight text-graphite-900"
+          className="transition-opacity hover:opacity-80"
         >
-          Forebearer
+          <Image
+            src="/logotext.png"
+            alt="Forebearer"
+            width={150}
+            height={40}
+            className="h-8 w-auto"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}
