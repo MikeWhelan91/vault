@@ -155,8 +155,16 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
 
         // Store wrapped item keys in memory (for quick access)
         if (data.items) {
+          console.log(`[Unlock] Loading ${data.items.length} item keys from database`);
           for (const item of data.items) {
             if (item.wrappedItemKey && item.wrappedItemKeyIV) {
+              console.log('[Unlock] Caching item key:', {
+                itemId: item.id,
+                itemName: item.name,
+                wrappedKeyPreview: item.wrappedItemKey.slice(0, 32) + '...',
+                ivPreview: item.wrappedItemKeyIV
+              });
+
               sessionStorage.setItem(
                 `vault_item_key_${item.id}`,
                 JSON.stringify({
@@ -281,14 +289,22 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
       // Check sessionStorage first
       const stored = sessionStorage.getItem(`vault_item_key_${itemId}`);
 
+      console.log('[GetItemKey] Retrieving key for item:', {
+        itemId,
+        hasStoredKey: !!stored,
+        storedKeyPreview: stored ? JSON.parse(stored).wrapped.slice(0, 32) + '...' : 'none'
+      });
+
       if (stored) {
         const { wrapped, iv } = JSON.parse(stored);
         const wrappedKey = hexToBytes(wrapped);
         const ivBytes = hexToBytes(iv);
 
+        console.log('[GetItemKey] Using stored key from sessionStorage');
         return unwrapKey(wrappedKey, session.dataKey, ivBytes, ['encrypt', 'decrypt']);
       } else {
         // Generate new item key (will be stored when item is created)
+        console.log('[GetItemKey] No stored key found, generating new key');
         return generateItemKey();
       }
     },
@@ -418,11 +434,21 @@ export function CryptoProvider({ children }: { children: React.ReactNode }) {
       });
 
       // Store wrapped key in session
+      const wrappedKeyHex = bytesToHex(wrappedItemKey);
+      const ivHex = bytesToHex(iv);
+
+      console.log('[AddItem] Storing wrapped key for new item:', {
+        itemId: newItem.id,
+        wrappedKeyPreview: wrappedKeyHex.slice(0, 32) + '...',
+        wrappedKeyLength: wrappedItemKey.length,
+        ivPreview: ivHex
+      });
+
       sessionStorage.setItem(
         `vault_item_key_${newItem.id}`,
         JSON.stringify({
-          wrapped: bytesToHex(wrappedItemKey),
-          iv: bytesToHex(iv),
+          wrapped: wrappedKeyHex,
+          iv: ivHex,
         })
       );
 
