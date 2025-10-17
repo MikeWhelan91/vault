@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export function Footer() {
@@ -26,9 +27,15 @@ export function Footer() {
           <div className="space-y-4">
             <Link
               href={toMarketingPath("/")}
-              className="text-lg font-semibold tracking-tight text-graphite-900 transition-colors hover:text-primary-600 sm:text-xl"
+              className="inline-block transition-opacity hover:opacity-80"
             >
-              Forebearer
+              <Image
+                src="/logotextslim.png"
+                alt="Forebearer"
+                width={180}
+                height={36}
+                className="h-9 w-auto"
+              />
             </Link>
             <p className="max-w-md text-sm text-graphite-600">
               Forebearer helps you organise, protect, and deliver your most meaningful memories. Keep everything encrypted until
