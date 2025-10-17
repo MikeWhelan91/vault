@@ -7,35 +7,15 @@ import { useToast } from '@/contexts/ToastContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
-import { User, Trash2, Database, Heart, AlertTriangle, CreditCard } from 'lucide-react';
+import { User, Trash2, Database, AlertTriangle, CreditCard } from 'lucide-react';
 
 export default function SettingsPageClient() {
   const router = useRouter();
   const { session, metadata, updateMetadata } = useCrypto();
   const { showToast } = useToast();
-  const [hasHeartbeatBundles, setHasHeartbeatBundles] = useState(false);
   const [showDeleteDataModal, setShowDeleteDataModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const checkHeartbeatBundles = async () => {
-      if (!session.dbUserId) return;
-
-      try {
-        const response = await fetch(`/api/bundles?userId=${session.dbUserId}`);
-        if (response.ok) {
-          const data = await response.json();
-          const hasHeartbeat = data.bundles?.some((b: any) => b.mode === 'heartbeat' && !b.released);
-          setHasHeartbeatBundles(hasHeartbeat);
-        }
-      } catch (error) {
-        console.error('Failed to check bundles:', error);
-      }
-    };
-
-    checkHeartbeatBundles();
-  }, [session.dbUserId]);
 
   const handleDeleteAllData = async () => {
     setIsDeleting(true);
@@ -157,31 +137,6 @@ export default function SettingsPageClient() {
             </div>
           </div>
         </Card>
-
-        {/* Heartbeat Check-in */}
-        {hasHeartbeatBundles && (
-          <Card>
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
-                <Heart className="w-5 h-5 text-graphite-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-base font-semibold text-graphite-900 mb-2">Heartbeat</h2>
-                <p className="text-sm text-graphite-600 mb-3">
-                  Active heartbeat bundles require check-ins
-                </p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => router.push('/app/settings/heartbeat')}
-                  className="text-xs"
-                >
-                  Manage
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
 
         {/* Delete All Data */}
         <Card>

@@ -671,18 +671,6 @@ export default function DashboardPageClient() {
                 </span>
                 <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
               </Link>
-              <Link
-                href="/app/settings/heartbeat"
-                className="group flex items-center justify-between rounded-2xl border border-graphite-100 bg-graphite-50/60 px-4 py-3 text-sm font-medium text-graphite-700 transition-colors hover:border-primary-200 hover:bg-primary-50 hover:text-primary-700"
-              >
-                <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-primary-600 shadow-sm">
-                    <Heart className="h-4 w-4" />
-                  </span>
-                  Complete heartbeat check-in
-                </span>
-                <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
-              </Link>
             </div>
           </Card>
 
