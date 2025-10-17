@@ -40,9 +40,9 @@ export function SiteHeader() {
             onClick={() => setIsOpen(false)}
           >
             <Image
-              src="/logotext.png"
+              src="/logotextslim.png"
               alt="Forebearer"
-              width={150}
+              width={200}
               height={40}
               className="h-8 w-auto"
               priority
