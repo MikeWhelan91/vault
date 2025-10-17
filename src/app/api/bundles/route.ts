@@ -18,6 +18,12 @@ export async function POST(request: NextRequest) {
       releaseToken, // Client-generated token used for bundle key derivation
       bundleNoteEncrypted, // Encrypted note for trustees
       bundleNoteIV, // IV for note decryption
+      includeEmailMessage,
+      emailMessageEncrypted,
+      emailMessageIV,
+      conditionalRelease,
+      conditionType,
+      conditionCount,
       items, // Now accepts array of {itemId, bundleWrappedKey, bundleWrappedKeyIV}
       trustees,
     } = body;
@@ -85,6 +91,12 @@ export async function POST(request: NextRequest) {
         releaseToken,
         bundleNoteEncrypted,
         bundleNoteIV,
+        includeEmailMessage: includeEmailMessage || false,
+        emailMessageEncrypted: emailMessageEncrypted || null,
+        emailMessageIV: emailMessageIV || null,
+        conditionalRelease: conditionalRelease || false,
+        conditionType: conditionalRelease ? conditionType : null,
+        conditionCount: conditionalRelease && conditionType === 'count' ? conditionCount : null,
         bundleItems: {
           create: items.map((item: { itemId: string; bundleWrappedKey: string; bundleWrappedKeyIV: string }) => ({
             itemId: item.itemId,
@@ -169,6 +181,8 @@ export async function GET(request: NextRequest) {
         mode: bundle.mode,
         releaseDate: bundle.releaseDate?.toISOString(),
         heartbeatCadenceDays: bundle.heartbeatCadenceDays,
+        heartbeatPaused: bundle.heartbeatPaused,
+        heartbeatPausedAt: bundle.heartbeatPausedAt?.toISOString(),
         released: bundle.released,
         items: bundle.bundleItems.map(bi => ({
           id: bi.item.id,

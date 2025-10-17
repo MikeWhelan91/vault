@@ -21,6 +21,7 @@ export async function GET(
       include: {
         user: {
           select: {
+            name: true,
             email: true,
           },
         },
@@ -96,6 +97,7 @@ export async function GET(
         bundleNoteIV: bundle.bundleNoteIV,
       },
       user: {
+        name: bundle.user.name,
         email: bundle.user.email,
       },
       items: bundle.bundleItems.map((bundleItem) => ({

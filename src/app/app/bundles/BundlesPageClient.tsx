@@ -5,7 +5,7 @@ import { useCrypto } from '@/contexts/CryptoContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
-import { Calendar, Heart, Package, Users, Clock, FileText, ShieldCheck, ArrowRight, StickyNote } from 'lucide-react';
+import { Calendar, Heart, Package, Users, Clock, FileText, ShieldCheck, ArrowRight, StickyNote, Pause, Play } from 'lucide-react';
 
 interface Bundle {
   id: string;
@@ -13,6 +13,8 @@ interface Bundle {
   mode: 'time-lock' | 'heartbeat';
   releaseDate?: string;
   heartbeatCadenceDays?: number;
+  heartbeatPaused?: boolean;
+  heartbeatPausedAt?: string;
   released: boolean;
   createdAt: string;
   items: Array<{
@@ -32,26 +34,69 @@ export default function BundlesPageClient() {
   const [bundles, setBundles] = useState<Bundle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedBundleId, setExpandedBundleId] = useState<string | null>(null);
+  const [pausingBundleId, setPausingBundleId] = useState<string | null>(null);
+
+  const fetchBundles = async () => {
+    if (!session.dbUserId) return;
+
+    try {
+      const response = await fetch(`/api/bundles?userId=${session.dbUserId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setBundles(data.bundles || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch bundles:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBundles = async () => {
-      if (!session.dbUserId) return;
-
-      try {
-        const response = await fetch(`/api/bundles?userId=${session.dbUserId}`);
-        if (response.ok) {
-          const data = await response.json();
-          setBundles(data.bundles || []);
-        }
-      } catch (error) {
-        console.error('Failed to fetch bundles:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchBundles();
   }, [session.dbUserId]);
+
+  const handlePauseBundle = async (bundleId: string) => {
+    setPausingBundleId(bundleId);
+    try {
+      const response = await fetch(`/api/bundles/${bundleId}/pause`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: session.dbUserId }),
+      });
+
+      if (response.ok) {
+        await fetchBundles();
+      } else {
+        console.error('Failed to pause bundle');
+      }
+    } catch (error) {
+      console.error('Error pausing bundle:', error);
+    } finally {
+      setPausingBundleId(null);
+    }
+  };
+
+  const handleResumeBundle = async (bundleId: string) => {
+    setPausingBundleId(bundleId);
+    try {
+      const response = await fetch(`/api/bundles/${bundleId}/resume`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: session.dbUserId }),
+      });
+
+      if (response.ok) {
+        await fetchBundles();
+      } else {
+        console.error('Failed to resume bundle');
+      }
+    } catch (error) {
+      console.error('Error resuming bundle:', error);
+    } finally {
+      setPausingBundleId(null);
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -148,6 +193,11 @@ export default function BundlesPageClient() {
                           <div className="flex items-center gap-2">
                             <ShieldCheck className="h-4 w-4 text-rose-500" />
                             Check-in every {bundle.heartbeatCadenceDays} days
+                            {bundle.heartbeatPaused && (
+                              <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                                Paused
+                              </span>
+                            )}
                           </div>
                         )}
                         <div className="flex items-center gap-2">
@@ -159,6 +209,27 @@ export default function BundlesPageClient() {
                   </div>
 
                   <div className="flex items-center gap-2 sm:flex-shrink-0">
+                    {!isTimeLock && !bundle.released && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => bundle.heartbeatPaused ? handleResumeBundle(bundle.id) : handlePauseBundle(bundle.id)}
+                        disabled={pausingBundleId === bundle.id}
+                        className="flex items-center gap-1"
+                      >
+                        {bundle.heartbeatPaused ? (
+                          <>
+                            <Play className="h-4 w-4" />
+                            <span className="hidden sm:inline">Resume</span>
+                          </>
+                        ) : (
+                          <>
+                            <Pause className="h-4 w-4" />
+                            <span className="hidden sm:inline">Pause</span>
+                          </>
+                        )}
+                      </Button>
+                    )}
                     <Button
                       variant="ghost"
                       size="sm"
@@ -167,9 +238,9 @@ export default function BundlesPageClient() {
                     >
                       {isExpanded ? 'Hide details' : 'View details'}
                     </Button>
-                    <Link href="/app/release" className="hidden sm:inline-flex">
+                    <Link href={`/app/bundles/${bundle.id}/edit`} className="hidden sm:inline-flex">
                       <Button variant="ghost" size="sm" className="flex items-center gap-1 text-primary-600 hover:text-primary-700">
-                        Manage
+                        Edit
                         <ArrowRight className="h-4 w-4" />
                       </Button>
                     </Link>

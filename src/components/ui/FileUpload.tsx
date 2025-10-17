@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react';
 import { Button } from './Button';
 
 export interface FileUploadProps {
-  onFileSelect: (file: File) => void;
+  onFileSelect: (file: File | File[]) => void;
   accept?: string;
   maxSize?: number; // bytes
   disabled?: boolean;
@@ -49,15 +49,20 @@ export function FileUpload({
     // Process first file (or all if multiple)
     const targetFiles = multiple ? files : [files[0]];
 
+    // Check file sizes
     for (const file of targetFiles) {
-      // Check file size
       if (file.size > maxSize) {
         const maxMB = Math.round(maxSize / (1024 * 1024));
-        setError(`File size must be less than ${maxMB}MB`);
+        setError(`File "${file.name}" exceeds ${maxMB}MB limit`);
         return;
       }
+    }
 
-      onFileSelect(file);
+    // Call callback with single file or array
+    if (multiple && targetFiles.length > 0) {
+      onFileSelect(targetFiles);
+    } else if (targetFiles.length > 0) {
+      onFileSelect(targetFiles[0]);
     }
   };
 
@@ -119,7 +124,7 @@ export function FileUpload({
             or drag and drop
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-500">
-            Max {Math.round(maxSize / (1024 * 1024))}MB
+            {multiple ? 'Select multiple files • ' : ''}Max {Math.round(maxSize / (1024 * 1024))}MB per file
           </p>
         </div>
       </div>

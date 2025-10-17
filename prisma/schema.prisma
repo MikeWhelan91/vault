@@ -38,6 +38,7 @@ model User {
   items           Item[]
   releaseBundles  ReleaseBundle[]
   heartbeat       Heartbeat?
+  scheduledLetters ScheduledLetter[]
 
   @@index([email])
 }
@@ -80,12 +81,19 @@ model ReleaseBundle {
   name      String
   mode      String   // 'time-lock' | 'heartbeat'
 
+  // Conditional release (Plus feature)
+  conditionalRelease Boolean @default(false)
+  conditionType      String? // 'all' | 'any' | 'count'
+  conditionCount     Int?    // For 'count' type: how many trustees must confirm
+
   // Time-lock specific
   releaseDate DateTime?
 
   // Heartbeat specific
   heartbeatCadenceDays Int?
   lastHeartbeat        DateTime?
+  heartbeatPaused      Boolean  @default(false)
+  heartbeatPausedAt    DateTime?
 
   // Status
   released    Boolean  @default(false)
@@ -95,6 +103,11 @@ model ReleaseBundle {
   // Bundle note (encrypted with bundle key for trustee access)
   bundleNoteEncrypted String? // Encrypted note content (hex-encoded)
   bundleNoteIV        String? // IV for note encryption (hex-encoded)
+
+  // Custom email message (optional, sent in release email to trustees)
+  includeEmailMessage Boolean @default(false)
+  emailMessageEncrypted String? // Encrypted email message (hex-encoded)
+  emailMessageIV        String? // IV for email message decryption (hex-encoded)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -141,6 +154,10 @@ model Trustee {
   notified Boolean @default(false)
   accessedAt DateTime?
 
+  // Conditional release confirmation
+  confirmed Boolean @default(false)
+  confirmedAt DateTime?
+
   createdAt DateTime @default(now())
 
   @@index([bundleId])
@@ -163,4 +180,35 @@ model Heartbeat {
 
   @@index([nextHeartbeat])
   @@index([enabled, nextHeartbeat])
+}
+
+// Scheduled letters (Plus feature)
+model ScheduledLetter {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title     String
+  recipient String   // Email address
+  recipientName String?
+
+  // Scheduling
+  scheduleType  String   // 'date' | 'birthday' | 'anniversary' | 'yearly'
+  scheduleDate  DateTime // When to send
+  yearlyMonth   Int?     // For yearly: month (1-12)
+  yearlyDay     Int?     // For yearly: day (1-31)
+
+  // Content (stored as plain text for email sending)
+  letterContent String @db.Text @default("") // Letter content to be sent via email
+
+  // Status
+  sent      Boolean   @default(false)
+  sentAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([scheduleDate])
+  @@index([sent, scheduleDate])
 }

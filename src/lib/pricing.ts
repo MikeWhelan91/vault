@@ -36,6 +36,9 @@ export interface TierLimits {
     analytics: boolean;
     prioritySupport: boolean;
     multipleCheckInMethods: boolean;
+    bulkUpload: boolean;
+    conditionalReleases: boolean;
+    letterScheduler: boolean;
   };
 }
 
@@ -71,14 +74,17 @@ export const TIER_LIMITS: Record<TierName, TierLimits> = {
       analytics: false,
       prioritySupport: false,
       multipleCheckInMethods: false,
+      bulkUpload: false,
+      conditionalReleases: false,
+      letterScheduler: false,
     },
   },
   plus: {
     name: 'plus',
     displayName: 'Plus',
     price: {
-      monthly: 9,
-      annual: 99, // $99/year (saves $9)
+      monthly: 9.99,
+      annual: 89.99, // $89.99/year (saves ~$30)
     },
     storage: {
       bytes: 5 * 1024 * 1024 * 1024, // 5 GB
@@ -105,6 +111,9 @@ export const TIER_LIMITS: Record<TierName, TierLimits> = {
       analytics: true,
       prioritySupport: true,
       multipleCheckInMethods: true,
+      bulkUpload: true,
+      conditionalReleases: true,
+      letterScheduler: true,
     },
   },
 };

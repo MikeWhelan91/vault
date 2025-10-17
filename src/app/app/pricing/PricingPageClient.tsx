@@ -137,8 +137,8 @@ export default function PricingPageClient() {
               <span className="text-5xl font-bold text-graphite-900">$9.99</span>
               <span className="text-graphite-600 ml-2">/month</span>
             </div>
-            <p className="text-sm text-primary-600 font-medium mb-6">
-              or $89.99/year (save $30)
+            <p className="text-sm text-primary-600 font-semibold mb-6">
+              or $7.50/month billed annually ($89.99/year — save $30)
             </p>
 
             <ul className="space-y-3 mb-8">
@@ -156,11 +156,23 @@ export default function PricingPageClient() {
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Unlimited items</span>
+                <span className="text-graphite-900 font-medium">Bulk file upload</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+                <span className="text-graphite-900 font-medium">Conditional releases</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+                <span className="text-graphite-900 font-medium">Letter scheduler</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                 <span className="text-graphite-900 font-medium">Custom heartbeat schedules</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+                <span className="text-graphite-900 font-medium">Pause/resume heartbeat</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />

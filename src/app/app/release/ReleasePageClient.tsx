@@ -28,6 +28,11 @@ export default function ReleasePageClient() {
   const [existingBundles, setExistingBundles] = useState<any[]>([]);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [upgradeReason, setUpgradeReason] = useState<UpgradeReason>('bundle_limit');
+  const [includeEmailMessage, setIncludeEmailMessage] = useState(false);
+  const [emailMessage, setEmailMessage] = useState('');
+  const [conditionalRelease, setConditionalRelease] = useState(false);
+  const [conditionType, setConditionType] = useState<'all' | 'any' | 'count'>('all');
+  const [conditionCount, setConditionCount] = useState(2);
 
   // Fetch existing bundles on mount
   useEffect(() => {
@@ -149,6 +154,22 @@ export default function ReleasePageClient() {
       const bundleNoteEncrypted = bytesToHex(new Uint8Array(noteEncrypted));
       const bundleNoteIV = bytesToHex(noteIV);
 
+      // Encrypt the email message if provided
+      let emailMessageEncrypted: string | undefined = undefined;
+      let emailMessageIV: string | undefined = undefined;
+      if (includeEmailMessage && emailMessage.trim()) {
+        const emailData = new TextEncoder().encode(emailMessage);
+        const emailIV = generateIV();
+        const emailEncrypted = await crypto.subtle.encrypt(
+          // @ts-expect-error - TypeScript has issues with ArrayBuffer vs SharedArrayBuffer in crypto.subtle
+          { name: 'AES-GCM', iv: emailIV },
+          bundleKey,
+          emailData
+        );
+        emailMessageEncrypted = bytesToHex(new Uint8Array(emailEncrypted));
+        emailMessageIV = bytesToHex(emailIV);
+      }
+
       // Wrap each item key with the bundle key
       const itemsWithWrappedKeys = await Promise.all(
         selectedItems.map(async (itemId) => {
@@ -202,6 +223,12 @@ export default function ReleasePageClient() {
           releaseToken, // Send the token we generated
           bundleNoteEncrypted, // Encrypted note for trustees
           bundleNoteIV, // IV for note decryption
+          includeEmailMessage,
+          emailMessageEncrypted,
+          emailMessageIV,
+          conditionalRelease,
+          conditionType: conditionalRelease ? conditionType : null,
+          conditionCount: conditionalRelease && conditionType === 'count' ? conditionCount : null,
           items: itemsWithWrappedKeys,
           trustees: trustees.map(t => ({ email: t.email, name: t.name })),
         }),
@@ -237,6 +264,11 @@ export default function ReleasePageClient() {
       setSelectedItems([]);
       setReleaseDate('');
       setTrustees([]);
+      setIncludeEmailMessage(false);
+      setEmailMessage('');
+      setConditionalRelease(false);
+      setConditionType('all');
+      setConditionCount(2);
       setStep(1);
     } catch (error) {
       console.error('Create bundle error:', error);
@@ -333,6 +365,34 @@ export default function ReleasePageClient() {
               <p className="text-xs text-graphite-500 mt-1">
                 This message will be encrypted and included in the download for your trustees
               </p>
+            </div>
+
+            <div className="space-y-3 rounded-lg border border-graphite-200 bg-graphite-50 p-4">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={includeEmailMessage}
+                  onChange={(e) => setIncludeEmailMessage(e.target.checked)}
+                  className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Include custom note in release email
+                </span>
+              </label>
+              {includeEmailMessage && (
+                <div>
+                  <textarea
+                    value={emailMessage}
+                    onChange={(e) => setEmailMessage(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                    rows={4}
+                    placeholder="Write a personal message that will appear in the release email to your trustees..."
+                  />
+                  <p className="text-xs text-graphite-500 mt-1">
+                    This note will be displayed in the email notification when the bundle is released
+                  </p>
+                </div>
+              )}
             </div>
 
             <div>
@@ -576,6 +636,83 @@ export default function ReleasePageClient() {
                   </Button>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Conditional Release (Plus Feature) */}
+          {isPaidUser && trustees.length >= 2 && (
+            <div className="space-y-3 rounded-lg border border-primary-200 bg-primary-50 p-4">
+              <div className="flex items-start gap-3">
+                <Crown className="h-5 w-5 text-primary-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={conditionalRelease}
+                      onChange={(e) => setConditionalRelease(e.target.checked)}
+                      className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                    />
+                    <span className="text-sm font-medium text-primary-900">
+                      Require trustee confirmation before release
+                    </span>
+                  </label>
+                  <p className="text-xs text-primary-700 mt-1 ml-7">
+                    Bundle will only be released when trustees confirm they should receive it
+                  </p>
+                </div>
+              </div>
+
+              {conditionalRelease && (
+                <div className="ml-7 space-y-3">
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="conditionType"
+                        value="all"
+                        checked={conditionType === 'all'}
+                        onChange={() => setConditionType('all')}
+                        className="w-4 h-4 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span className="text-sm text-graphite-900">All trustees must confirm</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="conditionType"
+                        value="any"
+                        checked={conditionType === 'any'}
+                        onChange={() => setConditionType('any')}
+                        className="w-4 h-4 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span className="text-sm text-graphite-900">Any single trustee can confirm</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="conditionType"
+                        value="count"
+                        checked={conditionType === 'count'}
+                        onChange={() => setConditionType('count')}
+                        className="w-4 h-4 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span className="text-sm text-graphite-900 flex items-center gap-2">
+                        At least
+                        <input
+                          type="number"
+                          value={conditionCount}
+                          onChange={(e) => setConditionCount(parseInt(e.target.value) || 2)}
+                          min={2}
+                          max={trustees.length}
+                          disabled={conditionType !== 'count'}
+                          className="w-16 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                        />
+                        trustees must confirm
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

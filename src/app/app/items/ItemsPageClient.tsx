@@ -338,21 +338,23 @@ function AddItemModal({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [noteName, setNoteName] = useState('');
   const [noteContent, setNoteContent] = useState('');
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
 
   // Clear error when file changes or type changes
   React.useEffect(() => {
     setUploadError(null);
-  }, [selectedFile, type]);
+  }, [selectedFiles, type]);
 
   // Clear error and reset state when modal closes
   React.useEffect(() => {
     if (!isOpen) {
       setUploadError(null);
-      setSelectedFile(null);
+      setSelectedFiles([]);
       setNoteName('');
       setNoteContent('');
+      setCurrentFileIndex(0);
     }
   }, [isOpen]);
 
@@ -409,17 +411,13 @@ function AddItemModal({
   };
 
   const handleAddFile = async () => {
-    if (!selectedFile) {
-      setUploadError('Please select a file');
+    if (selectedFiles.length === 0) {
+      setUploadError('Please select at least one file');
       return;
     }
 
-    // Check if this is a video file
-    const fileInfo = getFileTypeInfo(selectedFile.name);
-    const isVideo = fileInfo.category === 'video';
-
-    // If it's a video, check video limits for free tier
-    if (isVideo && metadata) {
+    // Check video limits if any file is a video
+    if (metadata) {
       const tier = (metadata.tier as TierName) || 'free';
       const currentVideoCount = metadata.items.filter(item => {
         if (item.type !== 'file') return false;
@@ -427,7 +425,15 @@ function AddItemModal({
         return itemFileInfo.category === 'video';
       }).length;
 
-      if (!canUploadVideo(tier, currentVideoCount)) {
+      let newVideoCount = 0;
+      for (const file of selectedFiles) {
+        const fileInfo = getFileTypeInfo(file.name);
+        if (fileInfo.category === 'video') {
+          newVideoCount++;
+        }
+      }
+
+      if (newVideoCount > 0 && !canUploadVideo(tier, currentVideoCount + newVideoCount - 1)) {
         const upgradeMsg = UPGRADE_MESSAGES.video_limit;
         setUploadError(upgradeMsg.message);
         return;
@@ -436,48 +442,58 @@ function AddItemModal({
 
     setUploadError(null);
     setIsUploading(true);
+
     try {
-      // Read file data, generate key, and encrypt
-      const fileData = await readFileAsArrayBuffer(selectedFile);
       const { generateItemKey } = await import('@/lib/crypto');
-      const itemKey = await generateItemKey();
-      const encryptedData = await encryptFile(new Uint8Array(fileData), itemKey);
 
-      // Create item metadata in database (this also stores wrapped key)
-      const item = await addItem({
-        type: 'file',
-        name: selectedFile.name,
-        size: encryptedData.length,
-        itemKeySalt: '',
-      }, itemKey);
+      // Upload each file sequentially
+      for (let i = 0; i < selectedFiles.length; i++) {
+        setCurrentFileIndex(i);
+        const file = selectedFiles[i];
 
-      try {
-        // Upload encrypted data to R2
-        await uploadObject(
-          session.userId,
-          item.id,
-          1,
-          encryptedData,
-          (progress) => setUploadProgress(progress.percentage)
-        );
-      } catch (uploadError) {
-        // If R2 upload fails, delete the database entry to keep things consistent
-        console.error('R2 upload failed, cleaning up database entry:', uploadError);
-        await fetch(`/api/items/${item.id}?userId=${session.dbUserId}`, {
-          method: 'DELETE',
-        });
-        throw new Error('Upload failed. Please try again.');
+        // Read file data, generate key, and encrypt
+        const fileData = await readFileAsArrayBuffer(file);
+        const itemKey = await generateItemKey();
+        const encryptedData = await encryptFile(new Uint8Array(fileData), itemKey);
+
+        // Create item metadata in database (this also stores wrapped key)
+        const item = await addItem({
+          type: 'file',
+          name: file.name,
+          size: encryptedData.length,
+          itemKeySalt: '',
+        }, itemKey);
+
+        try {
+          // Upload encrypted data to R2
+          await uploadObject(
+            session.userId,
+            item.id,
+            1,
+            encryptedData,
+            (progress) => setUploadProgress(progress.percentage)
+          );
+        } catch (uploadError) {
+          // If R2 upload fails, delete the database entry to keep things consistent
+          console.error('R2 upload failed, cleaning up database entry:', uploadError);
+          await fetch(`/api/items/${item.id}?userId=${session.dbUserId}`, {
+            method: 'DELETE',
+          });
+          throw new Error(`Upload failed for "${file.name}". Please try again.`);
+        }
       }
 
-      showToast('File uploaded successfully', 'success');
+      const fileCount = selectedFiles.length;
+      showToast(`${fileCount} file${fileCount > 1 ? 's' : ''} uploaded successfully`, 'success');
       onClose();
-      setSelectedFile(null);
+      setSelectedFiles([]);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'Failed to upload file', 'error');
+      showToast(error instanceof Error ? error.message : 'Failed to upload files', 'error');
       console.error(error);
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
+      setCurrentFileIndex(0);
     }
   };
 
@@ -528,12 +544,31 @@ function AddItemModal({
         {type === 'file' && (
           <div>
             <FileUpload
-              onFileSelect={setSelectedFile}
+              onFileSelect={(files) => {
+                if (Array.isArray(files)) {
+                  setSelectedFiles(files);
+                } else {
+                  setSelectedFiles([files]);
+                }
+              }}
               disabled={isUploading}
+              multiple={metadata && (metadata.tier as TierName) === 'plus'}
             />
-            {selectedFile && (
-              <p className="mt-2 text-sm text-graphite-600">
-                Selected: {selectedFile.name} ({formatFileSize(selectedFile.size)})
+            {selectedFiles.length > 0 && (
+              <div className="mt-2 space-y-1">
+                <p className="text-sm font-medium text-graphite-700">
+                  {selectedFiles.length} file{selectedFiles.length > 1 ? 's' : ''} selected
+                </p>
+                {selectedFiles.map((file, index) => (
+                  <p key={index} className="text-xs text-graphite-600">
+                    • {file.name} ({formatFileSize(file.size)})
+                  </p>
+                ))}
+              </div>
+            )}
+            {metadata && (metadata.tier as TierName) === 'free' && (
+              <p className="mt-2 text-xs text-amber-600">
+                Upgrade to Plus to upload multiple files at once
               </p>
             )}
           </div>
@@ -577,11 +612,18 @@ function AddItemModal({
 
         {/* Progress */}
         {isUploading && (
-          <Progress
-            value={uploadProgress}
-            label="Encrypting and uploading..."
-            color="blue"
-          />
+          <div className="space-y-2">
+            {selectedFiles.length > 1 && (
+              <p className="text-sm text-graphite-700">
+                Uploading file {currentFileIndex + 1} of {selectedFiles.length}: {selectedFiles[currentFileIndex]?.name}
+              </p>
+            )}
+            <Progress
+              value={uploadProgress}
+              label={selectedFiles.length > 1 ? "Encrypting and uploading..." : "Encrypting and uploading..."}
+              color="blue"
+            />
+          </div>
         )}
 
         {/* Actions */}
@@ -590,7 +632,9 @@ function AddItemModal({
             Cancel
           </Button>
           <Button onClick={handleSubmit} isLoading={isUploading}>
-            {type === 'file' ? 'Upload File' : 'Add Note'}
+            {type === 'file'
+              ? (selectedFiles.length > 1 ? `Upload ${selectedFiles.length} Files` : 'Upload File')
+              : 'Add Note'}
           </Button>
         </div>
       </div>

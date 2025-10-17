@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Button } from '@/components/ui/Button';
-import { useState } from 'react';
-import { Crown } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Crown, ChevronDown, Settings, Lock } from 'lucide-react';
 import type { TierName } from '@/lib/pricing';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -28,13 +28,30 @@ function AppNav() {
   const pathname = usePathname();
   const { lock, metadata, session } = useCrypto();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const tier = (metadata?.tier as TierName) || 'free';
+  const isPaidUser = tier !== 'free';
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const navigation = [
     { name: 'Dashboard', href: '/app' },
     { name: 'Items', href: '/app/items' },
     { name: 'Releases', href: '/app/release' },
     { name: 'My Bundles', href: '/app/bundles' },
-    { name: 'Settings', href: '/app/settings' },
+    ...(isPaidUser ? [{ name: 'Letters', href: '/app/letters' }] : []),
   ];
 
   const isActive = (href: string) => {
@@ -73,19 +90,49 @@ function AppNav() {
         </div>
 
         {/* Desktop User actions */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 md:flex" ref={dropdownRef}>
           {metadata?.tier === 'plus' && (
             <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
               <Crown className="h-3.5 w-3.5" />
               Plus
             </div>
           )}
-          <span className="max-w-[200px] truncate text-sm text-graphite-500">
-            {session.userId || metadata?.userId || 'User'}
-          </span>
-          <Button variant="ghost" size="sm" onClick={lock}>
-            Lock vault
-          </Button>
+          <div className="relative">
+            <button
+              onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+              className="flex items-center gap-2 rounded-full border border-graphite-200 px-3 py-2 text-sm text-graphite-700 transition-colors hover:bg-graphite-50"
+            >
+              <span className="max-w-[200px] truncate">
+                {session.userId || metadata?.userId || 'User'}
+              </span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {userDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 rounded-xl border border-graphite-200 bg-white shadow-lg">
+                <div className="py-1">
+                  <Link
+                    href="/app/settings"
+                    onClick={() => setUserDropdownOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-graphite-700 transition-colors hover:bg-graphite-50"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Settings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      lock();
+                    }}
+                    className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-graphite-700 transition-colors hover:bg-graphite-50"
+                  >
+                    <Lock className="h-4 w-4" />
+                    Lock vault
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Mobile menu button */}
@@ -125,7 +172,7 @@ function AppNav() {
               </Link>
             ))}
             <div className="rounded-xl border border-graphite-200 px-3 py-2 text-sm text-graphite-600">
-              <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center justify-between gap-2 mb-3">
                 <p className="truncate font-medium">{session.userId || metadata?.userId || 'User'}</p>
                 {metadata?.tier === 'plus' && (
                   <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
@@ -134,15 +181,26 @@ function AppNav() {
                   </div>
                 )}
               </div>
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  lock();
-                }}
-                className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700"
-              >
-                Lock vault
-              </button>
+              <div className="space-y-2">
+                <Link
+                  href="/app/settings"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 text-sm font-medium text-graphite-700 hover:text-primary-600"
+                >
+                  <Settings className="h-4 w-4" />
+                  Settings
+                </Link>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    lock();
+                  }}
+                  className="flex items-center gap-2 text-sm font-medium text-graphite-700 hover:text-primary-600"
+                >
+                  <Lock className="h-4 w-4" />
+                  Lock vault
+                </button>
+              </div>
             </div>
           </div>
         </div>
