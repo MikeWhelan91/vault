@@ -345,7 +345,7 @@ export default function DashboardPageClient() {
           {/* Storage Breakdown */}
           <Card className="rounded-3xl border border-graphite-200 shadow-sm">
             <div className="text-center">
-              <h2 className="text-xl font-semibold text-graphite-900">Storage breakdown</h2>
+              <h2 className="text-xl font-semibold text-graphite-900">Storage Breakdown</h2>
               <p className="mt-2 text-sm text-graphite-500">Understand what&apos;s filling your encrypted vault.</p>
             </div>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
@@ -461,7 +461,7 @@ export default function DashboardPageClient() {
           <Card className="rounded-3xl border border-graphite-200 shadow-sm">
             <div className="space-y-4 text-center">
               <div>
-                <h2 className="text-2xl font-semibold text-graphite-900">Active releases</h2>
+                <h2 className="text-2xl font-semibold text-graphite-900">Active Releases</h2>
                 <p className="mt-2 text-sm text-graphite-500">
                   {activeBundles.length === 0
                     ? 'Get started by assembling your first release bundle.'
@@ -645,7 +645,7 @@ export default function DashboardPageClient() {
         <div className="space-y-6">
           {/* Quick Actions */}
           <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-graphite-900">Quick actions</h2>
+            <h2 className="mb-4 text-lg font-semibold text-graphite-900">Quick Actions</h2>
             <div className="space-y-3">
               <Link
                 href="/app/items"
@@ -677,7 +677,7 @@ export default function DashboardPageClient() {
           {/* Next Steps */}
           {metadata.items.length === 0 && (
             <Card className="rounded-3xl border border-primary-100 bg-primary-50/70 shadow-sm">
-              <h3 className="mb-3 text-lg font-semibold text-graphite-900">Getting started</h3>
+              <h3 className="mb-3 text-lg font-semibold text-graphite-900">Getting Started</h3>
               <div className="space-y-4 text-sm">
                 {[{
                   title: 'Upload your first items',

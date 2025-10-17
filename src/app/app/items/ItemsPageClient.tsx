@@ -92,11 +92,11 @@ export default function ItemsPageClient() {
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
         <div className="flex flex-col gap-4">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-semibold text-graphite-900">Your encrypted items</h1>
+            <h1 className="text-3xl font-semibold text-graphite-900">Your Encrypted Items</h1>
             <p className="mt-2 text-sm text-graphite-600">
               {items.length === 0
                 ? 'Upload files or notes to start building your protected estate.'
-                : `Organise ${items.length} encrypted ${items.length === 1 ? 'asset' : 'assets'} by type, preview metadata, and manage storage.`}
+                : `Organize ${items.length} encrypted ${items.length === 1 ? 'asset' : 'assets'} by type, preview metadata, and manage storage.`}
             </p>
           </div>
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">

@@ -30,7 +30,7 @@ export default function PricingPageClient() {
     <div className="mx-auto max-w-5xl space-y-10">
       {/* Header */}
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-8 text-center shadow-sm">
-        <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">Choose your plan</h1>
+        <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">Choose Your Plan</h1>
         <p className="mt-3 text-sm text-graphite-600 sm:text-base">
           {tier === 'free'
             ? 'Unlock expanded storage, unlimited bundles, and richer heartbeat controls with Plus.'
@@ -42,7 +42,7 @@ export default function PricingPageClient() {
       <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-graphite-500">Current usage</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-graphite-500">Current Usage</h3>
             <p className="mt-2 text-lg font-semibold text-graphite-900">
               {formatBytes(metadata.totalSize)} of {tierLimits.storage.display}
             </p>

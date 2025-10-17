@@ -156,7 +156,7 @@ export default function LettersPageClient() {
         <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
           <div className="flex flex-col gap-4 text-center">
             <div className="space-y-2">
-              <h1 className="text-3xl font-semibold text-graphite-900">Schedule letters for the future</h1>
+              <h1 className="text-3xl font-semibold text-graphite-900">Schedule Letters for the Future</h1>
               <p className="mt-2 text-sm text-graphite-600">
                 Write letters to be delivered on birthdays, anniversaries, or any special date.
               </p>
@@ -191,7 +191,7 @@ export default function LettersPageClient() {
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
         <div className="flex flex-col gap-4">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-semibold text-graphite-900">Your scheduled letters</h1>
+            <h1 className="text-3xl font-semibold text-graphite-900">Your Scheduled Letters</h1>
             <p className="mt-2 text-sm text-graphite-600">
               Write letters to be delivered on birthdays, anniversaries, or any special date.
             </p>
@@ -211,7 +211,7 @@ export default function LettersPageClient() {
             <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-primary-600">
               <Mail className="h-7 w-7" />
             </div>
-            <h2 className="text-xl font-semibold text-graphite-900">No scheduled letters yet</h2>
+            <h2 className="text-xl font-semibold text-graphite-900">No Scheduled Letters Yet</h2>
             <p className="mt-2 max-w-sm text-sm text-graphite-600">
               Create your first scheduled letter to send heartfelt messages on future dates.
             </p>

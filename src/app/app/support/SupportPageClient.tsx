@@ -48,7 +48,7 @@ export default function SupportPageClient() {
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-primary-100 bg-primary-50 text-primary-600">
           <LifeBuoy className="h-6 w-6" />
         </div>
-        <h1 className="mt-6 text-3xl font-semibold text-graphite-900 sm:text-4xl">How can we help?</h1>
+        <h1 className="mt-6 text-3xl font-semibold text-graphite-900 sm:text-4xl">How Can We Help?</h1>
         <p className="mt-3 text-sm text-graphite-600 sm:text-base">
           Have a question about your vault or a bundle configuration? Raise a secure ticket and our team will respond within 24–48 hours.
         </p>
@@ -56,7 +56,7 @@ export default function SupportPageClient() {
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-graphite-900">Quick links</h2>
+          <h2 className="mb-4 text-lg font-semibold text-graphite-900">Quick Links</h2>
           <div className="space-y-3 text-sm">
             <Link href="/app/faq" className="group flex items-center justify-between rounded-xl border border-graphite-100 px-3 py-2 text-primary-700 transition-colors hover:border-primary-200">
               <span>View vault FAQs</span>
@@ -70,7 +70,7 @@ export default function SupportPageClient() {
         </Card>
 
         <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-          <h2 className="mb-3 text-lg font-semibold text-graphite-900">Response time</h2>
+          <h2 className="mb-3 text-lg font-semibold text-graphite-900">Response Time</h2>
           <p className="text-sm text-graphite-600">
             We typically respond within <span className="font-semibold text-graphite-900">24–48 hours</span> on business days. For urgent matters, mention “URGENT” in the subject line so we can triage quickly.
           </p>

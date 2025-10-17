@@ -108,7 +108,7 @@ export default function BundlesPageClient() {
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
         <div className="flex flex-col gap-4">
           <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-semibold text-graphite-900">Your release bundles</h1>
+            <h1 className="text-3xl font-semibold text-graphite-900">Your Release Bundles</h1>
             <p className="mt-2 text-sm text-graphite-600">
               Coordinate trustees, confirm delivery timelines, and keep every bundle ready to unlock at the right moment.
             </p>
@@ -135,7 +135,7 @@ export default function BundlesPageClient() {
             <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-primary-600">
               <Package className="h-7 w-7" />
             </div>
-            <h2 className="text-xl font-semibold text-graphite-900">No release bundles yet</h2>
+            <h2 className="text-xl font-semibold text-graphite-900">No Release Bundles Yet</h2>
             <p className="mt-2 max-w-sm text-sm text-graphite-600">
               Create your first bundle to choreograph how and when encrypted memories unlock for the people you trust most.
             </p>
@@ -262,7 +262,7 @@ export default function BundlesPageClient() {
 
                     {bundle.items.length > 0 && (
                       <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-graphite-800">Included items</h4>
+                        <h4 className="text-sm font-semibold text-graphite-800">Included Items</h4>
                         <div className="flex flex-wrap gap-2">
                           {bundle.items.map((item) => (
                             <span
