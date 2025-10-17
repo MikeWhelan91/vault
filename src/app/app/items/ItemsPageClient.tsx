@@ -90,32 +90,23 @@ export default function ItemsPageClient() {
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Header */}
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-              <Archive className="h-4 w-4" />
-              Secure library
-            </span>
-            <div>
-              <h1 className="text-3xl font-semibold text-graphite-900">Your encrypted items</h1>
-              <p className="mt-2 text-sm text-graphite-600">
-                {items.length === 0
-                  ? 'Upload files or notes to start building your protected estate.'
-                  : `Organise ${items.length} encrypted ${items.length === 1 ? 'asset' : 'assets'} by type, preview metadata, and manage storage.`}
-              </p>
-            </div>
+        <div className="flex flex-col gap-4">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-semibold text-graphite-900">Your encrypted items</h1>
+            <p className="mt-2 text-sm text-graphite-600">
+              {items.length === 0
+                ? 'Upload files or notes to start building your protected estate.'
+                : `Organise ${items.length} encrypted ${items.length === 1 ? 'asset' : 'assets'} by type, preview metadata, and manage storage.`}
+            </p>
           </div>
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
-            <Button onClick={() => setShowAddModal(true)} className="w-full sm:w-auto" size="lg">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Button onClick={() => setShowAddModal(true)} size="lg">
               <Plus className="h-4 w-4" />
               <span className="ml-2">Add new item</span>
             </Button>
             {tier === 'free' && (
-              <Link
-                href="/app/pricing"
-                className="w-full sm:w-auto"
-              >
-                <Button variant="secondary" className="w-full sm:w-auto" size="lg">
+              <Link href="/app/pricing">
+                <Button variant="secondary" size="lg">
                   Expand storage
                 </Button>
               </Link>

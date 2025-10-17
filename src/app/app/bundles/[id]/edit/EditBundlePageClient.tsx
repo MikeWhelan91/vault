@@ -234,11 +234,7 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div className="flex flex-col gap-4">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-            <Package className="h-4 w-4" />
-            Edit Bundle
-          </span>
+        <div className="flex flex-col gap-4 text-center">
           <div>
             <h1 className="text-3xl font-semibold text-graphite-900">Edit {bundle.name}</h1>
             <p className="mt-2 text-sm text-graphite-600">

@@ -274,11 +274,8 @@ export default function DashboardPageClient() {
 
       {/* Hero Section */}
       <section className="rounded-3xl border border-primary-100 bg-white px-6 py-8 shadow-sm sm:px-10">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-xl space-y-3">
-            <span className="inline-flex items-center rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-medium uppercase tracking-wide text-primary-700">
-              Secure vault overview
-            </span>
+        <div className="flex flex-col gap-6">
+          <div className="space-y-4 text-center">
             <div>
               <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">
                 {metadata.userName ? `Welcome back, ${metadata.userName.split(' ')[0]}` : 'Welcome back'}
@@ -288,14 +285,14 @@ export default function DashboardPageClient() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center lg:flex-col lg:items-end">
-            <div className="rounded-2xl border border-graphite-200 bg-graphite-50 px-4 py-3 text-left shadow-inner">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <div className="rounded-2xl border border-graphite-200 bg-graphite-50 px-4 py-3 text-center shadow-inner">
               <p className="text-xs font-medium uppercase tracking-wide text-graphite-500">Account ID</p>
               <p className="mt-1 text-sm font-semibold text-graphite-800">{session.userId || metadata.userId}</p>
             </div>
             {tier === 'free' ? (
-              <Link href="/app/pricing" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto" size="lg">
+              <Link href="/app/pricing">
+                <Button size="lg">
                   Upgrade for more space
                 </Button>
               </Link>
@@ -310,7 +307,7 @@ export default function DashboardPageClient() {
       </section>
 
       {/* Key Metrics */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4">
         <MetricCard
           icon={<Upload className="w-5 h-5" />}
           label="Total Items"
@@ -347,14 +344,9 @@ export default function DashboardPageClient() {
         <div className="lg:col-span-2 space-y-6">
           {/* Storage Breakdown */}
           <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-xl font-semibold text-graphite-900">Storage breakdown</h2>
-                <p className="text-sm text-graphite-500">Understand what&apos;s filling your encrypted vault.</p>
-              </div>
-              <div className="rounded-full border border-primary-100 bg-primary-50 px-4 py-1 text-xs font-medium uppercase tracking-wide text-primary-700">
-                {tierLimits.displayName} plan
-              </div>
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-graphite-900">Storage breakdown</h2>
+              <p className="mt-2 text-sm text-graphite-500">Understand what&apos;s filling your encrypted vault.</p>
             </div>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               <div className="flex items-center justify-center rounded-2xl border border-graphite-100 bg-graphite-50/60 p-4">
@@ -467,23 +459,17 @@ export default function DashboardPageClient() {
 
           {/* Active Bundles */}
           <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-                  <Package className="h-4 w-4" />
-                  Release bundles
-                </div>
-                <div>
-                  <h2 className="text-2xl font-semibold text-graphite-900">Active releases</h2>
-                  <p className="text-sm text-graphite-500">
-                    {activeBundles.length === 0
-                      ? 'Get started by assembling your first release bundle.'
-                      : `Managing ${activeBundles.length} active ${activeBundles.length === 1 ? 'bundle' : 'bundles'}.`}
-                  </p>
-                </div>
+            <div className="space-y-4 text-center">
+              <div>
+                <h2 className="text-2xl font-semibold text-graphite-900">Active releases</h2>
+                <p className="mt-2 text-sm text-graphite-500">
+                  {activeBundles.length === 0
+                    ? 'Get started by assembling your first release bundle.'
+                    : `Managing ${activeBundles.length} active ${activeBundles.length === 1 ? 'bundle' : 'bundles'}.`}
+                </p>
               </div>
-              <Link href="/app/release" className="sm:flex-shrink-0">
-                <Button className="w-full sm:w-auto" variant="secondary">
+              <Link href="/app/release" className="inline-block">
+                <Button variant="secondary">
                   Plan a release
                 </Button>
               </Link>
@@ -834,15 +820,13 @@ function MetricCard({
 
   return (
     <Card className="relative overflow-hidden rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm ring-1 ring-inset ring-transparent">
-      <div className="flex items-start justify-between gap-6">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-graphite-500">{label}</p>
-          <p className="mt-3 text-3xl font-semibold text-graphite-900">{value}</p>
-          <p className="mt-1 text-sm text-graphite-500">{subtext}</p>
-        </div>
-        <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${theme.iconBg} ${theme.iconText} ${theme.accent}`}>
+      <div className="flex flex-col items-center text-center">
+        <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl ${theme.iconBg} ${theme.iconText} ${theme.accent}`}>
           {icon}
         </div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-graphite-500">{label}</p>
+        <p className="mt-2 text-3xl font-semibold text-graphite-900">{value}</p>
+        <p className="mt-1 text-sm text-graphite-500">{subtext}</p>
       </div>
     </Card>
   );

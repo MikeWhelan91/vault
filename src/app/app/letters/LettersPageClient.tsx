@@ -154,12 +154,8 @@ export default function LettersPageClient() {
     return (
       <div className="mx-auto max-w-5xl space-y-8">
         <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 text-center">
             <div className="space-y-2">
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-                <Mail className="h-4 w-4" />
-                Letter Scheduler
-              </span>
               <h1 className="text-3xl font-semibold text-graphite-900">Schedule letters for the future</h1>
               <p className="mt-2 text-sm text-graphite-600">
                 Write letters to be delivered on birthdays, anniversaries, or any special date.
@@ -193,23 +189,19 @@ export default function LettersPageClient() {
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="space-y-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-              <Mail className="h-4 w-4" />
-              Letter Scheduler
-            </span>
-            <div>
-              <h1 className="text-3xl font-semibold text-graphite-900">Your scheduled letters</h1>
-              <p className="mt-2 text-sm text-graphite-600">
-                Write letters to be delivered on birthdays, anniversaries, or any special date.
-              </p>
-            </div>
+        <div className="flex flex-col gap-4">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-semibold text-graphite-900">Your scheduled letters</h1>
+            <p className="mt-2 text-sm text-graphite-600">
+              Write letters to be delivered on birthdays, anniversaries, or any special date.
+            </p>
           </div>
-          <Button onClick={() => setShowCreateModal(true)} size="lg">
-            <Plus className="h-4 w-4" />
-            <span className="ml-2">Schedule new letter</span>
-          </Button>
+          <div className="flex justify-center">
+            <Button onClick={() => setShowCreateModal(true)} size="lg">
+              <Plus className="h-4 w-4" />
+              <span className="ml-2">Schedule new letter</span>
+            </Button>
+          </div>
         </div>
       </section>
 

@@ -106,27 +106,21 @@ export default function BundlesPageClient() {
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Header */}
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="space-y-2">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary-700">
-              <Package className="h-4 w-4" />
-              Release orchestration
-            </span>
-            <div>
-              <h1 className="text-3xl font-semibold text-graphite-900">Your release bundles</h1>
-              <p className="mt-2 text-sm text-graphite-600">
-                Coordinate trustees, confirm delivery timelines, and keep every bundle ready to unlock at the right moment.
-              </p>
-            </div>
+        <div className="flex flex-col gap-4">
+          <div className="space-y-2 text-center">
+            <h1 className="text-3xl font-semibold text-graphite-900">Your release bundles</h1>
+            <p className="mt-2 text-sm text-graphite-600">
+              Coordinate trustees, confirm delivery timelines, and keep every bundle ready to unlock at the right moment.
+            </p>
           </div>
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Link href="/app/release" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto" size="lg">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link href="/app/release">
+              <Button size="lg">
                 Create new bundle
               </Button>
             </Link>
-            <Link href="/app/support" className="w-full sm:w-auto">
-              <Button variant="secondary" className="w-full sm:w-auto" size="lg">
+            <Link href="/app/support">
+              <Button variant="secondary" size="lg">
                 Talk to support
               </Button>
             </Link>

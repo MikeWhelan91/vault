@@ -30,10 +30,7 @@ export default function PricingPageClient() {
     <div className="mx-auto max-w-5xl space-y-10">
       {/* Header */}
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-8 text-center shadow-sm">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-primary-100 bg-primary-50 text-primary-600">
-          <Package className="h-6 w-6" />
-        </div>
-        <h1 className="mt-4 text-3xl font-semibold text-graphite-900 sm:text-4xl">Choose your plan</h1>
+        <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">Choose your plan</h1>
         <p className="mt-3 text-sm text-graphite-600 sm:text-base">
           {tier === 'free'
             ? 'Unlock expanded storage, unlimited bundles, and richer heartbeat controls with Plus.'

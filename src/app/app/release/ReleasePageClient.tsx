@@ -287,11 +287,11 @@ export default function ReleasePageClient() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div>
+      <div className="text-center">
         <h1 className="text-3xl font-bold text-graphite-900">
           Share Your Memories
         </h1>
-        <p className="text-graphite-600 mt-1">
+        <p className="text-graphite-600 mt-2">
           Choose what you want to share and who should receive it
         </p>
       </div>
