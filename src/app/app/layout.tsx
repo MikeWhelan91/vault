@@ -3,7 +3,6 @@
 import { UnlockGate } from '@/components/UnlockGate';
 import { Footer } from '@/components/Footer';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Button } from '@/components/ui/Button';
@@ -70,13 +69,10 @@ function AppNav() {
           href="/app"
           className="transition-opacity hover:opacity-80"
         >
-          <Image
+          <img
             src="/logotextslim.png"
             alt="Forebearer"
-            width={200}
-            height={40}
             className="h-8 w-auto"
-            priority
           />
         </Link>
 

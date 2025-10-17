@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export function Footer() {
@@ -29,11 +28,9 @@ export function Footer() {
               href={toMarketingPath("/")}
               className="inline-block transition-opacity hover:opacity-80"
             >
-              <Image
+              <img
                 src="/logotextslim.png"
                 alt="Forebearer"
-                width={180}
-                height={36}
                 className="h-9 w-auto"
               />
             </Link>

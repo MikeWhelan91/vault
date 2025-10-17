@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -39,13 +38,10 @@ export function SiteHeader() {
             className="transition-opacity hover:opacity-80"
             onClick={() => setIsOpen(false)}
           >
-            <Image
+            <img
               src="/logotextslim.png"
               alt="Forebearer"
-              width={200}
-              height={40}
               className="h-8 w-auto"
-              priority
             />
           </Link>
 
