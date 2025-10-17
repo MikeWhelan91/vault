@@ -18,19 +18,19 @@ const bulletPoints = [
 
 const featureHighlights = [
   {
-    title: "Collect your memories",
+    title: "Collect Your Memories",
     description:
       "Gather photos, videos, voice recordings, handwritten letters, and important account information. Create beautiful collections for different people or occasions.",
     image: "/upload.jpg",
   },
   {
-    title: "Choose the perfect moment",
+    title: "Choose the Perfect Moment",
     description:
       "Schedule a surprise for a birthday or anniversary. Or set up heartbeat check-ins so your memories are shared if you're gone.",
     image: "/decide.jpg",
   },
   {
-    title: "They receive your gift",
+    title: "They Receive Your Gift",
     description:
       "Your loved ones get a secure link with your memories, ready to open and cherish. No complicated setup needed.",
     image: "/handle.jpg",
@@ -39,17 +39,17 @@ const featureHighlights = [
 
 const timeline = [
   {
-    title: "Create your memory bundles",
+    title: "Create Your Memory Bundles",
     description:
       "Upload your favorite photos, write heartfelt messages, record voice notes, or store important account details. Organize them into meaningful collections for the people you love.",
   },
   {
-    title: "Pick who and when",
+    title: "Pick Who and When",
     description:
       "Choose who receives each bundle and when. Set a future date for celebrations, or use heartbeat mode for peace of mind.",
   },
   {
-    title: "Let us take care of the rest",
+    title: "Let Us Take Care of the Rest",
     description:
       "We'll keep your memories safe and deliver them at just the right time. You'll get reminders and can make changes anytime.",
   },
@@ -57,17 +57,17 @@ const timeline = [
 
 const securityFeatures = [
   {
-    title: "Private by design",
+    title: "Private by Design",
     description:
       "Your memories are encrypted before they leave your device. Only you and your chosen recipients can ever see them.",
   },
   {
-    title: "Always reliable",
+    title: "Always Reliable",
     description:
       "Your precious memories are safely stored with automatic backups, so they'll be there when it matters most.",
   },
   {
-    title: "Stay in control",
+    title: "Stay in Control",
     description:
       "Change your mind anytime. Update bundles, adjust delivery dates, or add new recipients whenever you want.",
   },
@@ -223,7 +223,7 @@ export default function LandingPage() {
           <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
             <div className="max-w-3xl space-y-8">
               <h1 className="animate-fade-in-down text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                A memory box for the moments that matter most
+                A Memory Box for the Moments That Matter Most
               </h1>
               <p className="animate-fade-in-up max-w-2xl text-lg text-graphite-100 lg:text-xl" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
                 Store your cherished photos, heartfelt letters, important passwords, and account details in one secure place. Share them with loved ones when the time is right—whether that&apos;s a special date or when you&apos;re no longer around.
@@ -278,7 +278,7 @@ export default function LandingPage() {
         <section id="features" data-animate className="space-y-12 py-20">
           <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('features') ? 'animate-fade-in-up' : 'opacity-0'}`}>
             <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-              From your heart to theirs, in three simple steps
+              From Your Heart to Theirs, in Three Simple Steps
             </h2>
             <p className="mx-auto max-w-2xl text-base text-graphite-600">
               Whether it&apos;s a birthday surprise, anniversary gift, critical account access for your family, or a message for when you&apos;re gone—Forebearer makes it easy to share what matters most.
@@ -331,7 +331,7 @@ export default function LandingPage() {
               <div className="p-8 lg:p-12 space-y-8">
                 <div className="space-y-4">
                   <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-                    How it works
+                    How It Works
                   </h2>
                   <p className="text-base text-graphite-600">
                     Creating and sharing your memory bundles is simple. Just follow these three steps.
@@ -371,7 +371,7 @@ export default function LandingPage() {
             <div className="mx-auto max-w-4xl space-y-8 text-center">
               <div className="space-y-3">
                 <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-                  Your memories, safe and sound
+                  Your Memories, Safe and Sound
                 </h2>
                 <p className="mx-auto max-w-2xl text-base text-graphite-600">
                   We protect your precious moments with care. Everything is encrypted, backed up, and ready to share when the time comes.
@@ -407,7 +407,7 @@ export default function LandingPage() {
         <section id="faq" data-animate className="py-20">
           <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}>
             <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-              Questions? We&apos;ve got answers
+              Questions? We've Got Answers
             </h2>
               <p className="mx-auto max-w-2xl text-base text-graphite-600">
                 Here&apos;s what people usually want to know about creating and sharing their memory bundles.
@@ -443,7 +443,7 @@ export default function LandingPage() {
         <section id="cta" data-animate className="py-24">
           <div className={`rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-lg sm:px-12 lg:px-16 transition-all duration-700 ${visibleSections.has('cta') ? 'animate-scale-in' : 'opacity-0'}`}>
             <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-              Start sharing the memories that matter
+              Start Sharing the Memories That Matter
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-graphite-600">
               Create your first memory bundle with 300 MB of free storage. Upload photos, write messages, store passwords and account details, and choose when to share them with the people you love.
