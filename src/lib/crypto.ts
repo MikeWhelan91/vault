@@ -180,6 +180,10 @@ export async function decryptData(
   key: CryptoKey
 ): Promise<Uint8Array> {
   if (encryptedData.length < SALT_LENGTH + IV_LENGTH) {
+    console.error('[Decrypt] Data too short:', {
+      length: encryptedData.length,
+      required: SALT_LENGTH + IV_LENGTH
+    });
     throw new Error('Invalid encrypted data: too short');
   }
 
@@ -188,6 +192,14 @@ export async function decryptData(
   const iv = encryptedData.slice(SALT_LENGTH, SALT_LENGTH + IV_LENGTH);
   const ciphertext = encryptedData.slice(SALT_LENGTH + IV_LENGTH);
 
+  console.log('[Decrypt] Attempting decryption:', {
+    totalLength: encryptedData.length,
+    saltLength: salt.length,
+    ivLength: iv.length,
+    ciphertextLength: ciphertext.length,
+    firstBytes: bytesToHex(encryptedData.slice(0, Math.min(64, encryptedData.length)))
+  });
+
   try {
     const plaintext = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv },
@@ -195,8 +207,20 @@ export async function decryptData(
       ciphertext
     );
 
+    console.log('[Decrypt] Success:', {
+      plaintextLength: plaintext.byteLength
+    });
+
     return new Uint8Array(plaintext);
   } catch (error) {
+    console.error('[Decrypt] Failed:', {
+      error,
+      encryptedDataLength: encryptedData.length,
+      keyAlgorithm: key.algorithm,
+      keyUsages: key.usages,
+      ivHex: bytesToHex(iv),
+      saltHex: bytesToHex(salt)
+    });
     throw new Error('Decryption failed: invalid key or corrupted data');
   }
 }
