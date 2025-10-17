@@ -63,6 +63,8 @@ export async function POST(request: NextRequest) {
         version: item.version,
         r2Key: item.r2Key,
         itemKeySalt: item.itemKeySalt,
+        wrappedItemKey: item.wrappedItemKey,
+        wrappedItemKeyIV: item.wrappedItemKeyIV,
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),
       })),
