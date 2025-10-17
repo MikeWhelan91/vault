@@ -13,7 +13,15 @@
       "Bash(node:*)",
       "Bash(npx prisma generate:*)",
       "Bash(npx tsx:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(psql:*)",
+      "Bash(npx cap add ios)",
+      "Bash(npx cap add android)",
+      "Bash(copy:*)",
+      "Bash(copy publiclogoonly.png assetssplash.png)",
+      "Bash(npx capacitor-assets:*)",
+      "Bash(npx cap:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

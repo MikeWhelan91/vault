@@ -51,3 +51,11 @@ prisma/.env
 *.swp
 *.swo
 *~
+
+# Capacitor
+/ios/
+/android/
+/assets/
+*.keystore
+keystore.properties
+/icons/

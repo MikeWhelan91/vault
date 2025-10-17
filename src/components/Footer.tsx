@@ -2,10 +2,17 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useIsNativeApp } from '@/lib/platform';
 
 export function Footer() {
   const pathname = usePathname();
   const isAppPage = pathname?.startsWith("/app");
+  const isNativeApp = useIsNativeApp();
+
+  // Hide footer in native mobile apps
+  if (isNativeApp) {
+    return null;
+  }
 
   const toMarketingPath = (path: string) => {
     if (!isAppPage) {

@@ -9,13 +9,16 @@ import { Button } from '@/components/ui/Button';
 import { useState, useRef, useEffect } from 'react';
 import { Crown, ChevronDown, Settings, Lock } from 'lucide-react';
 import type { TierName } from '@/lib/pricing';
+import { useIsNativeApp } from '@/lib/platform';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const isNativeApp = useIsNativeApp();
+
   return (
     <UnlockGate>
-      <div className="flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900">
+      <div className={`flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900 ${isNativeApp ? 'pb-safe' : ''}`}>
         <AppNav />
-        <main className="w-full flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <main className={`w-full flex-1 px-4 py-8 sm:px-6 lg:px-8 ${isNativeApp ? 'pb-20' : ''}`}>
           {children}
         </main>
         <Footer />
@@ -30,6 +33,7 @@ function AppNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const isNativeApp = useIsNativeApp();
 
   const tier = (metadata?.tier as TierName) || 'free';
   const isPaidUser = tier !== 'free';
@@ -62,8 +66,8 @@ function AppNav() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-graphite-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+    <nav className={`sticky top-0 z-50 border-b border-graphite-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 ${isNativeApp ? 'pt-safe' : ''}`}>
+      <div className={`mx-auto flex ${isNativeApp ? 'h-14' : 'h-16'} max-w-6xl items-center justify-between px-4 sm:px-6`}>
         {/* Logo */}
         <Link
           href="/app"
@@ -72,7 +76,7 @@ function AppNav() {
           <img
             src="/logotextslim.png"
             alt="Forebearer"
-            className="h-8 w-auto"
+            className={`${isNativeApp ? 'h-6' : 'h-8'} w-auto`}
           />
         </Link>
 

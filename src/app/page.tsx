@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
@@ -9,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/marketing/SiteHeader";
+import { useIsNativeApp } from "@/lib/platform";
 
 const bulletPoints = [
   "Store memories, passwords, and important documents securely",
@@ -92,8 +94,17 @@ const faqPreview = [
 ];
 
 export default function LandingPage() {
+  const router = useRouter();
+  const isNativeApp = useIsNativeApp();
   const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+
+  // Redirect mobile app users directly to signin
+  useEffect(() => {
+    if (isNativeApp) {
+      router.push('/signin');
+    }
+  }, [isNativeApp, router]);
 
   useEffect(() => {
     const handleScroll = () => {
