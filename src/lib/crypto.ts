@@ -133,15 +133,38 @@ export async function unwrapKey(
   keyUsages: KeyUsage[] = ['encrypt', 'decrypt'],
   extractable: boolean = false
 ): Promise<CryptoKey> {
-  return crypto.subtle.unwrapKey(
-    'raw',
-    wrappedKey,
-    unwrappingKey,
-    { name: 'AES-GCM', iv },
-    { name: 'AES-GCM', length: 256 },
+  console.log('[UnwrapKey] Attempting to unwrap key:', {
+    wrappedKeyLength: wrappedKey.length,
+    ivLength: iv.length,
+    keyUsages,
     extractable,
-    keyUsages
-  );
+    unwrappingKeyAlgorithm: unwrappingKey.algorithm,
+    unwrappingKeyUsages: unwrappingKey.usages,
+    wrappedKeyHex: bytesToHex(wrappedKey.slice(0, Math.min(32, wrappedKey.length))),
+    ivHex: bytesToHex(iv)
+  });
+
+  try {
+    const result = await crypto.subtle.unwrapKey(
+      'raw',
+      wrappedKey,
+      unwrappingKey,
+      { name: 'AES-GCM', iv },
+      { name: 'AES-GCM', length: 256 },
+      extractable,
+      keyUsages
+    );
+
+    console.log('[UnwrapKey] Success');
+    return result;
+  } catch (error) {
+    console.error('[UnwrapKey] Failed:', {
+      error,
+      wrappedKeyLength: wrappedKey.length,
+      ivHex: bytesToHex(iv)
+    });
+    throw error;
+  }
 }
 
 /**
