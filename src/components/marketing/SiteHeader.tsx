@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { href: "/pricing", label: "Pricing" },
   { href: "/faq", label: "FAQ" },
   { href: "/support", label: "Support" },
-  { href: "/release", label: "Release Notes" },
 ];
 
 export function SiteHeader() {
