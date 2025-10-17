@@ -12,7 +12,8 @@
       "Bash(python:*)",
       "Bash(node:*)",
       "Bash(npx prisma generate:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

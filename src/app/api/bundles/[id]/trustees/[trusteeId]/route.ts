@@ -7,10 +7,10 @@ import prisma from '@/lib/prisma';
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string; trusteeId: string } }
+  { params }: { params: Promise<{ id: string; trusteeId: string }> }
 ) {
   try {
-    const { id: bundleId, trusteeId } = params;
+    const { id: bundleId, trusteeId } = await params;
     const body = await request.json();
     const { userId } = body;
 
