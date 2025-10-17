@@ -67,7 +67,7 @@ export function Modal({
 
       {/* Modal */}
       <div
-        className={`relative mx-4 w-full max-h-[90vh] overflow-y-auto rounded-xl border border-graphite-200 bg-white/95 shadow-xl transition-colors supports-[backdrop-filter]:bg-white/80 dark:border-graphite-700 dark:bg-graphite-900/90 dark:supports-[backdrop-filter]:bg-graphite-900/75 ${sizes[size]}`}
+        className={`relative mx-4 w-full max-h-[90vh] overflow-y-auto rounded-xl border border-graphite-200 bg-white shadow-xl ${sizes[size]}`}
         role="dialog"
         aria-modal="true"
       >
