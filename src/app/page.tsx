@@ -302,6 +302,7 @@ export default function LandingPage() {
                     fill
                     className="object-cover transition-transform duration-500 hover:scale-110"
                     sizes="(min-width: 1024px) 33vw, 100vw"
+                    priority
                   />
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-6">
@@ -324,6 +325,7 @@ export default function LandingPage() {
                   fill
                   className="object-cover"
                   sizes="(min-width: 1024px) 50vw, 100vw"
+                  priority
                 />
               </div>
 
