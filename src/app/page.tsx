@@ -409,7 +409,7 @@ export default function LandingPage() {
         <section id="faq" data-animate className="py-20">
           <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}>
             <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
-              Questions? We've Got Answers
+              Questions? We&apos;ve Got Answers
             </h2>
               <p className="mx-auto max-w-2xl text-base text-graphite-600">
                 Here&apos;s what people usually want to know about creating and sharing their memory bundles.
