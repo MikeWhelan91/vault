@@ -24,7 +24,9 @@
       "Bash(git log:*)",
       "Bash(npm run build:android:*)",
       "Bash(npx prisma studio:*)",
-      "Bash(git check-ignore:*)"
+      "Bash(git check-ignore:*)",
+      "Bash(dir:*)",
+      "Bash(./gradlew bundleRelease:*)"
     ],
     "deny": [],
     "ask": []

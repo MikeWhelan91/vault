@@ -3,6 +3,7 @@ import "./globals.css";
 import { CryptoProvider } from "@/contexts/CryptoContext";
 import { ToastProvider } from "@/contexts/ToastContext";
 import { Analytics } from "@vercel/analytics/next";
+import { OfflineDetector } from "@/components/OfflineDetector";
 
 export const metadata: Metadata = {
   title: "Forebearer - Leave Something Behind | Secure Digital Legacy",
@@ -78,6 +79,7 @@ export default function RootLayout({
             {children}
           </CryptoProvider>
         </ToastProvider>
+        <OfflineDetector />
         <Analytics />
       </body>
     </html>
