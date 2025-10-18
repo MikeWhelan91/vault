@@ -30,12 +30,14 @@ export default function SignInPage() {
   const [showEnableBiometric, setShowEnableBiometric] = useState(false);
   const [step, setStep] = useState<'email' | 'auth'>('email'); // Two-step flow
 
-  // Hide splash screen when page is ready
+  // Hide splash screen when page is ready (with small delay to avoid flash)
   useEffect(() => {
     if (isNativeApp) {
-      SplashScreen.hide().catch(err => {
-        console.log('Splash screen already hidden', err);
-      });
+      setTimeout(() => {
+        SplashScreen.hide().catch(err => {
+          console.log('Splash screen already hidden', err);
+        });
+      }, 500); // 0.5 second delay
     }
   }, [isNativeApp]);
 
@@ -334,15 +336,17 @@ export default function SignInPage() {
           )}
         </div>
 
-        {/* Back to home */}
-        <div className="mt-6 text-center">
-          <Link
-            href="/"
-            className="text-sm text-graphite-600 hover:text-graphite-900 transition-colors"
-          >
-            ← Back to home
-          </Link>
-        </div>
+        {/* Back to home - Only show on web, not in native app */}
+        {!isNativeApp && (
+          <div className="mt-6 text-center">
+            <Link
+              href="/"
+              className="text-sm text-graphite-600 hover:text-graphite-900 transition-colors"
+            >
+              ← Back to home
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Biometric Enrollment Modal */}
