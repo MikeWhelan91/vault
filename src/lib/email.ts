@@ -253,7 +253,7 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
                 If you miss your check-in deadline, your designated trustees will receive access to your release bundles.
               </p>
 
-              <a href="https://forebearer.app/app/settings/heartbeat"
+              <a href="https://forebearer.app/app"
                  style="display: inline-block; background-color: #3d9999; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500; margin: 16px 0;">
                 Check In Now
               </a>
@@ -316,7 +316,7 @@ export async function sendCheckInReminder(email: string, daysUntil: number, name
               </p>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/app/settings/heartbeat"
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/app"
                    style="display: inline-block; background-color: #22c55e; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                   Check In Now
                 </a>

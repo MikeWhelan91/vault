@@ -8,7 +8,7 @@ import { sendCheckInReminder, sendReleaseNotification } from '@/lib/email';
  * Hourly cron job that:
  * 1. Checks for overdue heartbeats and triggers releases
  * 2. Checks for time-lock releases that have passed
- * 3. Sends check-in reminders (3 days before deadline)
+ * 3. Sends check-in reminders (3 days and 1 day before deadline)
  *
  * Triggered by GitHub Actions every hour (0 * * * *)
  * Note: GitHub Actions timing may be delayed 5-15 minutes during peak times
@@ -25,6 +25,8 @@ export async function GET(request: NextRequest) {
     const now = new Date();
     const threeDaysFromNow = new Date(now);
     threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+    const oneDayFromNow = new Date(now);
+    oneDayFromNow.setDate(oneDayFromNow.getDate() + 1);
 
     let remindersSent = 0;
     let heartbeatReleases = 0;
@@ -93,7 +95,7 @@ export async function GET(request: NextRequest) {
       timeLockReleases++;
     }
 
-    // 3. Send check-in reminders (3 days before deadline)
+    // 3. Send check-in reminders (3 days and 1 day before deadline)
     const upcomingDeadlines = await prisma.heartbeat.findMany({
       where: {
         enabled: true,
@@ -108,12 +110,18 @@ export async function GET(request: NextRequest) {
     });
 
     for (const heartbeat of upcomingDeadlines) {
-      const daysUntil = Math.ceil(
-        (new Date(heartbeat.nextHeartbeat!).getTime() - now.getTime()) / (24 * 60 * 60 * 1000)
-      );
+      const hoursUntil = (new Date(heartbeat.nextHeartbeat!).getTime() - now.getTime()) / (60 * 60 * 1000);
+      const daysUntil = Math.ceil(hoursUntil / 24);
 
-      await sendCheckInReminder(heartbeat.user.email, daysUntil, heartbeat.user.name);
-      remindersSent++;
+      // Send reminder at approximately 72 hours (3 days) or 24 hours (1 day)
+      // We send if hours are within a 2-hour window of the target (to account for cron running hourly)
+      const shouldSend3DayReminder = hoursUntil >= 70 && hoursUntil <= 74; // 72 ± 2 hours
+      const shouldSend1DayReminder = hoursUntil >= 22 && hoursUntil <= 26; // 24 ± 2 hours
+
+      if (shouldSend3DayReminder || shouldSend1DayReminder) {
+        await sendCheckInReminder(heartbeat.user.email, daysUntil, heartbeat.user.name);
+        remindersSent++;
+      }
     }
 
     return NextResponse.json({
