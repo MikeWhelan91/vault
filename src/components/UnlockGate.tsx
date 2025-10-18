@@ -6,9 +6,12 @@ import { useCrypto } from '@/contexts/CryptoContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { validatePassphrase } from '@/lib/crypto';
+import { initializePushNotifications } from '@/lib/push-notifications';
+import { useIsNativeApp } from '@/lib/platform';
 
 export function UnlockGate({ children }: { children: React.ReactNode }) {
-  const { isUnlocked, unlock, signup } = useCrypto();
+  const { isUnlocked, unlock, signup, session } = useCrypto();
+  const isNativeApp = useIsNativeApp();
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -33,6 +36,20 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
       window.history.replaceState({}, '', window.location.pathname);
     }
   }, []);
+
+  // Initialize push notifications after unlock (mobile only)
+  useEffect(() => {
+    if (isUnlocked && isNativeApp && session.dbUserId) {
+      // Initialize push notifications in background
+      initializePushNotifications(session.dbUserId).then(success => {
+        if (success) {
+          console.log('Push notifications initialized');
+        }
+      }).catch(error => {
+        console.error('Failed to initialize push notifications:', error);
+      });
+    }
+  }, [isUnlocked, isNativeApp, session.dbUserId]);
 
   if (isUnlocked) {
     return <>{children}</>;

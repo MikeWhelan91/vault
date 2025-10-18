@@ -39,6 +39,7 @@ model User {
   releaseBundles  ReleaseBundle[]
   heartbeat       Heartbeat?
   scheduledLetters ScheduledLetter[]
+  pushTokens      PushToken[]
 
   @@index([email])
 }
@@ -211,4 +212,21 @@ model ScheduledLetter {
   @@index([userId])
   @@index([scheduleDate])
   @@index([sent, scheduleDate])
+}
+
+// Push notification tokens for mobile devices
+model PushToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  token     String   // FCM token (Android) or APNs token (iOS)
+  platform  String   // 'android' | 'ios'
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, token]) // Prevent duplicate tokens
+  @@index([userId])
+  @@index([platform])
 }
