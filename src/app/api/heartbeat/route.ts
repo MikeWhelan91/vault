@@ -81,16 +81,27 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Update settings
+      const now = new Date();
+      const nextHeartbeat = new Date(now);
+      nextHeartbeat.setDate(nextHeartbeat.getDate() + (cadenceDays ?? 30));
+
       const heartbeat = await prisma.heartbeat.upsert({
         where: { userId },
         create: {
           userId,
           enabled: enabled ?? false,
           cadenceDays: cadenceDays ?? 30,
+          lastHeartbeat: now,
+          nextHeartbeat: nextHeartbeat,
         },
         update: {
           enabled,
           cadenceDays,
+          // If enabling for the first time or changing cadence, update nextHeartbeat
+          ...(enabled && {
+            nextHeartbeat: nextHeartbeat,
+            lastHeartbeat: now,
+          }),
         },
       });
 
