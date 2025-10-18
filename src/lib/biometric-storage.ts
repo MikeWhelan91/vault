@@ -1,17 +1,26 @@
 /**
  * Secure storage for biometric authentication credentials
  * Uses browser's secure storage on web, native keychain on mobile
+ * Supports multiple accounts - credentials are stored per email
  */
 
 import { platform } from './platform';
 
-const STORAGE_KEY = 'forebearer_biometric_credentials';
+const STORAGE_KEY_PREFIX = 'forebearer_biometric_';
 
 interface BiometricCredentials {
   email: string;
   encryptedPassword: string; // Base64 encoded encrypted password
   iv: string; // Initialization vector for decryption
   enabled: boolean;
+}
+
+/**
+ * Generate storage key for a specific email
+ */
+function getStorageKey(email: string): string {
+  // Normalize email to lowercase for consistent storage
+  return `${STORAGE_KEY_PREFIX}${email.toLowerCase()}`;
 }
 
 /**
@@ -63,13 +72,14 @@ async function getDeviceId(): Promise<string> {
 }
 
 /**
- * Check if biometric credentials are stored
+ * Check if biometric credentials are stored for a specific email
  */
-export function hasBiometricCredentials(): boolean {
+export function hasBiometricCredentials(email?: string): boolean {
   if (!platform.isMobile()) return false;
+  if (!email) return false;
 
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(getStorageKey(email));
     if (!stored) return false;
 
     const creds: BiometricCredentials = JSON.parse(stored);
@@ -91,40 +101,24 @@ export async function storeBiometricCredentials(email: string, password: string)
   const { encrypted, iv } = encryptPassword(password, deviceId);
 
   const credentials: BiometricCredentials = {
-    email,
+    email: email.toLowerCase(),
     encryptedPassword: encrypted,
     iv,
     enabled: true,
   };
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(credentials));
+  localStorage.setItem(getStorageKey(email), JSON.stringify(credentials));
 }
 
 /**
- * Retrieve stored email for biometric login
+ * Retrieve and decrypt password for biometric login for a specific email
  */
-export function getStoredEmail(): string | null {
+export async function retrieveBiometricCredentials(email: string): Promise<{ email: string; password: string } | null> {
   if (!platform.isMobile()) return null;
+  if (!email) return null;
 
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return null;
-
-    const creds: BiometricCredentials = JSON.parse(stored);
-    return creds.enabled ? creds.email : null;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Retrieve and decrypt password for biometric login
- */
-export async function retrieveBiometricCredentials(): Promise<{ email: string; password: string } | null> {
-  if (!platform.isMobile()) return null;
-
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(getStorageKey(email));
     if (!stored) return null;
 
     const creds: BiometricCredentials = JSON.parse(stored);
@@ -144,15 +138,15 @@ export async function retrieveBiometricCredentials(): Promise<{ email: string; p
 }
 
 /**
- * Disable biometric login and clear stored credentials
+ * Disable biometric login and clear stored credentials for a specific email
  */
-export function clearBiometricCredentials(): void {
-  localStorage.removeItem(STORAGE_KEY);
+export function clearBiometricCredentials(email: string): void {
+  localStorage.removeItem(getStorageKey(email));
 }
 
 /**
- * Check if biometric login is enabled for current user
+ * Check if biometric login is enabled for a specific email
  */
-export function isBiometricEnabled(): boolean {
-  return hasBiometricCredentials();
+export function isBiometricEnabled(email: string): boolean {
+  return hasBiometricCredentials(email);
 }

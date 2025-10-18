@@ -28,34 +28,35 @@ export default function SignInPage() {
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [hasSavedCredentials, setHasSavedCredentials] = useState(false);
   const [showEnableBiometric, setShowEnableBiometric] = useState(false);
+  const [step, setStep] = useState<'email' | 'auth'>('email'); // Two-step flow
 
-  // Check biometric availability and saved credentials on mount
+  // Check biometric availability on mount
   useEffect(() => {
     async function init() {
       if (isNativeApp) {
         const available = await biometric.isAvailable();
         setBiometricAvailable(available);
+      }
 
-        const hasCredentials = hasBiometricCredentials();
-        setHasSavedCredentials(hasCredentials);
-
-        if (hasCredentials) {
-          const storedEmail = getStoredEmail();
-          if (storedEmail) {
-            setEmail(storedEmail);
-          }
-        }
-      } else {
-        // Web fallback - load saved email
-        const savedEmail = localStorage.getItem('vault_user_email');
-        if (savedEmail) {
-          setEmail(savedEmail);
-        }
+      // Load last used email
+      const savedEmail = localStorage.getItem('vault_user_email');
+      if (savedEmail) {
+        setEmail(savedEmail);
       }
     }
 
     init();
   }, [isNativeApp]);
+
+  // Check for biometric credentials when email changes
+  useEffect(() => {
+    if (email && isNativeApp && biometricAvailable) {
+      const hasCredentials = hasBiometricCredentials(email);
+      setHasSavedCredentials(hasCredentials);
+    } else {
+      setHasSavedCredentials(false);
+    }
+  }, [email, isNativeApp, biometricAvailable]);
 
   // Redirect if already unlocked (but not if showing biometric modal)
   useEffect(() => {
@@ -63,6 +64,23 @@ export default function SignInPage() {
       router.push('/app');
     }
   }, [isUnlocked, showEnableBiometric, router]);
+
+  const handleEmailContinue = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    // Validate email
+    if (!email.trim() || !email.includes('@')) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // Save email for next time
+    localStorage.setItem('vault_user_email', email.trim().toLowerCase());
+
+    // Move to auth step
+    setStep('auth');
+  };
 
   const handleBiometricSignIn = async () => {
     setIsLoading(true);
@@ -83,8 +101,8 @@ export default function SignInPage() {
 
       await haptics.success();
 
-      // Retrieve stored credentials
-      const credentials = await retrieveBiometricCredentials();
+      // Retrieve stored credentials for this email
+      const credentials = await retrieveBiometricCredentials(email.trim().toLowerCase());
 
       if (!credentials) {
         setError('Failed to retrieve credentials. Please sign in with password.');
@@ -118,15 +136,9 @@ export default function SignInPage() {
     }
   };
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handlePasswordSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    // Validate email
-    if (!email.trim() || !email.includes('@')) {
-      setError('Please enter a valid email address');
-      return;
-    }
 
     if (!password) {
       setError('Please enter your password');
@@ -136,9 +148,6 @@ export default function SignInPage() {
     setIsLoading(true);
 
     try {
-      // Save email for next time
-      localStorage.setItem('vault_user_email', email.trim().toLowerCase());
-
       // Unlock vault
       await unlock(password, email.trim().toLowerCase());
 
@@ -155,6 +164,12 @@ export default function SignInPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleBackToEmail = () => {
+    setStep('email');
+    setPassword('');
+    setError('');
   };
 
   return (
@@ -179,88 +194,125 @@ export default function SignInPage() {
 
         {/* Form */}
         <div className="card p-8 animate-slide-up">
-          {/* Biometric Sign In Button - Show if credentials are saved */}
-          {isNativeApp && biometricAvailable && hasSavedCredentials && (
-            <div className="mb-6">
-              <Button
-                type="button"
-                onClick={handleBiometricSignIn}
-                className="w-full flex items-center justify-center gap-2"
-                variant="secondary"
-                size="lg"
-                disabled={isLoading}
-              >
-                <Fingerprint className="w-5 h-5" />
-                Sign in with Biometrics
-              </Button>
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-graphite-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-graphite-500">Or sign in with password</span>
+          {step === 'email' ? (
+            /* Step 1: Email Entry */
+            <>
+              <form onSubmit={handleEmailContinue} className="space-y-5">
+                <Input
+                  type="email"
+                  label="Email Address"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError('');
+                  }}
+                  placeholder="you@example.com"
+                  error={error}
+                  disabled={isLoading}
+                  autoComplete="email"
+                  autoFocus
+                />
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={!email}
+                >
+                  Continue
+                </Button>
+              </form>
+
+              <div className="mt-6 text-center">
+                <p className="text-sm text-graphite-600">
+                  Don&apos;t have an account?{' '}
+                  <Link
+                    href="/signup"
+                    className="text-accent-600 hover:underline font-medium"
+                  >
+                    Sign Up
+                  </Link>
+                </p>
+              </div>
+
+              <div className="mt-6 pt-6 border-t border-graphite-200">
+                <p className="text-xs text-graphite-600 leading-relaxed">
+                  Your password is used to decrypt your data locally. We never see your password or decrypted data.
+                </p>
+              </div>
+            </>
+          ) : (
+            /* Step 2: Authentication (Password or Biometric) */
+            <>
+              {/* Show email with edit option */}
+              <div className="mb-6 p-3 bg-graphite-50 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-graphite-500 mb-1">Signing in as</p>
+                    <p className="text-sm font-medium text-graphite-900 truncate">{email}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleBackToEmail}
+                    className="text-xs text-primary-600 hover:text-primary-700 font-medium ml-3"
+                  >
+                    Change
+                  </button>
                 </div>
               </div>
-            </div>
+
+              {/* Biometric Sign In Button - Show if credentials are saved */}
+              {isNativeApp && biometricAvailable && hasSavedCredentials && (
+                <div className="mb-6">
+                  <Button
+                    type="button"
+                    onClick={handleBiometricSignIn}
+                    className="w-full flex items-center justify-center gap-2"
+                    variant="secondary"
+                    size="lg"
+                    disabled={isLoading}
+                  >
+                    <Fingerprint className="w-5 h-5" />
+                    Sign in with Biometrics
+                  </Button>
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-graphite-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-2 bg-white text-graphite-500">Or use password</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Password Form */}
+              <form onSubmit={handlePasswordSignIn} className="space-y-5">
+                <Input
+                  type="password"
+                  label="Password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError('');
+                  }}
+                  placeholder="Enter your password"
+                  error={error}
+                  disabled={isLoading}
+                  autoComplete="current-password"
+                  autoFocus
+                />
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoading || !password}
+                  isLoading={isLoading}
+                >
+                  Sign In
+                </Button>
+              </form>
+            </>
           )}
-
-          <form onSubmit={handleSignIn} className="space-y-5">
-            <Input
-              type="email"
-              label="Email Address"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError('');
-              }}
-              placeholder="you@example.com"
-              disabled={isLoading}
-              autoComplete="email"
-              autoFocus={!email}
-            />
-
-            <Input
-              type="password"
-              label="Password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setError('');
-              }}
-              placeholder="Enter your password"
-              error={error}
-              disabled={isLoading}
-              autoComplete="current-password"
-              autoFocus={!!email}
-            />
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading || !email || !password}
-              isLoading={isLoading}
-            >
-              Sign In
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-sm text-graphite-600">
-              Don&apos;t have an account?{' '}
-              <Link
-                href="/signup"
-                className="text-accent-600 hover:underline font-medium"
-              >
-                Sign Up
-              </Link>
-            </p>
-          </div>
-
-          <div className="mt-6 pt-6 border-t border-graphite-200">
-            <p className="text-xs text-graphite-600 leading-relaxed">
-              Your password is used to decrypt your data locally. We never see your password or decrypted data.
-            </p>
-          </div>
         </div>
 
         {/* Back to home */}
