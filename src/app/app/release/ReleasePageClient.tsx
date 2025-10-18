@@ -482,7 +482,7 @@ export default function ReleasePageClient() {
                         <p className="text-sm text-amber-800 mb-3">
                           Plus members can choose any check-in frequency from 1 to 365 days.
                         </p>
-                        <Link href="/app/pricing">
+                        <Link href="/app/settings/billing">
                           <Button size="sm" variant="secondary" className="bg-white hover:bg-amber-50">
                             Upgrade to Plus
                           </Button>
