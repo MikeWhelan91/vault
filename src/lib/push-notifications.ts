@@ -80,15 +80,10 @@ export async function initializePushNotifications(userId: string): Promise<boole
       (notification: ActionPerformed) => {
         console.log('Push notification action performed:', notification);
 
-        // Handle deep linking based on notification data
-        const data = notification.notification.data;
-        if (data.bundleId) {
-          // Navigate to bundles page
-          window.location.href = '/app/bundles';
-        } else {
-          // Default: navigate to app home
-          window.location.href = '/app';
-        }
+        // App is now in the foreground
+        // Don't navigate - just let the app open naturally
+        // If user is locked, they'll see the unlock screen
+        // If user is unlocked, they'll see wherever they were
       }
     );
 

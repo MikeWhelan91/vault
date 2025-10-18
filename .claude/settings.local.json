@@ -22,7 +22,8 @@
       "Bash(npx capacitor-assets:*)",
       "Bash(npx cap:*)",
       "Bash(git log:*)",
-      "Bash(npm run build:android:*)"
+      "Bash(npm run build:android:*)",
+      "Bash(npx prisma studio:*)"
     ],
     "deny": [],
     "ask": []

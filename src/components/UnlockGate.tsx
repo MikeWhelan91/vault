@@ -98,10 +98,12 @@ export function UnlockGate({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex items-center justify-center bg-ivory-50 dark:bg-graphite-900 px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <Link href="/" className="inline-block mb-6">
-            <h1 className="text-2xl font-semibold text-graphite-900 dark:text-ivory-50">
-              Forebearer
-            </h1>
+          <Link href="/" className="inline-block mb-6 transition-opacity hover:opacity-80">
+            <img
+              src="/logotextslim.png"
+              alt="Forebearer"
+              className="h-10 w-auto mx-auto"
+            />
           </Link>
           <h2 className="text-3xl font-light text-graphite-900 dark:text-ivory-50 mb-2">
             {mode === 'login' ? 'Access Your Vault' : 'Create Your Account'}

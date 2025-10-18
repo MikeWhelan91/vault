@@ -99,10 +99,10 @@ export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
 
-  // Redirect mobile app users directly to signin
+  // Redirect mobile app users directly to app
   useEffect(() => {
     if (isNativeApp) {
-      router.push('/signin');
+      router.push('/app');
     }
   }, [isNativeApp, router]);
 
