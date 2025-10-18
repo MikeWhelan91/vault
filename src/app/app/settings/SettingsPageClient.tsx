@@ -7,7 +7,7 @@ import { useToast } from '@/contexts/ToastContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
-import { User, Trash2, Database, AlertTriangle, CreditCard, Fingerprint, Smartphone } from 'lucide-react';
+import { User, Trash2, Database, AlertTriangle, CreditCard, Fingerprint, Smartphone, Settings } from 'lucide-react';
 import { useIsNativeApp } from '@/lib/platform';
 import { biometric, haptics } from '@/lib/mobile';
 import {
@@ -17,6 +17,7 @@ import {
   isBiometricEnabled,
 } from '@/lib/biometric-storage';
 import { getPreferences, setPreference } from '@/lib/preferences';
+import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 
 export default function SettingsPageClient() {
   const router = useRouter();
@@ -176,12 +177,12 @@ export default function SettingsPageClient() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-graphite-900">Settings</h1>
-        <p className="text-sm sm:text-base text-graphite-600 mt-1">
-          Manage your account and preferences
-        </p>
-      </div>
+      <MobilePageHeader
+        title="Settings"
+        subtitle="Manage your account and preferences"
+        icon={Settings}
+        iconColor="text-graphite-600"
+      />
 
       {/* Settings Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { Calendar, Heart, Package, Users, Clock, FileText, ShieldCheck, ArrowRight, StickyNote, Pause, Play } from 'lucide-react';
+import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 
 interface Bundle {
   id: string;
@@ -105,28 +106,26 @@ export default function BundlesPageClient() {
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Header */}
-      <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-semibold text-graphite-900">Your Release Bundles</h1>
-            <p className="mt-2 text-sm text-graphite-600">
-              Coordinate trustees, confirm delivery timelines, and keep every bundle ready to unlock at the right moment.
-            </p>
-          </div>
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+      <MobilePageHeader
+        title="My Bundles"
+        subtitle="Coordinate trustees, confirm delivery timelines, and keep every bundle ready to unlock at the right moment."
+        icon={Package}
+        iconColor="text-emerald-600"
+        actions={
+          <>
             <Link href="/app/release">
-              <Button size="lg">
+              <Button size="sm">
                 Create new bundle
               </Button>
             </Link>
             <Link href="/app/support">
-              <Button variant="secondary" size="lg">
+              <Button variant="secondary" size="sm">
                 Talk to support
               </Button>
             </Link>
-          </div>
-        </div>
-      </section>
+          </>
+        }
+      />
 
       {/* Bundles List */}
       {bundles.length === 0 ? (

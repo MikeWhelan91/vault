@@ -9,9 +9,10 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import type { ReleaseMode, ReleaseBundle, Trustee } from '@/types';
-import { Calendar, Heart, FileText, StickyNote, Plus, X, Crown } from 'lucide-react';
+import { Calendar, Heart, FileText, StickyNote, Plus, X, Crown, Send } from 'lucide-react';
 import { UpgradePrompt, type UpgradeReason } from '@/components/UpgradePrompt';
 import { canCreateBundle, canAddTrustee, getTierLimits, type TierName } from '@/lib/pricing';
+import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 
 export default function ReleasePageClient() {
   const router = useRouter();
@@ -276,14 +277,12 @@ export default function ReleasePageClient() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-graphite-900">
-          Share Your Memories
-        </h1>
-        <p className="text-graphite-600 mt-2">
-          Choose what you want to share and who should receive it
-        </p>
-      </div>
+      <MobilePageHeader
+        title="Create Release"
+        subtitle="Choose what you want to share and who should receive it"
+        icon={Send}
+        iconColor="text-violet-600"
+      />
 
       {/* Bundle Limit Reached - Show Upgrade Prompt */}
       {!canCreate && (
