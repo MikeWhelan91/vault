@@ -99,28 +99,29 @@ export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
 
-  // Redirect mobile app users directly to app BEFORE rendering
+  // Redirect mobile app users directly to app
   useEffect(() => {
     if (isNativeApp) {
-      router.replace('/app'); // Use replace instead of push
+      router.replace('/app');
     }
   }, [isNativeApp, router]);
 
-  // Don't render anything if this is a native app
-  if (isNativeApp) {
-    return null;
-  }
-
+  // Handle scroll tracking (only on web)
   useEffect(() => {
+    if (isNativeApp) return;
+
     const handleScroll = () => {
       setScrollY(window.scrollY);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isNativeApp]);
 
+  // Handle section visibility tracking (only on web)
   useEffect(() => {
+    if (isNativeApp) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -137,7 +138,12 @@ export default function LandingPage() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [isNativeApp]);
+
+  // Don't render anything if this is a native app
+  if (isNativeApp) {
+    return null;
+  }
 
   const structuredData = {
     "@context": "https://schema.org",
