@@ -7,6 +7,7 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 import { App } from '@capacitor/app';
 import { BiometricAuth, BiometryType } from '@aparajita/capacitor-biometric-auth';
 import { platform } from './platform';
+import { isHapticsEnabled } from './preferences';
 
 /**
  * Initialize mobile app features
@@ -36,7 +37,7 @@ export const haptics = {
    * Light impact (e.g., button tap)
    */
   light: async () => {
-    if (!platform.isMobile()) return;
+    if (!platform.isMobile() || !isHapticsEnabled()) return;
     try {
       await Haptics.impact({ style: ImpactStyle.Light });
     } catch (error) {
@@ -48,7 +49,7 @@ export const haptics = {
    * Medium impact (e.g., toggle switch)
    */
   medium: async () => {
-    if (!platform.isMobile()) return;
+    if (!platform.isMobile() || !isHapticsEnabled()) return;
     try {
       await Haptics.impact({ style: ImpactStyle.Medium });
     } catch (error) {
@@ -60,7 +61,7 @@ export const haptics = {
    * Heavy impact (e.g., delete action)
    */
   heavy: async () => {
-    if (!platform.isMobile()) return;
+    if (!platform.isMobile() || !isHapticsEnabled()) return;
     try {
       await Haptics.impact({ style: ImpactStyle.Heavy });
     } catch (error) {
@@ -72,7 +73,7 @@ export const haptics = {
    * Success notification
    */
   success: async () => {
-    if (!platform.isMobile()) return;
+    if (!platform.isMobile() || !isHapticsEnabled()) return;
     try {
       await Haptics.notification({ type: NotificationType.Success });
     } catch (error) {
@@ -84,7 +85,7 @@ export const haptics = {
    * Warning notification
    */
   warning: async () => {
-    if (!platform.isMobile()) return;
+    if (!platform.isMobile() || !isHapticsEnabled()) return;
     try {
       await Haptics.notification({ type: NotificationType.Warning });
     } catch (error) {
@@ -96,7 +97,7 @@ export const haptics = {
    * Error notification
    */
   error: async () => {
-    if (!platform.isMobile()) return;
+    if (!platform.isMobile() || !isHapticsEnabled()) return;
     try {
       await Haptics.notification({ type: NotificationType.Error });
     } catch (error) {

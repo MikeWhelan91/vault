@@ -21,7 +21,8 @@
       "Bash(copy publiclogoonly.png assetssplash.png)",
       "Bash(npx capacitor-assets:*)",
       "Bash(npx cap:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(npm run build:android:*)"
     ],
     "deny": [],
     "ask": []

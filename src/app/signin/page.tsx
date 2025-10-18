@@ -12,7 +12,6 @@ import {
   hasBiometricCredentials,
   retrieveBiometricCredentials,
   storeBiometricCredentials,
-  getStoredEmail,
   clearBiometricCredentials,
 } from '@/lib/biometric-storage';
 import { Fingerprint } from 'lucide-react';

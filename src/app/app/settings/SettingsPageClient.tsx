@@ -7,15 +7,103 @@ import { useToast } from '@/contexts/ToastContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
-import { User, Trash2, Database, AlertTriangle, CreditCard } from 'lucide-react';
+import { User, Trash2, Database, AlertTriangle, CreditCard, Fingerprint, Smartphone } from 'lucide-react';
+import { useIsNativeApp } from '@/lib/platform';
+import { biometric, haptics } from '@/lib/mobile';
+import {
+  hasBiometricCredentials,
+  storeBiometricCredentials,
+  clearBiometricCredentials,
+  isBiometricEnabled,
+} from '@/lib/biometric-storage';
+import { getPreferences, setPreference } from '@/lib/preferences';
 
 export default function SettingsPageClient() {
   const router = useRouter();
   const { session, metadata, updateMetadata } = useCrypto();
   const { showToast } = useToast();
+  const isNativeApp = useIsNativeApp();
   const [showDeleteDataModal, setShowDeleteDataModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [showBiometricModal, setShowBiometricModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [biometricEnabled, setBiometricEnabled] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [password, setPassword] = useState('');
+  const [hapticsEnabled, setHapticsEnabled] = useState(true);
+
+  // Check biometric availability and preferences on mount
+  useEffect(() => {
+    async function init() {
+      if (isNativeApp && session.userId) {
+        const available = await biometric.isAvailable();
+        setBiometricAvailable(available);
+
+        if (available) {
+          const enabled = isBiometricEnabled(session.userId);
+          setBiometricEnabled(enabled);
+        }
+      }
+
+      // Load preferences
+      const prefs = getPreferences();
+      setHapticsEnabled(prefs.hapticsEnabled);
+    }
+
+    init();
+  }, [isNativeApp, session.userId]);
+
+  const handleEnableBiometric = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password) return;
+
+    setIsProcessing(true);
+    try {
+      await haptics.medium();
+      await storeBiometricCredentials(session.userId, password);
+      await haptics.success();
+
+      setBiometricEnabled(true);
+      setShowBiometricModal(false);
+      setPassword('');
+      showToast('Biometric authentication enabled', 'success');
+    } catch (error) {
+      await haptics.error();
+      console.error('Failed to enable biometric:', error);
+      showToast('Failed to enable biometric authentication', 'error');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleDisableBiometric = async () => {
+    try {
+      await haptics.medium();
+      clearBiometricCredentials(session.userId);
+      setBiometricEnabled(false);
+      showToast('Biometric authentication disabled', 'success');
+    } catch (error) {
+      console.error('Failed to disable biometric:', error);
+      showToast('Failed to disable biometric authentication', 'error');
+    }
+  };
+
+  const handleToggleHaptics = async () => {
+    const newValue = !hapticsEnabled;
+    setHapticsEnabled(newValue);
+    setPreference('hapticsEnabled', newValue);
+
+    // Give feedback only if enabling (not disabling)
+    if (newValue) {
+      await haptics.medium();
+    }
+
+    showToast(
+      newValue ? 'Haptic feedback enabled' : 'Haptic feedback disabled',
+      'success'
+    );
+  };
 
   const handleDeleteAllData = async () => {
     setIsDeleting(true);
@@ -137,6 +225,31 @@ export default function SettingsPageClient() {
             </div>
           </div>
         </Card>
+
+        {/* Haptic Feedback - Mobile Only */}
+        {isNativeApp && (
+          <Card>
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
+                <Smartphone className="w-5 h-5 text-graphite-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-base font-semibold text-graphite-900 mb-2">Haptic Feedback</h2>
+                <p className="text-sm text-graphite-600 mb-3">
+                  {hapticsEnabled ? 'Vibration enabled for interactions' : 'Vibration disabled'}
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleToggleHaptics}
+                  className="text-xs"
+                >
+                  {hapticsEnabled ? 'Disable' : 'Enable'}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Delete All Data */}
         <Card>
