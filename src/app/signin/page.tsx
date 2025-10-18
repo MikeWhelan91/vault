@@ -65,13 +65,14 @@ export default function SignInPage() {
   }, [isUnlocked, showEnableBiometric, router]);
 
   // Reset to email step when user returns to signin page (e.g., after locking vault)
+  // But don't reset if we're showing the biometric enrollment modal
   useEffect(() => {
-    if (!isUnlocked) {
+    if (!isUnlocked && !showEnableBiometric) {
       setStep('email');
       setPassword('');
       setError('');
     }
-  }, [isUnlocked]);
+  }, [isUnlocked, showEnableBiometric]);
 
   const handleEmailContinue = (e: React.FormEvent) => {
     e.preventDefault();
