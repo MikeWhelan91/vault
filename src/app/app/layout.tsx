@@ -1,9 +1,8 @@
 'use client';
 
-import { UnlockGate } from '@/components/UnlockGate';
 import { Footer } from '@/components/Footer';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Button } from '@/components/ui/Button';
 import { useState, useRef, useEffect } from 'react';
@@ -14,18 +13,30 @@ import { BottomNav } from '@/components/mobile/BottomNav';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isNativeApp = useIsNativeApp();
+  const { isUnlocked } = useCrypto();
+  const router = useRouter();
+
+  // Redirect to signin if not unlocked
+  useEffect(() => {
+    if (!isUnlocked) {
+      router.push('/signin');
+    }
+  }, [isUnlocked, router]);
+
+  // Don't render anything if not unlocked (will redirect)
+  if (!isUnlocked) {
+    return null;
+  }
 
   return (
-    <UnlockGate>
-      <div className={`flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900 ${isNativeApp ? 'pt-safe pb-safe' : ''}`}>
-        <AppNav />
-        <main className={`w-full flex-1 px-4 sm:px-6 lg:px-8 ${isNativeApp ? 'pt-6 pb-24' : 'py-8'}`}>
-          {children}
-        </main>
-        <Footer />
-        <BottomNav />
-      </div>
-    </UnlockGate>
+    <div className={`flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900 ${isNativeApp ? 'pt-safe pb-safe' : ''}`}>
+      <AppNav />
+      <main className={`w-full flex-1 px-4 sm:px-6 lg:px-8 ${isNativeApp ? 'pt-6 pb-24' : 'py-8'}`}>
+        {children}
+      </main>
+      <Footer />
+      <BottomNav />
+    </div>
   );
 }
 
