@@ -8,6 +8,16 @@ const config: CapacitorConfig = {
     url: 'https://forebearer.app',
     cleartext: true
   },
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 0,
+      launchAutoHide: false,
+      androidScaleType: 'CENTER_CROP',
+      showSpinner: false,
+      splashFullScreen: true,
+      splashImmersive: true,
+    }
+  },
   ios: {
     contentInset: 'always',
   },

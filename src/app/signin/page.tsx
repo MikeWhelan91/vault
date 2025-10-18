@@ -15,6 +15,7 @@ import {
   clearBiometricCredentials,
 } from '@/lib/biometric-storage';
 import { Fingerprint } from 'lucide-react';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -28,6 +29,15 @@ export default function SignInPage() {
   const [hasSavedCredentials, setHasSavedCredentials] = useState(false);
   const [showEnableBiometric, setShowEnableBiometric] = useState(false);
   const [step, setStep] = useState<'email' | 'auth'>('email'); // Two-step flow
+
+  // Hide splash screen when page is ready
+  useEffect(() => {
+    if (isNativeApp) {
+      SplashScreen.hide().catch(err => {
+        console.log('Splash screen already hidden', err);
+      });
+    }
+  }, [isNativeApp]);
 
   // Check biometric availability on mount
   useEffect(() => {
