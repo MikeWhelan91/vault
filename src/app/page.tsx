@@ -99,12 +99,17 @@ export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
 
-  // Redirect mobile app users directly to app
+  // Redirect mobile app users directly to app BEFORE rendering
   useEffect(() => {
     if (isNativeApp) {
-      router.push('/app');
+      router.replace('/app'); // Use replace instead of push
     }
   }, [isNativeApp, router]);
+
+  // Don't render anything if this is a native app
+  if (isNativeApp) {
+    return null;
+  }
 
   useEffect(() => {
     const handleScroll = () => {
