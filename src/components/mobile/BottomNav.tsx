@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, FileText, Send, MoreHorizontal, Package, Mail, Settings, X, Crown } from 'lucide-react';
+import { Home, FileText, Send, MoreHorizontal, Package, Mail, Settings, X, Crown, Lock } from 'lucide-react';
 import { haptics } from '@/lib/mobile';
 import { useIsNativeApp } from '@/lib/platform';
 import { useState } from 'react';
@@ -12,7 +12,7 @@ export function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
   const isNativeApp = useIsNativeApp();
-  const { metadata } = useCrypto();
+  const { metadata, lock } = useCrypto();
   const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   if (!isNativeApp) {
@@ -29,9 +29,9 @@ export function BottomNav() {
   ];
 
   const moreMenuItems = [
-    { name: 'My Bundles', href: '/app/bundles', icon: Package, requiresPaid: false },
-    { name: 'Letters', href: '/app/letters', icon: Mail, requiresPaid: true },
-    { name: 'Settings', href: '/app/settings', icon: Settings, requiresPaid: false },
+    { name: 'My Bundles', href: '/app/bundles', icon: Package, requiresPaid: false, isAction: false },
+    { name: 'Letters', href: '/app/letters', icon: Mail, requiresPaid: true, isAction: false },
+    { name: 'Settings', href: '/app/settings', icon: Settings, requiresPaid: false, isAction: false },
   ];
 
   const handleNavigate = async (href: string) => {
@@ -48,6 +48,12 @@ export function BottomNav() {
   const handleCloseMenu = async () => {
     await haptics.light();
     setShowMoreMenu(false);
+  };
+
+  const handleLockVault = async () => {
+    await haptics.medium();
+    setShowMoreMenu(false);
+    lock();
   };
 
   const isActive = (href: string) => {
@@ -156,6 +162,17 @@ export function BottomNav() {
                     </button>
                   );
                 })}
+
+                {/* Lock Vault - Separator and Lock button */}
+                <div className="pt-2 mt-2 border-t border-graphite-200">
+                  <button
+                    onClick={handleLockVault}
+                    className="w-full flex items-center gap-4 p-4 rounded-xl text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+                  >
+                    <Lock className="w-5 h-5 stroke-[1.5]" />
+                    <span className="text-base font-medium">Lock Vault</span>
+                  </button>
+                </div>
               </div>
 
               {/* Upgrade prompt for free users */}

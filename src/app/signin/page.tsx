@@ -57,12 +57,12 @@ export default function SignInPage() {
     init();
   }, [isNativeApp]);
 
-  // Redirect if already unlocked
+  // Redirect if already unlocked (but not if showing biometric modal)
   useEffect(() => {
-    if (isUnlocked) {
+    if (isUnlocked && !showEnableBiometric) {
       router.push('/app');
     }
-  }, [isUnlocked, router]);
+  }, [isUnlocked, showEnableBiometric, router]);
 
   const handleBiometricSignIn = async () => {
     setIsLoading(true);
