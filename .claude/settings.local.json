@@ -23,7 +23,8 @@
       "Bash(npx cap:*)",
       "Bash(git log:*)",
       "Bash(npm run build:android:*)",
-      "Bash(npx prisma studio:*)"
+      "Bash(npx prisma studio:*)",
+      "Bash(git check-ignore:*)"
     ],
     "deny": [],
     "ask": []

@@ -8,11 +8,14 @@ import { Button } from '@/components/ui/Button';
 import { getTierLimits, type TierName } from '@/lib/pricing';
 import { CreditCard, Check, ArrowLeft, Crown, Loader2 } from 'lucide-react';
 import { STRIPE_PRICES } from '@/lib/stripe';
+import { useIsNativeApp } from '@/lib/platform';
+import { Browser } from '@capacitor/browser';
 
 export default function BillingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { metadata } = useCrypto();
+  const isNativeApp = useIsNativeApp();
   const [isLoadingMonthly, setIsLoadingMonthly] = useState(false);
   const [isLoadingAnnual, setIsLoadingAnnual] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -69,9 +72,25 @@ export default function BillingPage() {
         throw new Error(data.error || 'Failed to create checkout session');
       }
 
-      // Redirect to Stripe Checkout using the session URL
+      // Redirect to Stripe Checkout
       if (data.url) {
-        window.location.href = data.url;
+        if (isNativeApp) {
+          // On mobile, open in in-app browser tab
+          await Browser.open({
+            url: data.url,
+            presentationStyle: 'popover',
+            toolbarColor: '#FFFFFF'
+          });
+
+          // Show message to refresh after completing payment
+          setMessage({
+            type: 'success',
+            text: 'Complete your payment in the browser. Return here and refresh to see your updated subscription.',
+          });
+        } else {
+          // On web, redirect normally
+          window.location.href = data.url;
+        }
       } else {
         throw new Error('No checkout URL received');
       }
