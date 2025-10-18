@@ -314,6 +314,7 @@ export default function DashboardPageClient() {
           value={metadata.items.length.toString()}
           subtext="files & notes"
           tone="primary"
+          href="/app/items"
         />
         <MetricCard
           icon={<Package className="w-5 h-5" />}
@@ -321,6 +322,7 @@ export default function DashboardPageClient() {
           value={activeBundles.length.toString()}
           subtext={tierLimits.bundles.max ? `of ${tierLimits.bundles.max}` : 'unlimited'}
           tone="emerald"
+          href="/app/bundles"
         />
         <MetricCard
           icon={<CheckCircle className="w-5 h-5" />}
@@ -328,6 +330,7 @@ export default function DashboardPageClient() {
           value={releasedBundles.length.toString()}
           subtext="bundles sent"
           tone="violet"
+          href="/app/bundles"
         />
         <MetricCard
           icon={<TrendingUp className="w-5 h-5" />}
@@ -335,6 +338,7 @@ export default function DashboardPageClient() {
           value={`${storagePercentage.toFixed(0)}%`}
           subtext={formatBytes(metadata.totalSize)}
           tone={storagePercentage > 85 ? 'red' : 'amber'}
+          href="/app/items"
         />
       </div>
 
@@ -797,25 +801,41 @@ function MetricCard({
   value,
   subtext,
   tone = 'primary',
+  href,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   subtext: string;
   tone?: keyof typeof metricThemes;
+  href?: string;
 }) {
   const theme = metricThemes[tone] ?? metricThemes.primary;
 
+  const content = (
+    <div className="flex flex-col items-center text-center">
+      <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl ${theme.iconBg} ${theme.iconText} ${theme.accent}`}>
+        {icon}
+      </div>
+      <p className="text-xs font-semibold uppercase tracking-wide text-graphite-500">{label}</p>
+      <p className="mt-2 text-3xl font-semibold text-graphite-900">{value}</p>
+      <p className="mt-1 text-sm text-graphite-500">{subtext}</p>
+    </div>
+  );
+
+  if (href) {
+    return (
+      <Link href={href}>
+        <Card className="relative overflow-hidden rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm ring-1 ring-inset ring-transparent transition-all hover:shadow-md hover:border-primary-200 hover:scale-[1.02] cursor-pointer">
+          {content}
+        </Card>
+      </Link>
+    );
+  }
+
   return (
     <Card className="relative overflow-hidden rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm ring-1 ring-inset ring-transparent">
-      <div className="flex flex-col items-center text-center">
-        <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-xl ${theme.iconBg} ${theme.iconText} ${theme.accent}`}>
-          {icon}
-        </div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-graphite-500">{label}</p>
-        <p className="mt-2 text-3xl font-semibold text-graphite-900">{value}</p>
-        <p className="mt-1 text-sm text-graphite-500">{subtext}</p>
-      </div>
+      {content}
     </Card>
   );
 }
