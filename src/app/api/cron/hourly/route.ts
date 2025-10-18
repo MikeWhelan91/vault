@@ -96,7 +96,49 @@ export async function GET(request: NextRequest) {
       timeLockReleases++;
     }
 
-    // 3. Send check-in reminders (3 days and 1 day before deadline)
+    // 3. Send time-lock release reminders (1 day before release)
+    const upcomingTimeLocks = await prisma.releaseBundle.findMany({
+      where: {
+        mode: 'time-lock',
+        released: false,
+        releaseDate: {
+          gte: now,
+          lte: oneDayFromNow,
+        },
+      },
+      include: {
+        user: {
+          include: {
+            pushTokens: true,
+          },
+        },
+      },
+    });
+
+    for (const bundle of upcomingTimeLocks) {
+      const hoursUntil = (new Date(bundle.releaseDate!).getTime() - now.getTime()) / (60 * 60 * 1000);
+
+      // Send reminder at approximately 24 hours before release
+      const shouldSendReminder = hoursUntil >= 22 && hoursUntil <= 26; // 24 ± 2 hours
+
+      if (shouldSendReminder) {
+        // Send push notification to bundle owner
+        if (bundle.user.pushTokens.length > 0) {
+          const tokens = bundle.user.pushTokens.map(pt => pt.token);
+          await sendPushNotificationToMultipleTokens({
+            tokens,
+            title: 'Bundle releasing soon',
+            body: `"${bundle.name}" will be released to trustees tomorrow`,
+            data: {
+              type: 'timelock_reminder',
+              bundleId: bundle.id,
+            },
+          });
+        }
+      }
+    }
+
+    // 4. Send check-in reminders (3 days and 1 day before deadline)
     const upcomingDeadlines = await prisma.heartbeat.findMany({
       where: {
         enabled: true,
