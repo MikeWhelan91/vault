@@ -8,6 +8,11 @@ import { OfflineDetector } from "@/components/OfflineDetector";
 export const metadata: Metadata = {
   title: "Forebearer - Leave Something Behind | Secure Digital Legacy",
   description: "Store photos, videos, and messages safely. Share them with loved ones at the right time. End-to-end encrypted digital memory vault with time-lock and heartbeat features.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
+  },
   keywords: [
     "digital legacy",
     "memory storage",

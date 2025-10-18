@@ -67,7 +67,7 @@ export function BottomNav() {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-graphite-200 bg-white pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-graphite-200 bg-white pb-safe-bottom">
         <div className="grid grid-cols-4 h-16">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -118,7 +118,7 @@ export function BottomNav() {
           />
 
           {/* Menu Sheet */}
-          <div className="fixed bottom-0 left-0 right-0 z-[70] bg-white rounded-t-3xl shadow-2xl animate-slide-up pb-safe">
+          <div className="fixed bottom-0 left-0 right-0 z-[70] bg-white rounded-t-3xl shadow-2xl animate-slide-up pb-safe-bottom">
             <div className="p-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">

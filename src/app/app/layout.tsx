@@ -29,7 +29,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className={`flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900 ${isNativeApp ? 'pt-safe pb-safe' : ''}`}>
+    <div className={`flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900 ${isNativeApp ? 'pt-safe-top pb-safe-bottom' : ''}`}>
       <AppNav />
       <main className={`w-full flex-1 px-4 sm:px-6 lg:px-8 ${isNativeApp ? 'pt-6 pb-24' : 'py-8'}`}>
         {children}
