@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { useToast } from '@/contexts/ToastContext';
 import { Card } from '@/components/ui/Card';
@@ -13,6 +14,7 @@ import { UpgradePrompt, type UpgradeReason } from '@/components/UpgradePrompt';
 import { canCreateBundle, canAddTrustee, getTierLimits, type TierName } from '@/lib/pricing';
 
 export default function ReleasePageClient() {
+  const router = useRouter();
   const { metadata, session, getExtractableItemKey } = useCrypto();
   const { showToast } = useToast();
   const [step, setStep] = useState(1);
@@ -255,21 +257,8 @@ export default function ReleasePageClient() {
 
       showToast('Release bundle created successfully', 'success');
 
-      // Refresh bundles list
-      await fetchBundles();
-
-      // Reset form
-      setBundleName('');
-      setBundleNote('');
-      setSelectedItems([]);
-      setReleaseDate('');
-      setTrustees([]);
-      setIncludeEmailMessage(false);
-      setEmailMessage('');
-      setConditionalRelease(false);
-      setConditionType('all');
-      setConditionCount(2);
-      setStep(1);
+      // Redirect to bundles page to show the new bundle
+      router.push('/app/bundles');
     } catch (error) {
       console.error('Create bundle error:', error);
       showToast(error instanceof Error ? error.message : 'Failed to create release bundle', 'error');
