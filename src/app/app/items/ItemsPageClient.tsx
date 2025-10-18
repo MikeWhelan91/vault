@@ -24,12 +24,14 @@ import {
   File as FileIcon,
   ArrowRight,
   ChevronDown,
+  FolderOpen,
 } from 'lucide-react';
 import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
 import type { FileCategory } from '@/lib/file-types';
 import { StorageIndicator } from '@/components/StorageIndicator';
 import type { TierName } from '@/lib/pricing';
 import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
+import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 
 const CATEGORY_LABELS: Record<FileCategory, string> = {
   image: 'Image file',
@@ -89,31 +91,28 @@ export default function ItemsPageClient() {
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Header */}
-      <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2 text-center">
-            <h1 className="text-3xl font-semibold text-graphite-900">Your Encrypted Items</h1>
-            <p className="mt-2 text-sm text-graphite-600">
-              {items.length === 0
-                ? 'Upload files or notes to start building your protected estate.'
-                : `Organize ${items.length} encrypted ${items.length === 1 ? 'asset' : 'assets'} by type, preview metadata, and manage storage.`}
-            </p>
-          </div>
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Button onClick={() => setShowAddModal(true)} size="lg">
+      <MobilePageHeader
+        title="Your Items"
+        subtitle={items.length === 0
+          ? 'Upload files or notes to start building your protected estate.'
+          : `Organize ${items.length} encrypted ${items.length === 1 ? 'asset' : 'assets'} by type, preview metadata, and manage storage.`}
+        icon={FolderOpen}
+        actions={
+          <>
+            <Button onClick={() => setShowAddModal(true)} size="sm">
               <Plus className="h-4 w-4" />
               <span className="ml-2">Add new item</span>
             </Button>
             {tier === 'free' && (
               <Link href="/app/pricing">
-                <Button variant="secondary" size="lg">
+                <Button variant="secondary" size="sm">
                   Expand storage
                 </Button>
               </Link>
             )}
-          </div>
-        </div>
-      </section>
+          </>
+        }
+      />
 
       {/* Storage Indicator */}
       <StorageIndicator

@@ -24,10 +24,12 @@ import {
   Music,
   File,
   ArrowRight,
-  Crown
+  Crown,
+  Home
 } from 'lucide-react';
 import { getFileTypeInfo } from '@/lib/file-types';
 import { getTierLimits, type TierName } from '@/lib/pricing';
+import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 
 export default function DashboardPageClient() {
   const { metadata, session } = useCrypto();
@@ -273,38 +275,34 @@ export default function DashboardPageClient() {
       )}
 
       {/* Hero Section */}
-      <section className="rounded-3xl border border-primary-100 bg-white px-6 py-8 shadow-sm sm:px-10">
-        <div className="flex flex-col gap-6">
-          <div className="space-y-4 text-center">
-            <div>
-              <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">
-                {metadata.userName ? `Welcome back, ${metadata.userName.split(' ')[0]}` : 'Welcome back'}
-              </h1>
-              <p className="mt-3 text-base text-graphite-600">
-                Monitor your encrypted storage, track release readiness, and keep every trustee in the loop from one private dashboard.
-              </p>
+      <MobilePageHeader
+        title={metadata.userName ? `Welcome back, ${metadata.userName.split(' ')[0]}` : 'Welcome back'}
+        subtitle="Monitor your encrypted storage, track release readiness, and keep every trustee in the loop from one private dashboard."
+        icon={Home}
+        badge={
+          tier === 'plus' ? (
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+              <Crown className="h-3 w-3" />
+              Plus
             </div>
-          </div>
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <div className="rounded-2xl border border-graphite-200 bg-graphite-50 px-4 py-3 text-center shadow-inner">
+          ) : undefined
+        }
+        actions={
+          <>
+            <div className="rounded-2xl border border-graphite-200 bg-graphite-50 px-4 py-2.5 text-center shadow-inner">
               <p className="text-xs font-medium uppercase tracking-wide text-graphite-500">Account ID</p>
-              <p className="mt-1 text-sm font-semibold text-graphite-800">{session.userId || metadata.userId}</p>
+              <p className="mt-0.5 text-sm font-semibold text-graphite-800">{session.userId || metadata.userId}</p>
             </div>
-            {tier === 'free' ? (
+            {tier === 'free' && (
               <Link href="/app/pricing">
-                <Button size="lg">
+                <Button size="sm">
                   Upgrade for more space
                 </Button>
               </Link>
-            ) : (
-              <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-700">
-                <Crown className="h-4 w-4" />
-                Plus member
-              </div>
             )}
-          </div>
-        </div>
-      </section>
+          </>
+        }
+      />
 
       {/* Key Metrics */}
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
