@@ -59,3 +59,7 @@ prisma/.env
 *.keystore
 keystore.properties
 /icons/
+
+# Firebase
+firebase-service-account.json
+google-services.json

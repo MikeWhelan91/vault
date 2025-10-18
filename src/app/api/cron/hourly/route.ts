@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendCheckInReminder, sendReleaseNotification } from '@/lib/email';
+import { sendPushNotificationToMultipleTokens } from '@/lib/firebase-admin';
 
 /**
  * GET /api/cron/hourly
@@ -105,7 +106,11 @@ export async function GET(request: NextRequest) {
         },
       },
       include: {
-        user: true,
+        user: {
+          include: {
+            pushTokens: true,
+          },
+        },
       },
     });
 
@@ -119,7 +124,23 @@ export async function GET(request: NextRequest) {
       const shouldSend1DayReminder = hoursUntil >= 22 && hoursUntil <= 26; // 24 ± 2 hours
 
       if (shouldSend3DayReminder || shouldSend1DayReminder) {
+        // Send email reminder
         await sendCheckInReminder(heartbeat.user.email, daysUntil, heartbeat.user.name);
+
+        // Send push notification to all user's devices (if any)
+        if (heartbeat.user.pushTokens.length > 0) {
+          const tokens = heartbeat.user.pushTokens.map(pt => pt.token);
+          await sendPushNotificationToMultipleTokens({
+            tokens,
+            title: 'Time to check in',
+            body: `${daysUntil} ${daysUntil === 1 ? 'day' : 'days'} left until your heartbeat deadline`,
+            data: {
+              type: 'heartbeat_reminder',
+              daysUntil: String(daysUntil),
+            },
+          });
+        }
+
         remindersSent++;
       }
     }
