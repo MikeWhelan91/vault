@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { sendCheckInReminder, sendReleaseNotification } from '@/lib/email';
+import { sendCheckInReminder, sendReleaseNotification, sendOwnerBundleReleasedNotification } from '@/lib/email';
 import { sendPushNotificationToMultipleTokens } from '@/lib/firebase-admin';
 
 /**
@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
       include: {
         user: {
           include: {
+            pushTokens: true,
             releaseBundles: {
               where: {
                 mode: 'heartbeat',
@@ -87,7 +88,11 @@ export async function GET(request: NextRequest) {
           },
         },
         trustees: true,
-        user: true,
+        user: {
+          include: {
+            pushTokens: true,
+          },
+        },
       },
     });
 
@@ -204,7 +209,7 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * Trigger a release bundle - mark as released and send emails to trustees
+ * Trigger a release bundle - mark as released and send emails to trustees and owner
  */
 async function triggerRelease(bundle: any) {
   try {
@@ -251,6 +256,45 @@ async function triggerRelease(bundle: any) {
         where: { id: trustee.id },
         data: { notified: true },
       });
+    }
+
+    // Send notification to bundle owner
+    console.log(`Sending release notification to owner ${bundle.user.email}`);
+
+    // Send email notification to owner
+    const ownerEmailResult = await sendOwnerBundleReleasedNotification(
+      bundle.user.email,
+      bundle.user.name,
+      bundle.name,
+      bundle.mode,
+      bundle.trustees.length,
+      bundle.bundleItems.length
+    );
+
+    if (ownerEmailResult.success) {
+      console.log(`✓ Owner email sent successfully to ${bundle.user.email}`);
+    } else {
+      console.error(`✗ Failed to send owner email to ${bundle.user.email}:`, ownerEmailResult.error);
+    }
+
+    // Send push notification to owner (if they have the app installed)
+    if (bundle.user.pushTokens && bundle.user.pushTokens.length > 0) {
+      const tokens = bundle.user.pushTokens.map((pt: any) => pt.token);
+      const pushResult = await sendPushNotificationToMultipleTokens({
+        tokens,
+        title: 'Bundle Released',
+        body: `Your bundle "${bundle.name}" has been released to your trustees`,
+        data: {
+          type: 'bundle_released',
+          bundleId: bundle.id,
+          bundleName: bundle.name,
+          releaseMode: bundle.mode,
+        },
+      });
+
+      console.log(`✓ Push notification sent to owner (${tokens.length} device${tokens.length > 1 ? 's' : ''})`);
+    } else {
+      console.log(`ℹ No push tokens registered for owner - skipping push notification`);
     }
   } catch (error) {
     console.error(`Failed to trigger release ${bundle.id}:`, error);
