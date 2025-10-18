@@ -64,6 +64,15 @@ export default function SignInPage() {
     }
   }, [isUnlocked, showEnableBiometric, router]);
 
+  // Reset to email step when user returns to signin page (e.g., after locking vault)
+  useEffect(() => {
+    if (!isUnlocked) {
+      setStep('email');
+      setPassword('');
+      setError('');
+    }
+  }, [isUnlocked]);
+
   const handleEmailContinue = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
