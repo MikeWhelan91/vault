@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { UPGRADE_MESSAGES } from '@/lib/pricing';
@@ -14,12 +15,12 @@ export interface UpgradePromptProps {
 }
 
 export function UpgradePrompt({ isOpen, onClose, reason }: UpgradePromptProps) {
+  const router = useRouter();
   const message = UPGRADE_MESSAGES[reason];
 
   const handleUpgrade = () => {
-    // TODO: In Phase 2, redirect to Stripe checkout
-    // For now, redirect to pricing page
-    window.location.href = '/app/pricing';
+    // Use Next.js router to navigate to billing page
+    router.push('/app/settings/billing');
   };
 
   return (
