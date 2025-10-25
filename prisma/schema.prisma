@@ -40,6 +40,10 @@ model User {
   heartbeat       Heartbeat?
   scheduledLetters ScheduledLetter[]
   pushTokens      PushToken[]
+  passwords       Password[]
+  emergencyAccess EmergencyAccess[]
+  digitalAssets   DigitalAsset[]
+  videoMessages   VideoMessage[]
 
   @@index([email])
 }
@@ -73,6 +77,193 @@ model Item {
   @@index([userId, updatedAt])
 }
 
+// Password Vault - encrypted password storage
+model Password {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String   // e.g., "Gmail", "Bank of America"
+  category  String   @default("other") // 'login', 'card', 'identity', 'secure_note', 'other'
+  favorite  Boolean  @default(false)
+
+  // URLs and identifiers
+  url       String?  // Website URL
+  username  String?  // Encrypted username/email
+
+  // Encrypted fields (all stored encrypted)
+  passwordEncrypted String  // The actual password
+  passwordIV        String  // IV for password decryption
+
+  notesEncrypted    String? // Additional notes
+  notesIV           String? // IV for notes decryption
+
+  // Optional fields for different types
+  cardNumberEncrypted String? // For credit cards (last 4 digits could be shown)
+  cardExpiryEncrypted String?
+  cardCVVEncrypted    String?
+  cardCVVIV           String?
+
+  // Cryptographic data (same pattern as Items)
+  passwordKeySalt    String // hex-encoded salt
+  wrappedPasswordKey String // hex-encoded wrapped key
+  wrappedPasswordKeyIV String // hex-encoded IV
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastUsed  DateTime? // Track when password was last accessed
+
+  // Relations
+  emergencyAccess EmergencyAccess[]
+
+  @@index([userId])
+  @@index([userId, category])
+  @@index([userId, favorite])
+  @@index([userId, updatedAt])
+}
+
+// Emergency Access for Password Vault
+model EmergencyAccess {
+  id        String   @id @default(cuid())
+  userId    String   // Owner of the passwords
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  trusteeEmail String
+  trusteeName  String?
+
+  accessLevel  String   @default("view") // 'view' | 'takeover'
+  waitTimeDays Int      @default(7) // Days to wait before granting access
+
+  status       String   @default("pending") // 'pending', 'active', 'requested', 'granted', 'denied'
+
+  requestedAt  DateTime? // When trustee requested access
+  grantedAt    DateTime? // When access was granted
+  deniedAt     DateTime? // If owner denied the request
+
+  inviteToken  String?   @unique // Token for trustee to accept invitation
+  acceptedAt   DateTime? // When trustee accepted invitation
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations - which passwords this emergency contact can access
+  passwords Password[]
+
+  @@index([userId])
+  @@index([trusteeEmail])
+  @@index([status])
+  @@index([inviteToken])
+}
+
+// Digital Asset Inventory
+model DigitalAsset {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String   // e.g., "Wells Fargo Checking", "Facebook Account"
+  category  String   // 'financial', 'social_media', 'subscription', 'email', 'domain', 'crypto', 'cloud_storage', 'other'
+  platform  String?  // e.g., "Chase Bank", "Instagram", "Netflix"
+
+  // Account details (encrypted)
+  accountNumberEncrypted String? // Account number, username, or identifier
+  accountNumberIV        String?
+
+  url       String?  // Website/app URL
+
+  // Instructions for beneficiaries (encrypted)
+  instructionsEncrypted String? // "Delete this account", "Archive", "Transfer to..."
+  instructionsIV        String?
+
+  // Value estimation (optional)
+  estimatedValue Decimal? @db.Decimal(12, 2) // USD value
+  valueCurrency  String?  @default("USD")
+
+  // Important dates
+  renewalDate    DateTime? // For subscriptions
+  expirationDate DateTime? // For domains, etc.
+
+  // Status
+  status    String  @default("active") // 'active', 'archived', 'closed'
+  important Boolean @default(false) // Flag high-priority assets
+
+  // Cryptographic data
+  assetKeySalt    String // hex-encoded salt
+  wrappedAssetKey String // hex-encoded wrapped key
+  wrappedAssetKeyIV String // hex-encoded IV
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, category])
+  @@index([userId, status])
+  @@index([renewalDate])
+}
+
+// Video Messages
+model VideoMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title     String   // e.g., "18th Birthday Message for Sarah"
+  category  String   @default("personal") // 'birthday', 'wedding', 'graduation', 'anniversary', 'general', 'guided_memory'
+
+  // Storage
+  r2Key     String   // path in R2
+  duration  Int      // seconds
+  size      BigInt   // bytes
+  thumbnail String?  // R2 key for thumbnail image
+
+  // Trigger conditions
+  triggerType  String?  // 'date', 'age', 'event', 'manual'
+  triggerDate  DateTime? // Specific date
+  recipientName String? // For age-based triggers
+  recipientAge  Int?    // Release when recipient turns this age
+
+  // Guided memory prompts (if applicable)
+  promptQuestion String? // "What's your biggest life lesson?"
+
+  // Release status
+  released   Boolean  @default(false)
+  releasedAt DateTime?
+
+  // Encryption
+  videoKeySalt    String
+  wrappedVideoKey String
+  wrappedVideoKeyIV String
+
+  // Relations
+  recipients VideoRecipient[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, category])
+  @@index([triggerDate])
+  @@index([released])
+}
+
+// Recipients for video messages
+model VideoRecipient {
+  id        String   @id @default(cuid())
+  videoId   String
+  video     VideoMessage @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  email     String
+  name      String?
+
+  notified  Boolean  @default(false)
+  viewedAt  DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([videoId])
+  @@index([email])
+}
+
 // Release bundles (time-lock or heartbeat)
 model ReleaseBundle {
   id        String   @id @default(cuid())
@@ -80,7 +271,16 @@ model ReleaseBundle {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   name      String
-  mode      String   // 'time-lock' | 'heartbeat'
+  mode      String   // 'time-lock' | 'heartbeat' | 'life-event'
+
+  // Life Event Triggers (new feature)
+  lifeEventType      String? // 'birthday', 'age_milestone', 'anniversary', 'recurring_annual', 'custom_date'
+  recipientName      String? // Name of person for age-based triggers
+  recipientBirthdate DateTime? // For calculating age
+  targetAge          Int? // Release when recipient turns this age
+  recurringMonth     Int? // For annual recurring (1-12)
+  recurringDay       Int? // For annual recurring (1-31)
+  customEventDate    DateTime? // For one-time custom events
 
   // Conditional release (Plus feature)
   conditionalRelease Boolean @default(false)
