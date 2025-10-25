@@ -23,23 +23,30 @@ export function MobilePageHeader({
 }: MobilePageHeaderProps) {
   const isNativeApp = useIsNativeApp();
 
-  // Desktop: centered card layout
+  // Desktop: left-aligned professional layout
   if (!isNativeApp) {
     return (
       <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2 text-center">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          {/* Left side: Icon, title, subtitle */}
+          <div className="flex items-start gap-4 flex-1">
             {Icon && (
-              <div className={`mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 ${iconColor}`}>
+              <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-primary-50 ${iconColor}`}>
                 <Icon className="h-7 w-7" />
               </div>
             )}
-            <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">{title}</h1>
-            {subtitle && <p className="mt-2 text-sm text-graphite-600">{subtitle}</p>}
-            {badge && <div className="mt-2 flex justify-center">{badge}</div>}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h1 className="text-2xl font-semibold text-graphite-900 sm:text-3xl">{title}</h1>
+                {badge && <div>{badge}</div>}
+              </div>
+              {subtitle && <p className="mt-2 text-sm text-graphite-600 leading-relaxed max-w-2xl">{subtitle}</p>}
+            </div>
           </div>
+
+          {/* Right side: Actions */}
           {actions && (
-            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <div className="flex flex-col gap-3 sm:flex-shrink-0 sm:items-end">
               {actions}
             </div>
           )}
