@@ -80,28 +80,12 @@ export async function POST(request: NextRequest) {
 
     // releaseToken is now provided by client (generated client-side for zero-knowledge crypto)
 
-    // If heartbeat mode, create or update the heartbeat record
+    // Calculate nextHeartbeat for heartbeat bundles (per-bundle check-ins)
+    let bundleNextHeartbeat = undefined;
     if (mode === 'heartbeat' && heartbeatCadenceDays) {
       const now = new Date();
-      const nextHeartbeat = new Date(now);
-      nextHeartbeat.setDate(nextHeartbeat.getDate() + heartbeatCadenceDays);
-
-      await prisma.heartbeat.upsert({
-        where: { userId },
-        create: {
-          userId,
-          enabled: true,
-          cadenceDays: heartbeatCadenceDays,
-          lastHeartbeat: now,
-          nextHeartbeat: nextHeartbeat,
-        },
-        update: {
-          enabled: true,
-          cadenceDays: heartbeatCadenceDays,
-          lastHeartbeat: now,
-          nextHeartbeat: nextHeartbeat,
-        },
-      });
+      bundleNextHeartbeat = new Date(now);
+      bundleNextHeartbeat.setDate(bundleNextHeartbeat.getDate() + heartbeatCadenceDays);
     }
 
     // Create bundle with items and trustees in a transaction
@@ -112,6 +96,8 @@ export async function POST(request: NextRequest) {
         mode,
         releaseDate: releaseDate ? new Date(releaseDate) : undefined,
         heartbeatCadenceDays,
+        lastHeartbeat: mode === 'heartbeat' ? new Date() : undefined,
+        nextHeartbeat: bundleNextHeartbeat,
         releaseToken,
         bundleNoteEncrypted,
         bundleNoteIV,

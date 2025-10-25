@@ -90,9 +90,10 @@ model ReleaseBundle {
   // Time-lock specific
   releaseDate DateTime?
 
-  // Heartbeat specific
+  // Heartbeat specific (per-bundle check-ins)
   heartbeatCadenceDays Int?
   lastHeartbeat        DateTime?
+  nextHeartbeat        DateTime? // When next check-in is due for this bundle
   heartbeatPaused      Boolean  @default(false)
   heartbeatPausedAt    DateTime?
 
@@ -120,6 +121,7 @@ model ReleaseBundle {
   @@index([userId])
   @@index([releaseDate])
   @@index([released])
+  @@index([mode, released, nextHeartbeat]) // For efficient heartbeat deadline checks
 }
 
 // Junction table for bundles and items

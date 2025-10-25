@@ -279,7 +279,7 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
 /**
  * Send check-in reminder (updated for new design)
  */
-export async function sendCheckInReminder(email: string, daysUntil: number, name?: string) {
+export async function sendCheckInReminder(email: string, daysUntil: number, name?: string, bundleName?: string) {
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -308,11 +308,11 @@ export async function sendCheckInReminder(email: string, daysUntil: number, name
               </p>
 
               <p style="color: #166534; margin-bottom: 20px; font-size: 16px;">
-                Just a friendly reminder that your check-in is due soon.
+                Just a friendly reminder that your check-in is due soon${bundleName ? ` for your bundle "${bundleName}"` : ''}.
               </p>
 
               <p style="color: #166534; margin-bottom: 20px; font-size: 16px;">
-                If you don't check in before the deadline, your memories will automatically be sent to the people you've chosen.
+                If you don't check in before the deadline, ${bundleName ? 'this bundle' : 'your memories'} will automatically be sent to the people you've chosen.
               </p>
 
               <div style="text-align: center; margin: 30px 0;">

@@ -33,43 +33,34 @@ export async function GET(request: NextRequest) {
     let heartbeatReleases = 0;
     let timeLockReleases = 0;
 
-    // 1. Check for overdue heartbeats
-    const overdueHeartbeats = await prisma.heartbeat.findMany({
+    // 1. Check for overdue heartbeat bundles (per-bundle check-ins)
+    const overdueHeartbeatBundles = await prisma.releaseBundle.findMany({
       where: {
-        enabled: true,
+        mode: 'heartbeat',
+        released: false,
+        heartbeatPaused: false, // Don't trigger paused bundles
         nextHeartbeat: {
           lt: now,
         },
       },
       include: {
+        bundleItems: {
+          include: {
+            item: true,
+          },
+        },
+        trustees: true,
         user: {
           include: {
             pushTokens: true,
-            releaseBundles: {
-              where: {
-                mode: 'heartbeat',
-                released: false,
-              },
-              include: {
-                bundleItems: {
-                  include: {
-                    item: true,
-                  },
-                },
-                trustees: true,
-              },
-            },
           },
         },
       },
     });
 
-    for (const heartbeat of overdueHeartbeats) {
-      // Trigger all heartbeat-mode releases for this user
-      for (const bundle of heartbeat.user.releaseBundles) {
-        await triggerRelease(bundle);
-        heartbeatReleases++;
-      }
+    for (const bundle of overdueHeartbeatBundles) {
+      await triggerRelease(bundle);
+      heartbeatReleases++;
     }
 
     // 2. Check for expired time-lock releases
@@ -143,10 +134,12 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // 4. Send check-in reminders (3 days and 1 day before deadline)
-    const upcomingDeadlines = await prisma.heartbeat.findMany({
+    // 4. Send per-bundle check-in reminders (3 days and 1 day before deadline)
+    const upcomingBundleDeadlines = await prisma.releaseBundle.findMany({
       where: {
-        enabled: true,
+        mode: 'heartbeat',
+        released: false,
+        heartbeatPaused: false,
         nextHeartbeat: {
           gte: now,
           lte: threeDaysFromNow,
@@ -161,8 +154,8 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    for (const heartbeat of upcomingDeadlines) {
-      const hoursUntil = (new Date(heartbeat.nextHeartbeat!).getTime() - now.getTime()) / (60 * 60 * 1000);
+    for (const bundle of upcomingBundleDeadlines) {
+      const hoursUntil = (new Date(bundle.nextHeartbeat!).getTime() - now.getTime()) / (60 * 60 * 1000);
       const daysUntil = Math.ceil(hoursUntil / 24);
 
       // Send reminder at approximately 72 hours (3 days) or 24 hours (1 day)
@@ -171,18 +164,20 @@ export async function GET(request: NextRequest) {
       const shouldSend1DayReminder = hoursUntil >= 22 && hoursUntil <= 26; // 24 ± 2 hours
 
       if (shouldSend3DayReminder || shouldSend1DayReminder) {
-        // Send email reminder
-        await sendCheckInReminder(heartbeat.user.email, daysUntil, heartbeat.user.name);
+        // Send email reminder with bundle name
+        await sendCheckInReminder(bundle.user.email, daysUntil, bundle.user.name, bundle.name);
 
         // Send push notification to all user's devices (if any)
-        if (heartbeat.user.pushTokens.length > 0) {
-          const tokens = heartbeat.user.pushTokens.map(pt => pt.token);
+        if (bundle.user.pushTokens.length > 0) {
+          const tokens = bundle.user.pushTokens.map(pt => pt.token);
           await sendPushNotificationToMultipleTokens({
             tokens,
             title: 'Time to check in',
-            body: `${daysUntil} ${daysUntil === 1 ? 'day' : 'days'} left until your heartbeat deadline`,
+            body: `${daysUntil} ${daysUntil === 1 ? 'day' : 'days'} left for "${bundle.name}"`,
             data: {
-              type: 'heartbeat_reminder',
+              type: 'bundle_checkin_reminder',
+              bundleId: bundle.id,
+              bundleName: bundle.name,
               daysUntil: String(daysUntil),
             },
           });
