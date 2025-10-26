@@ -75,9 +75,12 @@ export function BundleCheckIn({
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <Heart className={`w-5 h-5 ${isOverdue ? 'text-red-600' : isUrgent ? 'text-amber-600' : 'text-emerald-600'}`} />
-            <h3 className="font-semibold text-graphite-900">
-              {isOverdue ? '⚠️ Check-In Overdue' : 'Heartbeat Check-In'}
-            </h3>
+            <div className="flex-1">
+              <h3 className="font-semibold text-graphite-900">
+                {isOverdue ? '⚠️ Check-In Overdue' : 'Heartbeat Check-In'}
+              </h3>
+              <p className="text-sm text-graphite-700 font-medium">&quot;{bundleName}&quot;</p>
+            </div>
           </div>
 
           <div className="space-y-2 text-sm">

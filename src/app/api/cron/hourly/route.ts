@@ -164,8 +164,8 @@ export async function GET(request: NextRequest) {
       const shouldSend1DayReminder = hoursUntil >= 22 && hoursUntil <= 26; // 24 ± 2 hours
 
       if (shouldSend3DayReminder || shouldSend1DayReminder) {
-        // Send email reminder with bundle name
-        await sendCheckInReminder(bundle.user.email, daysUntil, bundle.user.name, bundle.name);
+        // Send email reminder with bundle name and ID
+        await sendCheckInReminder(bundle.user.email, daysUntil, bundle.user.name, bundle.name, bundle.id);
 
         // Send push notification to all user's devices (if any)
         if (bundle.user.pushTokens.length > 0) {

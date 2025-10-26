@@ -279,8 +279,13 @@ export async function sendHeartbeatReminderEmail(email: string, nextCheckIn: str
 /**
  * Send check-in reminder (updated for new design)
  */
-export async function sendCheckInReminder(email: string, daysUntil: number, name?: string, bundleName?: string) {
+export async function sendCheckInReminder(email: string, daysUntil: number, name?: string, bundleName?: string, bundleId?: string) {
   try {
+    // Include bundle ID in URL so dashboard can highlight it
+    const checkInUrl = bundleId
+      ? `${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/app?checkin=${bundleId}`
+      : `${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/app`;
+
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
@@ -316,7 +321,7 @@ export async function sendCheckInReminder(email: string, daysUntil: number, name
               </p>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://forebearer.app'}/app"
+                <a href="${checkInUrl}"
                    style="display: inline-block; background-color: #22c55e; color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px;">
                   Check In Now
                 </a>

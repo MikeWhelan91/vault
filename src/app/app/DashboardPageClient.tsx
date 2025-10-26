@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -33,31 +34,63 @@ import {
 import { getFileTypeInfo } from '@/lib/file-types';
 import { getTierLimits, type TierName } from '@/lib/pricing';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
+import { BundleCheckIn } from '@/components/BundleCheckIn';
 
 export default function DashboardPageClient() {
   const { metadata, session } = useCrypto();
   const [bundles, setBundles] = useState<any[]>([]);
   const [isLoadingBundles, setIsLoadingBundles] = useState(true);
+  const searchParams = useSearchParams();
+  const checkInRef = useRef<HTMLDivElement>(null);
+  const [checkInBundleId, setCheckInBundleId] = useState<string | null>(null);
+
+  const fetchBundles = async () => {
+    if (!session.dbUserId) return;
+
+    try {
+      const response = await fetch(`/api/bundles?userId=${session.dbUserId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setBundles(data.bundles || []);
+      }
+    } catch (error) {
+      console.error('Error fetching bundles:', error);
+    } finally {
+      setIsLoadingBundles(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBundles = async () => {
-      if (!session.dbUserId) return;
-
-      try {
-        const response = await fetch(`/api/bundles?userId=${session.dbUserId}`);
-        if (response.ok) {
-          const data = await response.json();
-          setBundles(data.bundles || []);
-        }
-      } catch (error) {
-        console.error('Error fetching bundles:', error);
-      } finally {
-        setIsLoadingBundles(false);
-      }
-    };
-
     fetchBundles();
   }, [session.dbUserId]);
+
+  // Handle checkin parameter from URL or localStorage (persists through login)
+  useEffect(() => {
+    const urlCheckinParam = searchParams.get('checkin');
+
+    if (urlCheckinParam) {
+      // Store in localStorage so it persists through login redirect
+      localStorage.setItem('pendingCheckin', urlCheckinParam);
+      setCheckInBundleId(urlCheckinParam);
+    } else {
+      // Check if there's a pending checkin from before login
+      const pendingCheckin = localStorage.getItem('pendingCheckin');
+      if (pendingCheckin) {
+        setCheckInBundleId(pendingCheckin);
+        // Clear it after retrieving
+        localStorage.removeItem('pendingCheckin');
+      }
+    }
+  }, [searchParams]);
+
+  // Scroll to check-in section when checkin param is present
+  useEffect(() => {
+    if (checkInBundleId && checkInRef.current && !isLoadingBundles) {
+      setTimeout(() => {
+        checkInRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+    }
+  }, [checkInBundleId, isLoadingBundles]);
 
   if (!metadata) {
     return <div>Loading...</div>;
@@ -68,6 +101,7 @@ export default function DashboardPageClient() {
   const storagePercentage = (metadata.totalSize / metadata.storageLimit) * 100;
   const activeBundles = bundles.filter(b => !b.released);
   const releasedBundles = bundles.filter(b => b.released);
+  const heartbeatBundles = activeBundles.filter(b => b.mode === 'heartbeat');
 
   // Categorize items by type for storage breakdown
   const itemsByType = {
@@ -274,6 +308,36 @@ export default function DashboardPageClient() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Heartbeat Check-In Section */}
+      {heartbeatBundles.length > 0 && (
+        <div ref={checkInBundleId ? checkInRef : null} className="space-y-4">
+          {checkInBundleId && (
+            <div className="rounded-2xl border-2 border-primary-300 bg-primary-50 p-4">
+              <div className="flex items-start gap-3">
+                <Heart className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-lg font-semibold text-primary-900">Check-In Required</h3>
+                  <p className="mt-1 text-sm text-primary-700">
+                    Click the &quot;I&apos;m Alive&quot; button below to reset your heartbeat timer and prevent automatic release.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          {heartbeatBundles.map((bundle) => (
+            <BundleCheckIn
+              key={bundle.id}
+              bundleId={bundle.id}
+              bundleName={bundle.name}
+              lastHeartbeat={bundle.lastHeartbeat}
+              nextHeartbeat={bundle.nextHeartbeat}
+              cadenceDays={bundle.heartbeatCadenceDays || 1}
+              onCheckInSuccess={fetchBundles}
+            />
+          ))}
         </div>
       )}
 
