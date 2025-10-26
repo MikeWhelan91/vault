@@ -26,11 +26,13 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
+import { encryptFile, generateItemKey } from '@/lib/crypto';
+import { uploadObject } from '@/lib/r2-client';
 
 type MessageCategory = 'birthday' | 'wedding' | 'graduation' | 'anniversary' | 'general' | 'guided_memory';
 
 export default function MessagesPageClient() {
-  const { metadata, session } = useCrypto();
+  const { metadata, session, addItem } = useCrypto();
   const { showToast } = useToast();
   const [showRecordModal, setShowRecordModal] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
@@ -48,6 +50,7 @@ export default function MessagesPageClient() {
   const [triggerType, setTriggerType] = useState<'date' | 'age' | 'manual'>('manual');
   const [triggerDate, setTriggerDate] = useState('');
   const [recipientAge, setRecipientAge] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -179,6 +182,8 @@ export default function MessagesPageClient() {
       return;
     }
 
+    setIsSaving(true);
+
     try {
       // If still recording, stop it first
       if (isRecording) {
@@ -191,14 +196,58 @@ export default function MessagesPageClient() {
         type: mediaType === 'video' ? 'video/webm' : 'audio/webm'
       });
 
-      // TODO: Encrypt and upload to R2, save to database
-      showToast('Message saved successfully!', 'success');
-      setShowRecordModal(false);
-      resetRecordingState();
-      fetchMessages();
+      // Convert blob to ArrayBuffer
+      const arrayBuffer = await blob.arrayBuffer();
+      const videoData = new Uint8Array(arrayBuffer);
+
+      // Generate encryption key for this video
+      const itemKey = await generateItemKey();
+
+      // Encrypt the video data
+      const encryptedData = await encryptFile(videoData, itemKey);
+
+      // Generate filename with extension
+      const extension = mediaType === 'video' ? 'webm' : 'webm';
+      const filename = `${messageTitle}.${extension}`;
+
+      // Create item in database (stores wrapped encryption key)
+      const mimeType = mediaType === 'video' ? 'video/webm' : 'audio/webm';
+      const item = await addItem({
+        type: 'file',
+        name: filename,
+        size: encryptedData.length,
+        itemKeySalt: '',
+      }, itemKey, mimeType);
+
+      try {
+        // Upload encrypted video to R2
+        await uploadObject(
+          session.userId,
+          item.id,
+          1,
+          encryptedData,
+          (progress) => {
+            console.log(`Upload progress: ${progress.percentage}%`);
+          }
+        );
+
+        showToast('Message saved successfully!', 'success');
+        setShowRecordModal(false);
+        resetRecordingState();
+        fetchMessages();
+      } catch (uploadError) {
+        // If R2 upload fails, delete the database entry to keep things consistent
+        console.error('R2 upload failed, cleaning up database entry:', uploadError);
+        await fetch(`/api/items/${item.id}?userId=${session.dbUserId}`, {
+          method: 'DELETE',
+        });
+        throw new Error('Upload failed. Please try again.');
+      }
     } catch (error) {
       console.error('Error saving message:', error);
-      showToast('Failed to save message', 'error');
+      showToast(error instanceof Error ? error.message : 'Failed to save message', 'error');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -515,9 +564,9 @@ export default function MessagesPageClient() {
             >
               Cancel
             </Button>
-            <Button onClick={saveMessage} disabled={recordingDuration === 0 || !messageTitle.trim()}>
+            <Button onClick={saveMessage} disabled={recordingDuration === 0 || !messageTitle.trim() || isSaving}>
               <Send className="h-4 w-4" />
-              <span className="ml-2">Save Message</span>
+              <span className="ml-2">{isSaving ? 'Saving...' : 'Save Message'}</span>
             </Button>
           </div>
         </div>

@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Video, Mic, Play, Pause, Square, Send, Cake, Heart, GraduationCap, Briefcase, PartyPopper, Star } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
+import { useCrypto } from '@/contexts/CryptoContext';
+import { encryptFile, generateItemKey } from '@/lib/crypto';
+import { uploadObject } from '@/lib/r2-client';
 
 type MediaType = 'video' | 'audio';
 type MessageCategory = 'birthday' | 'anniversary' | 'graduation' | 'retirement' | 'general' | 'milestone';
@@ -20,6 +23,7 @@ interface RecordModalProps {
 
 export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video' }: RecordModalProps) {
   const { showToast } = useToast();
+  const { addItem, session } = useCrypto();
   const [mediaType, setMediaType] = useState<MediaType>(defaultMediaType);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -31,6 +35,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
   const [triggerDate, setTriggerDate] = useState('');
   const [recipientAge, setRecipientAge] = useState('');
   const [category, setCategory] = useState<MessageCategory>('general');
+  const [isSaving, setIsSaving] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -137,6 +142,8 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
       return;
     }
 
+    setIsSaving(true);
+
     try {
       // If still recording, stop it first
       if (isRecording) {
@@ -149,13 +156,58 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
         type: mediaType === 'video' ? 'video/webm' : 'audio/webm'
       });
 
-      // TODO: Encrypt and upload to R2, save to database
-      showToast('Message saved successfully!', 'success');
-      handleClose();
-      if (onSave) onSave();
+      // Convert blob to ArrayBuffer
+      const arrayBuffer = await blob.arrayBuffer();
+      const videoData = new Uint8Array(arrayBuffer);
+
+      // Generate encryption key for this video
+      const itemKey = await generateItemKey();
+
+      // Encrypt the video data
+      const encryptedData = await encryptFile(videoData, itemKey);
+
+      // Generate filename with extension
+      const extension = mediaType === 'video' ? 'webm' : 'webm';
+      const filename = `${messageTitle}.${extension}`;
+
+      // Create item in database (stores wrapped encryption key)
+      const mimeType = mediaType === 'video' ? 'video/webm' : 'audio/webm';
+      const item = await addItem({
+        type: 'file',
+        name: filename,
+        size: encryptedData.length,
+        itemKeySalt: '',
+      }, itemKey, mimeType);
+
+      try {
+        // Upload encrypted video to R2
+        await uploadObject(
+          session.userId,
+          item.id,
+          1,
+          encryptedData,
+          (progress) => {
+            // Optional: could add progress indicator here
+            console.log(`Upload progress: ${progress.percentage}%`);
+          }
+        );
+
+        showToast('Message saved successfully!', 'success');
+        handleClose();
+        if (onSave) onSave();
+      } catch (uploadError) {
+        // If R2 upload fails, delete the database entry to keep things consistent
+        console.error('R2 upload failed, cleaning up database entry:', uploadError);
+        await fetch(`/api/items/${item.id}?userId=${session.dbUserId}`, {
+          method: 'DELETE',
+        });
+        throw new Error('Upload failed. Please try again.');
+      }
     } catch (error) {
       console.error('Error saving message:', error);
-      showToast('Failed to save message', 'error');
+      showToast(error instanceof Error ? error.message : 'Failed to save message', 'error');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -409,9 +461,9 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
           >
             Cancel
           </Button>
-          <Button onClick={saveMessage} disabled={recordingDuration === 0 || !messageTitle.trim()}>
+          <Button onClick={saveMessage} disabled={recordingDuration === 0 || !messageTitle.trim() || isSaving}>
             <Send className="h-4 w-4" />
-            <span className="ml-2">Save Message</span>
+            <span className="ml-2">{isSaving ? 'Saving...' : 'Save Message'}</span>
           </Button>
         </div>
       </div>

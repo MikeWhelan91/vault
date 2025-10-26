@@ -27,6 +27,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
+import { encryptData, generateItemKey, generateIV, wrapKey, bytesToHex } from '@/lib/crypto';
 
 type AssetCategory =
   | 'financial'
@@ -85,14 +86,68 @@ export default function AssetsPageClient() {
     }
 
     try {
-      // TODO: Implement encryption and database save
+      // Generate encryption key for this asset
+      const assetKey = await generateItemKey();
+
+      // Encrypt sensitive fields
+      let accountNumberEncrypted = null;
+      let accountNumberIV = null;
+      if (accountNumber.trim()) {
+        const iv = generateIV();
+        const encrypted = await encryptData(new TextEncoder().encode(accountNumber), assetKey, iv);
+        accountNumberEncrypted = bytesToHex(encrypted);
+        accountNumberIV = bytesToHex(iv);
+      }
+
+      let instructionsEncrypted = null;
+      let instructionsIV = null;
+      if (instructions.trim()) {
+        const iv = generateIV();
+        const encrypted = await encryptData(new TextEncoder().encode(instructions), assetKey, iv);
+        instructionsEncrypted = bytesToHex(encrypted);
+        instructionsIV = bytesToHex(iv);
+      }
+
+      // Wrap the asset key with the user's data key
+      const wrappingIV = generateIV();
+      const wrappedKey = await wrapKey(assetKey, session.dataKey!, wrappingIV);
+
+      // Save to database
+      const response = await fetch('/api/digital-assets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: session.dbUserId,
+          name: assetName,
+          category,
+          platform: platform || null,
+          url: url || null,
+          accountNumberEncrypted,
+          accountNumberIV,
+          instructionsEncrypted,
+          instructionsIV,
+          estimatedValue: estimatedValue || null,
+          valueCurrency: 'USD',
+          renewalDate: renewalDate || null,
+          assetKeySalt: '', // Not used but kept for consistency
+          wrappedAssetKey: bytesToHex(wrappedKey),
+          wrappedAssetKeyIV: bytesToHex(wrappingIV),
+          important,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save asset');
+      }
+
       showToast('Asset added successfully!', 'success');
       setShowAddModal(false);
       resetForm();
       fetchAssets();
     } catch (error) {
       console.error('Error adding asset:', error);
-      showToast('Failed to add asset', 'error');
+      showToast(error instanceof Error ? error.message : 'Failed to add asset', 'error');
     }
   };
 
