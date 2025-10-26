@@ -42,6 +42,7 @@ import type { TierName } from '@/lib/pricing';
 import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 import { SimpleRecordModal } from '@/components/SimpleRecordModal';
+import { useThumbnail } from '@/hooks/useThumbnail';
 
 const CATEGORY_LABELS: Record<FileCategory, string> = {
   image: 'Image file',
@@ -284,6 +285,37 @@ export default function ItemsPageClient() {
   );
 }
 
+function ThumbnailImage({ itemId, itemName, isVideo }: { itemId: string; itemName: string; isVideo: boolean }) {
+  const { thumbnail, isLoading } = useThumbnail(itemId, itemName, true);
+
+  if (isLoading || !thumbnail) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-champagne-100 to-champagne-200">
+        {isVideo ? (
+          <div className="relative flex items-center justify-center">
+            <VideoIcon className="h-12 w-12 text-espresso-300 animate-pulse" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-full bg-white/80 flex items-center justify-center">
+                <div className="h-0 w-0 border-l-[8px] border-l-espresso-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <ImageIcon className="h-12 w-12 text-espresso-300 animate-pulse" />
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={thumbnail}
+      alt={itemName}
+      className="h-full w-full object-cover"
+    />
+  );
+}
+
 function ItemCard({ item, viewMode = 'list' }: { item: any; viewMode?: 'list' | 'grid' }) {
   const fileInfo = item.type === 'file' ? getFileTypeInfo(item.name) : null;
 
@@ -335,20 +367,7 @@ function ItemCard({ item, viewMode = 'list' }: { item: any; viewMode?: 'list' | 
           {/* Thumbnail */}
           <div className="relative aspect-square w-full overflow-hidden bg-champagne-100">
             {isImage || isVideo ? (
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-champagne-100 to-champagne-200">
-                {isImage ? (
-                  <ImageIcon className="h-12 w-12 text-espresso-300" />
-                ) : (
-                  <div className="relative flex items-center justify-center">
-                    <VideoIcon className="h-12 w-12 text-espresso-300" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="h-8 w-8 rounded-full bg-white/80 flex items-center justify-center">
-                        <div className="h-0 w-0 border-l-[8px] border-l-espresso-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <ThumbnailImage itemId={item.id} itemName={item.name} isVideo={isVideo} />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
                 {getIcon()}
