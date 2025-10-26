@@ -59,7 +59,6 @@ export default function ItemsPageClient() {
   const { showToast } = useToast();
   const [showAddModal, setShowAddModal] = useState(false);
   const [addType, setAddType] = useState<ItemType>('file');
-  const [activeTab, setActiveTab] = useState<VaultTab>('files');
   const [showRecordModal, setShowRecordModal] = useState(false);
 
   if (!metadata) {
@@ -373,8 +372,8 @@ function AddItemModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  type: ItemType | 'recording';
-  onTypeChange: (type: ItemType | 'recording') => void;
+  type: ItemType;
+  onTypeChange: (type: ItemType) => void;
 }) {
   const { metadata, addItem, getItemKey, session } = useCrypto();
   const { showToast } = useToast();
@@ -395,9 +394,6 @@ function AddItemModal({
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCVV, setCardCVV] = useState('');
   const [secureNoteContent, setSecureNoteContent] = useState('');
-
-  // Recording state
-  const [showRecordingUI, setShowRecordingUI] = useState(false);
 
   // Clear error when file changes or type changes
   React.useEffect(() => {
