@@ -41,6 +41,7 @@ import { StorageIndicator } from '@/components/StorageIndicator';
 import type { TierName } from '@/lib/pricing';
 import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
+import { RecordModal } from '@/components/RecordModal';
 
 const CATEGORY_LABELS: Record<FileCategory, string> = {
   image: 'Image file',
@@ -59,6 +60,7 @@ export default function ItemsPageClient() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addType, setAddType] = useState<ItemType>('file');
   const [activeTab, setActiveTab] = useState<VaultTab>('files');
+  const [showRecordModal, setShowRecordModal] = useState(false);
 
   if (!metadata) {
     return <div>Loading...</div>;
@@ -125,12 +127,10 @@ export default function ItemsPageClient() {
               </Button>
             )}
             {activeTab === 'messages' && (
-              <Link href="/app/messages">
-                <Button size="sm">
-                  <Plus className="h-4 w-4" />
-                  <span className="ml-2">Record Message</span>
-                </Button>
-              </Link>
+              <Button onClick={() => setShowRecordModal(true)} size="sm">
+                <Plus className="h-4 w-4" />
+                <span className="ml-2">Record Message</span>
+              </Button>
             )}
             {activeTab === 'letters' && (
               <Link href="/app/letters">
@@ -307,12 +307,10 @@ export default function ItemsPageClient() {
             <p className="mt-2 max-w-sm text-sm text-graphite-600">
               Record heartfelt video or audio messages for future delivery to loved ones on special occasions.
             </p>
-            <Link href="/app/messages">
-              <Button size="lg" className="mt-6">
-                <Plus className="h-4 w-4" />
-                <span className="ml-2">Record Your First Message</span>
-              </Button>
-            </Link>
+            <Button onClick={() => setShowRecordModal(true)} size="lg" className="mt-6">
+              <Plus className="h-4 w-4" />
+              <span className="ml-2">Record Your First Message</span>
+            </Button>
           </div>
         </Card>
       )}
@@ -365,6 +363,12 @@ export default function ItemsPageClient() {
         onClose={() => setShowAddModal(false)}
         type={addType}
         onTypeChange={setAddType}
+      />
+
+      {/* Record Video/Audio Modal */}
+      <RecordModal
+        isOpen={showRecordModal}
+        onClose={() => setShowRecordModal(false)}
       />
     </div>
   );

@@ -154,27 +154,18 @@ export default function MessagesPageClient() {
   };
 
   const stopRecording = () => {
-    return new Promise<Blob>((resolve) => {
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.onstop = () => {
-          const blob = new Blob(chunksRef.current, {
-            type: mediaType === 'video' ? 'video/webm' : 'audio/webm'
-          });
-          resolve(blob);
-        };
-
-        mediaRecorderRef.current.stop();
-        if (streamRef.current) {
-          streamRef.current.getTracks().forEach(track => track.stop());
-        }
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-
-        setIsRecording(false);
-        setIsPaused(false);
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
-    });
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+
+      setIsRecording(false);
+      setIsPaused(false);
+    }
   };
 
   const saveMessage = async () => {
@@ -183,13 +174,22 @@ export default function MessagesPageClient() {
       return;
     }
 
-    if (!isRecording && chunksRef.current.length === 0) {
+    if (chunksRef.current.length === 0) {
       showToast('Please record a message first', 'error');
       return;
     }
 
     try {
-      const blob = await stopRecording();
+      // If still recording, stop it first
+      if (isRecording) {
+        stopRecording();
+        // Wait a moment for the recording to stop
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
+      const blob = new Blob(chunksRef.current, {
+        type: mediaType === 'video' ? 'video/webm' : 'audio/webm'
+      });
 
       // TODO: Encrypt and upload to R2, save to database
       showToast('Message saved successfully!', 'success');
