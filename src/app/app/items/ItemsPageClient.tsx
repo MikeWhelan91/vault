@@ -705,93 +705,93 @@ function AddItemModal({
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Item" size="lg">
       <div className="space-y-6">
         {/* Type Selector */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => onTypeChange('file')}
-            className={`group relative p-6 rounded-2xl border-2 transition-all ${
+            className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'file'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
                 : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'file'
                   ? 'bg-primary-100'
                   : 'bg-graphite-100 group-hover:bg-primary-50'
               }`}>
-                <FileText className={`w-7 h-7 ${type === 'file' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <FileText className={`w-5 h-5 ${type === 'file' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
               </div>
               <span className={`text-sm font-semibold ${type === 'file' ? 'text-primary-900' : 'text-graphite-900'}`}>
                 File Upload
               </span>
-              <span className="text-xs text-graphite-600 mt-1">Photos, documents & more</span>
+              <span className="text-xs text-graphite-600 mt-0.5">Photos, documents & more</span>
             </div>
           </button>
           <button
             onClick={() => onTypeChange('password')}
-            className={`group relative p-6 rounded-2xl border-2 transition-all ${
+            className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'password'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
                 : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'password'
                   ? 'bg-primary-100'
                   : 'bg-graphite-100 group-hover:bg-primary-50'
               }`}>
-                <Key className={`w-7 h-7 ${type === 'password' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <Key className={`w-5 h-5 ${type === 'password' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
               </div>
               <span className={`text-sm font-semibold ${type === 'password' ? 'text-primary-900' : 'text-graphite-900'}`}>
                 Password
               </span>
-              <span className="text-xs text-graphite-600 mt-1">Login credentials</span>
+              <span className="text-xs text-graphite-600 mt-0.5">Login credentials</span>
             </div>
           </button>
           <button
             onClick={() => onTypeChange('card')}
-            className={`group relative p-6 rounded-2xl border-2 transition-all ${
+            className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'card'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
                 : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'card'
                   ? 'bg-primary-100'
                   : 'bg-graphite-100 group-hover:bg-primary-50'
               }`}>
-                <CreditCard className={`w-7 h-7 ${type === 'card' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <CreditCard className={`w-5 h-5 ${type === 'card' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
               </div>
               <span className={`text-sm font-semibold ${type === 'card' ? 'text-primary-900' : 'text-graphite-900'}`}>
                 Credit Card
               </span>
-              <span className="text-xs text-graphite-600 mt-1">Payment information</span>
+              <span className="text-xs text-graphite-600 mt-0.5">Payment information</span>
             </div>
           </button>
           <button
             onClick={() => onTypeChange('secure_note')}
-            className={`group relative p-6 rounded-2xl border-2 transition-all ${
+            className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'secure_note'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
                 : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'secure_note'
                   ? 'bg-primary-100'
                   : 'bg-graphite-100 group-hover:bg-primary-50'
               }`}>
-                <Lock className={`w-7 h-7 ${type === 'secure_note' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <Lock className={`w-5 h-5 ${type === 'secure_note' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
               </div>
               <span className={`text-sm font-semibold ${type === 'secure_note' ? 'text-primary-900' : 'text-graphite-900'}`}>
                 Secure Note
               </span>
-              <span className="text-xs text-graphite-600 mt-1">Encrypted text</span>
+              <span className="text-xs text-graphite-600 mt-0.5">Encrypted text</span>
             </div>
           </button>
         </div>
