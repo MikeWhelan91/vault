@@ -47,14 +47,24 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
         videoPreviewRef.current.srcObject = stream;
       }
 
-      // Android codec fallback
+      // Codec selection with audio support
       let options = {};
-      if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-        options = { mimeType: 'video/webm;codecs=vp9' };
-      } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
-        options = { mimeType: 'video/webm;codecs=vp8' };
-      } else if (MediaRecorder.isTypeSupported('video/webm')) {
-        options = { mimeType: 'video/webm' };
+      if (mediaType === 'video') {
+        // For video with audio, use codecs that support both
+        if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
+          options = { mimeType: 'video/webm;codecs=vp9,opus' };
+        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
+          options = { mimeType: 'video/webm;codecs=vp8,opus' };
+        } else if (MediaRecorder.isTypeSupported('video/webm')) {
+          options = { mimeType: 'video/webm' };
+        }
+      } else {
+        // For audio only
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+          options = { mimeType: 'audio/webm;codecs=opus' };
+        } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+          options = { mimeType: 'audio/webm' };
+        }
       }
 
       const mediaRecorder = new MediaRecorder(stream, options);
