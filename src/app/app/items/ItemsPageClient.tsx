@@ -52,7 +52,7 @@ const CATEGORY_LABELS: Record<FileCategory, string> = {
   other: 'File',
 };
 
-type VaultTab = 'files';
+type VaultTab = 'all' | 'images' | 'videos' | 'documents' | 'passwords' | 'other';
 
 export default function ItemsPageClient() {
   const { metadata, addItem, getItemKey, session } = useCrypto();
@@ -60,6 +60,7 @@ export default function ItemsPageClient() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addType, setAddType] = useState<ItemType>('file');
   const [showRecordModal, setShowRecordModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<VaultTab>('all');
 
   if (!metadata) {
     return <div>Loading...</div>;
@@ -103,8 +104,26 @@ export default function ItemsPageClient() {
     }),
   };
 
-  // No tabs needed - single view
-  const showTabs = false;
+  // Get items for current tab
+  const getItemsForTab = () => {
+    switch (activeTab) {
+      case 'images':
+        return categorizedItems.images;
+      case 'videos':
+        return categorizedItems.videos;
+      case 'documents':
+        return categorizedItems.documents;
+      case 'passwords':
+        return [...categorizedItems.passwords, ...categorizedItems.cards, ...categorizedItems.secureNotes];
+      case 'other':
+        return [...categorizedItems.audio, ...categorizedItems.other];
+      case 'all':
+      default:
+        return items;
+    }
+  };
+
+  const tabItems = getItemsForTab();
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
@@ -127,14 +146,94 @@ export default function ItemsPageClient() {
         }
       />
 
-      {/* Files Content */}
-      <>
-          {/* Storage Indicator */}
+      {/* Storage Indicator */}
       <StorageIndicator
         tier={tier}
         usedBytes={metadata.totalSize}
         limitBytes={metadata.storageLimit}
       />
+
+      {/* Tabs */}
+      {items.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          <button
+            onClick={() => setActiveTab('all')}
+            className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === 'all'
+                ? 'bg-primary-500 text-white'
+                : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+            }`}
+          >
+            <FolderOpen className="h-4 w-4" />
+            All ({items.length})
+          </button>
+          {categorizedItems.images.length > 0 && (
+            <button
+              onClick={() => setActiveTab('images')}
+              className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'images'
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+              }`}
+            >
+              <ImageIcon className="h-4 w-4" />
+              Images ({categorizedItems.images.length})
+            </button>
+          )}
+          {categorizedItems.videos.length > 0 && (
+            <button
+              onClick={() => setActiveTab('videos')}
+              className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'videos'
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+              }`}
+            >
+              <VideoIcon className="h-4 w-4" />
+              Videos ({categorizedItems.videos.length})
+            </button>
+          )}
+          {categorizedItems.documents.length > 0 && (
+            <button
+              onClick={() => setActiveTab('documents')}
+              className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'documents'
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+              }`}
+            >
+              <FileText className="h-4 w-4" />
+              Documents ({categorizedItems.documents.length})
+            </button>
+          )}
+          {(categorizedItems.passwords.length > 0 || categorizedItems.cards.length > 0 || categorizedItems.secureNotes.length > 0) && (
+            <button
+              onClick={() => setActiveTab('passwords')}
+              className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'passwords'
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+              }`}
+            >
+              <Key className="h-4 w-4" />
+              Passwords ({categorizedItems.passwords.length + categorizedItems.cards.length + categorizedItems.secureNotes.length})
+            </button>
+          )}
+          {(categorizedItems.audio.length > 0 || categorizedItems.other.length > 0) && (
+            <button
+              onClick={() => setActiveTab('other')}
+              className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === 'other'
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+              }`}
+            >
+              <FileIcon className="h-4 w-4" />
+              Other ({categorizedItems.audio.length + categorizedItems.other.length})
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Items List */}
       {items.length === 0 ? (
@@ -153,90 +252,19 @@ export default function ItemsPageClient() {
             </Button>
           </div>
         </Card>
+      ) : tabItems.length === 0 ? (
+        <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
+          <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
+            <p className="text-sm text-espresso-600">No items in this category</p>
+          </div>
+        </Card>
       ) : (
-        <div className="space-y-8">
-          {/* Passwords */}
-          {categorizedItems.passwords.length > 0 && (
-            <CategorySection
-              title="Passwords"
-              icon={<Key className="w-5 h-5" />}
-              items={categorizedItems.passwords}
-              count={categorizedItems.passwords.length}
-            />
-          )}
-
-          {/* Cards */}
-          {categorizedItems.cards.length > 0 && (
-            <CategorySection
-              title="Credit Cards"
-              icon={<CreditCard className="w-5 h-5" />}
-              items={categorizedItems.cards}
-              count={categorizedItems.cards.length}
-            />
-          )}
-
-          {/* Secure Notes */}
-          {categorizedItems.secureNotes.length > 0 && (
-            <CategorySection
-              title="Secure Notes"
-              icon={<Lock className="w-5 h-5" />}
-              items={categorizedItems.secureNotes}
-              count={categorizedItems.secureNotes.length}
-            />
-          )}
-
-          {/* Images */}
-          {categorizedItems.images.length > 0 && (
-            <CategorySection
-              title="Images"
-              icon={<ImageIcon className="w-5 h-5" />}
-              items={categorizedItems.images}
-              count={categorizedItems.images.length}
-            />
-          )}
-
-          {/* Videos */}
-          {categorizedItems.videos.length > 0 && (
-            <CategorySection
-              title="Videos"
-              icon={<VideoIcon className="w-5 h-5" />}
-              items={categorizedItems.videos}
-              count={categorizedItems.videos.length}
-            />
-          )}
-
-          {/* Audio */}
-          {categorizedItems.audio.length > 0 && (
-            <CategorySection
-              title="Audio"
-              icon={<MusicIcon className="w-5 h-5" />}
-              items={categorizedItems.audio}
-              count={categorizedItems.audio.length}
-            />
-          )}
-
-          {/* Documents */}
-          {categorizedItems.documents.length > 0 && (
-            <CategorySection
-              title="Documents"
-              icon={<FileText className="w-5 h-5" />}
-              items={categorizedItems.documents}
-              count={categorizedItems.documents.length}
-            />
-          )}
-
-          {/* Other Files */}
-          {categorizedItems.other.length > 0 && (
-            <CategorySection
-              title="Other Files"
-              icon={<FileIcon className="w-5 h-5" />}
-              items={categorizedItems.other}
-              count={categorizedItems.other.length}
-            />
-          )}
+        <div className={`grid gap-4 ${activeTab === 'images' || activeTab === 'videos' ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4' : ''}`}>
+          {tabItems.map((item) => (
+            <ItemCard key={item.id} item={item} viewMode={activeTab === 'images' || activeTab === 'videos' ? 'grid' : 'list'} />
+          ))}
         </div>
       )}
-      </>
 
 
       {/* Add Item Modal */}
@@ -256,53 +284,7 @@ export default function ItemsPageClient() {
   );
 }
 
-function CategorySection({
-  title,
-  icon,
-  items,
-  count,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  items: any[];
-  count: number;
-}) {
-  const [isExpanded, setIsExpanded] = useState(true);
-
-  return (
-    <div className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
-      {/* Category Header - Collapsible */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-primary-600">
-            {icon}
-          </div>
-          <div>
-            <h2 className="font-display text-base font-semibold text-espresso-900">{title}</h2>
-            <p className="text-xs text-espresso-500">{count} {count === 1 ? 'item' : 'items'}</p>
-          </div>
-        </div>
-        <span className="flex h-8 w-8 items-center justify-center rounded-full border border-champagne-200 text-espresso-500 transition-transform">
-          <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-        </span>
-      </button>
-
-      {/* Items List */}
-      {isExpanded && (
-        <div className="divide-y divide-champagne-100">
-          {items.map((item) => (
-            <ItemCard key={item.id} item={item} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ItemCard({ item }: { item: any }) {
+function ItemCard({ item, viewMode = 'list' }: { item: any; viewMode?: 'list' | 'grid' }) {
   const fileInfo = item.type === 'file' ? getFileTypeInfo(item.name) : null;
 
   const getDescription = () => {
@@ -342,26 +324,80 @@ function ItemCard({ item }: { item: any }) {
     return <FileText className="w-4 h-4 text-espresso-500" />;
   };
 
-  return (
-    <Link href={`/app/items/${item.id}`} className="block">
-      <div className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-primary-50/60">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-champagne-100 text-espresso-600 group-hover:bg-primary-100 group-hover:text-primary-700">
-            {getIcon()}
+  // Grid view for images/videos with thumbnails
+  if (viewMode === 'grid') {
+    const isImage = fileInfo?.category === 'image';
+    const isVideo = fileInfo?.category === 'video';
+
+    return (
+      <Link href={`/app/items/${item.id}`} className="block">
+        <Card className="group overflow-hidden border-champagne-200 p-0 transition-all hover:border-primary-300 hover:shadow-md">
+          {/* Thumbnail */}
+          <div className="relative aspect-square w-full overflow-hidden bg-champagne-100">
+            {isImage || isVideo ? (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-champagne-100 to-champagne-200">
+                {isImage ? (
+                  <ImageIcon className="h-12 w-12 text-espresso-300" />
+                ) : (
+                  <div className="relative flex items-center justify-center">
+                    <VideoIcon className="h-12 w-12 text-espresso-300" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="h-8 w-8 rounded-full bg-white/80 flex items-center justify-center">
+                        <div className="h-0 w-0 border-l-[8px] border-l-espresso-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                {getIcon()}
+              </div>
+            )}
+            {isVideo && (
+              <div className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
+                Video
+              </div>
+            )}
           </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="truncate text-sm font-medium text-espresso-900">{item.name}</h3>
-            <div className="flex items-center gap-3 mt-1">
-              <p className="text-xs text-espresso-500">{fileDescription}</p>
-              <span className="hidden sm:inline text-xs text-espresso-400">•</span>
-              <span className="hidden sm:inline text-xs text-espresso-500">{formatFileSize(item.size)}</span>
-              <span className="hidden md:inline text-xs text-espresso-400">•</span>
-              <span className="hidden md:inline text-xs text-espresso-500">{formatDate(item.updatedAt)}</span>
+          {/* Info */}
+          <div className="p-3">
+            <h3 className="truncate text-sm font-medium text-espresso-900 group-hover:text-primary-700">
+              {item.name}
+            </h3>
+            <div className="mt-1 flex items-center justify-between">
+              <p className="text-xs text-espresso-500">{formatFileSize(item.size)}</p>
+              <p className="text-xs text-espresso-400">{formatDate(item.updatedAt)}</p>
             </div>
           </div>
+        </Card>
+      </Link>
+    );
+  }
+
+  // List view (default)
+  return (
+    <Link href={`/app/items/${item.id}`} className="block">
+      <Card className="group border-champagne-200 p-0 transition-all hover:border-primary-300">
+        <div className="flex items-center justify-between gap-4 px-5 py-4">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-champagne-100 text-espresso-600 group-hover:bg-primary-100 group-hover:text-primary-700">
+              {getIcon()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-sm font-medium text-espresso-900">{item.name}</h3>
+              <div className="flex items-center gap-3 mt-1">
+                <p className="text-xs text-espresso-500">{fileDescription}</p>
+                <span className="hidden sm:inline text-xs text-espresso-400">•</span>
+                <span className="hidden sm:inline text-xs text-espresso-500">{formatFileSize(item.size)}</span>
+                <span className="hidden md:inline text-xs text-espresso-400">•</span>
+                <span className="hidden md:inline text-xs text-espresso-500">{formatDate(item.updatedAt)}</span>
+              </div>
+            </div>
+          </div>
+          <ArrowRight className="h-4 w-4 flex-shrink-0 text-espresso-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
         </div>
-        <ArrowRight className="h-4 w-4 flex-shrink-0 text-espresso-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
-      </div>
+      </Card>
     </Link>
   );
 }
