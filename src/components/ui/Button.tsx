@@ -19,9 +19,9 @@ export function Button({
 
   const variants = {
     primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-400 shadow-sm hover-lift',
-    secondary: 'bg-champagne-200 text-espresso-900 hover:bg-champagne-300 focus:ring-champagne-400 border border-champagne-300',
+    secondary: 'bg-champagne-200 text-plum-900 hover:bg-champagne-300 focus:ring-champagne-400 border border-champagne-300',
     danger: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-400 shadow-sm hover-lift',
-    ghost: 'text-espresso-800 hover:bg-champagne-100 focus:ring-champagne-300',
+    ghost: 'text-plum-800 hover:bg-champagne-100 focus:ring-champagne-300',
   };
 
   const sizes = {

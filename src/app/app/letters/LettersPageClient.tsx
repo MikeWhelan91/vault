@@ -154,11 +154,11 @@ export default function LettersPageClient() {
   if (!isPaidUser) {
     return (
       <div className="mx-auto max-w-5xl space-y-8">
-        <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
+        <section className="rounded-3xl border border-warm-200 bg-white px-6 py-6 shadow-sm sm:px-8">
           <div className="flex flex-col gap-4 text-center">
             <div className="space-y-2">
-              <h1 className="text-3xl font-semibold text-graphite-900">Schedule Letters for the Future</h1>
-              <p className="mt-2 text-sm text-graphite-600">
+              <h1 className="text-3xl font-semibold text-warm-900">Schedule Letters for the Future</h1>
+              <p className="mt-2 text-sm text-warm-600">
                 Write letters to be delivered on birthdays, anniversaries, or any special date.
               </p>
             </div>
@@ -170,8 +170,8 @@ export default function LettersPageClient() {
             <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-amber-300 bg-amber-100 text-amber-600">
               <Crown className="h-7 w-7" />
             </div>
-            <h2 className="text-xl font-semibold text-graphite-900">Plus Feature</h2>
-            <p className="mt-2 max-w-sm text-sm text-graphite-600">
+            <h2 className="text-xl font-semibold text-warm-900">Plus Feature</h2>
+            <p className="mt-2 max-w-sm text-sm text-warm-600">
               Letter scheduling is a Plus-exclusive feature. Upgrade to schedule letters to loved ones for future dates.
             </p>
             <Link href="/app/pricing" className="mt-6">
@@ -211,13 +211,13 @@ export default function LettersPageClient() {
       />
 
       {letters.length === 0 ? (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+        <Card className="rounded-3xl border border-warm-200 bg-white shadow-sm">
           <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-primary-600">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-warm-200 bg-warm-50 text-primary-600">
               <Mail className="h-7 w-7" />
             </div>
-            <h2 className="text-xl font-semibold text-graphite-900">No Scheduled Letters Yet</h2>
-            <p className="mt-2 max-w-sm text-sm text-graphite-600">
+            <h2 className="text-xl font-semibold text-warm-900">No Scheduled Letters Yet</h2>
+            <p className="mt-2 max-w-sm text-sm text-warm-600">
               Create your first scheduled letter to send heartfelt messages on future dates.
             </p>
             <Button onClick={() => setShowCreateModal(true)} size="lg" className="mt-6">
@@ -229,7 +229,7 @@ export default function LettersPageClient() {
       ) : (
         <div className="space-y-4">
           {letters.map((letter) => (
-            <Card key={letter.id} className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+            <Card key={letter.id} className="rounded-3xl border border-warm-200 bg-white shadow-sm">
               <div className="flex items-start justify-between gap-3 sm:gap-4">
                 <div className="flex min-w-0 flex-1 gap-3 sm:gap-4">
                   <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
@@ -237,7 +237,7 @@ export default function LettersPageClient() {
                   </div>
                   <div className="min-w-0 flex-1 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="break-words text-base font-semibold text-graphite-900 sm:text-lg">{letter.title}</h3>
+                      <h3 className="break-words text-base font-semibold text-warm-900 sm:text-lg">{letter.title}</h3>
                       {letter.sent ? (
                         <span className="whitespace-nowrap rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
                           Sent
@@ -248,13 +248,13 @@ export default function LettersPageClient() {
                         </span>
                       )}
                     </div>
-                    <div className="flex flex-col gap-1 text-sm text-graphite-600">
+                    <div className="flex flex-col gap-1 text-sm text-warm-600">
                       <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 flex-shrink-0 text-graphite-400" />
+                        <Mail className="h-4 w-4 flex-shrink-0 text-warm-400" />
                         <span className="break-words">To: {letter.recipientName || letter.recipient}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 flex-shrink-0 text-graphite-400" />
+                        <Calendar className="h-4 w-4 flex-shrink-0 text-warm-400" />
                         <span className="break-words">
                           {letter.sent
                             ? `Sent ${new Date(letter.sentAt!).toLocaleDateString()}`
@@ -330,7 +330,7 @@ export default function LettersPageClient() {
                   onChange={() => setScheduleType('date')}
                   className="w-4 h-4 text-primary-600 focus:ring-primary-500"
                 />
-                <span className="text-sm text-graphite-900">Specific date</span>
+                <span className="text-sm text-warm-900">Specific date</span>
               </label>
               {scheduleType === 'date' && (
                 <Input
@@ -350,7 +350,7 @@ export default function LettersPageClient() {
                   onChange={() => setScheduleType('yearly')}
                   className="w-4 h-4 text-primary-600 focus:ring-primary-500"
                 />
-                <span className="text-sm text-graphite-900">Yearly (birthday/anniversary)</span>
+                <span className="text-sm text-warm-900">Yearly (birthday/anniversary)</span>
               </label>
               {scheduleType === 'yearly' && (
                 <div className="ml-6 flex gap-2">
@@ -382,12 +382,12 @@ export default function LettersPageClient() {
             <textarea
               value={letterContent}
               onChange={(e) => setLetterContent(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-warm-900"
               rows={10}
               placeholder="Write your letter here..."
               required
             />
-            <p className="text-xs text-graphite-500 mt-1">
+            <p className="text-xs text-warm-500 mt-1">
               This letter will be sent via email on the scheduled date
             </p>
           </div>

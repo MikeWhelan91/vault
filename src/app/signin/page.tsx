@@ -205,10 +205,10 @@ export default function SignInPage() {
               className="h-10 w-auto mx-auto"
             />
           </Link>
-          <h2 className="text-3xl font-light text-graphite-900 mb-2">
+          <h2 className="text-3xl font-light text-warm-900 mb-2">
             Welcome Back
           </h2>
-          <p className="text-graphite-600 text-sm">
+          <p className="text-warm-600 text-sm">
             Sign in to access your encrypted vault
           </p>
         </div>
@@ -244,7 +244,7 @@ export default function SignInPage() {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-sm text-graphite-600">
+                <p className="text-sm text-warm-600">
                   Don&apos;t have an account?{' '}
                   <Link
                     href="/signup"
@@ -255,8 +255,8 @@ export default function SignInPage() {
                 </p>
               </div>
 
-              <div className="mt-6 pt-6 border-t border-graphite-200">
-                <p className="text-xs text-graphite-600 leading-relaxed">
+              <div className="mt-6 pt-6 border-t border-warm-200">
+                <p className="text-xs text-warm-600 leading-relaxed">
                   Your password is used to decrypt your data locally. We never see your password or decrypted data.
                 </p>
               </div>
@@ -265,11 +265,11 @@ export default function SignInPage() {
             /* Step 2: Authentication (Password or Biometric) */
             <>
               {/* Show email with edit option */}
-              <div className="mb-6 p-3 bg-graphite-50 rounded-lg">
+              <div className="mb-6 p-3 bg-warm-50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-graphite-500 mb-1">Signing in as</p>
-                    <p className="text-sm font-medium text-graphite-900 truncate">{email}</p>
+                    <p className="text-xs text-warm-500 mb-1">Signing in as</p>
+                    <p className="text-sm font-medium text-warm-900 truncate">{email}</p>
                   </div>
                   <button
                     type="button"
@@ -297,10 +297,10 @@ export default function SignInPage() {
                   </Button>
                   <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-graphite-200"></div>
+                      <div className="w-full border-t border-warm-200"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-2 bg-white text-graphite-500">Or use password</span>
+                      <span className="px-2 bg-white text-warm-500">Or use password</span>
                     </div>
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export default function SignInPage() {
           <div className="mt-6 text-center">
             <Link
               href="/"
-              className="text-sm text-graphite-600 hover:text-graphite-900 transition-colors"
+              className="text-sm text-warm-600 hover:text-warm-900 transition-colors"
             >
               ← Back to home
             </Link>
@@ -358,10 +358,10 @@ export default function SignInPage() {
                 <Fingerprint className="h-8 w-8 text-primary-600" />
               </div>
             </div>
-            <h3 className="mb-2 text-center text-xl font-semibold text-graphite-900">
+            <h3 className="mb-2 text-center text-xl font-semibold text-warm-900">
               Enable Biometric Login?
             </h3>
-            <p className="mb-6 text-center text-sm text-graphite-600">
+            <p className="mb-6 text-center text-sm text-warm-600">
               Sign in faster next time using your fingerprint or face recognition
             </p>
             <div className="flex gap-3">

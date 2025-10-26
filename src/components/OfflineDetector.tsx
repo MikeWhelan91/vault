@@ -28,8 +28,8 @@ export function OfflineDetector() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-graphite-900/95 backdrop-blur-sm">
-      <div className="mx-4 max-w-md rounded-2xl border border-graphite-700 bg-graphite-800 p-8 text-center shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-warm-900/95 backdrop-blur-sm">
+      <div className="mx-4 max-w-md rounded-2xl border border-warm-700 bg-warm-800 p-8 text-center shadow-2xl">
         <div className="mb-4 flex justify-center">
           <div className="rounded-full bg-red-500/20 p-4">
             <WifiOff className="h-12 w-12 text-red-400" />
@@ -38,10 +38,10 @@ export function OfflineDetector() {
         <h2 className="mb-2 text-2xl font-semibold text-white">
           No Internet Connection
         </h2>
-        <p className="mb-4 text-sm text-graphite-300">
+        <p className="mb-4 text-sm text-warm-300">
           Forebearer requires an internet connection to access your encrypted vault and sync your data securely.
         </p>
-        <p className="text-xs text-graphite-400">
+        <p className="text-xs text-warm-400">
           Please check your connection and try again.
         </p>
       </div>

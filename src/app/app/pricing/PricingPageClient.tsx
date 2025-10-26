@@ -29,9 +29,9 @@ export default function PricingPageClient() {
   return (
     <div className="mx-auto max-w-5xl space-y-10">
       {/* Header */}
-      <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-8 text-center shadow-sm">
-        <h1 className="text-3xl font-semibold text-graphite-900 sm:text-4xl">Choose Your Plan</h1>
-        <p className="mt-3 text-sm text-graphite-600 sm:text-base">
+      <section className="rounded-3xl border border-warm-200 bg-white px-6 py-8 text-center shadow-sm">
+        <h1 className="text-3xl font-semibold text-warm-900 sm:text-4xl">Choose Your Plan</h1>
+        <p className="mt-3 text-sm text-warm-600 sm:text-base">
           {tier === 'free'
             ? 'Unlock expanded storage, unlimited bundles, and richer heartbeat controls with Plus.'
             : 'You have full access to Plus features—review your benefits below or adjust billing anytime.'}
@@ -39,14 +39,14 @@ export default function PricingPageClient() {
       </section>
 
       {/* Current Usage Banner */}
-      <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+      <Card className="rounded-3xl border border-warm-200 bg-white shadow-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-graphite-500">Current Usage</h3>
-            <p className="mt-2 text-lg font-semibold text-graphite-900">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-warm-500">Current Usage</h3>
+            <p className="mt-2 text-lg font-semibold text-warm-900">
               {formatBytes(metadata.totalSize)} of {tierLimits.storage.display}
             </p>
-            <p className="text-xs text-graphite-500">{metadata.items.length} encrypted items stored</p>
+            <p className="text-xs text-warm-500">{metadata.items.length} encrypted items stored</p>
           </div>
           <Link href="/app/settings/billing">
             <Button variant="ghost" className="flex items-center gap-2 text-primary-600 hover:text-primary-700">
@@ -60,7 +60,7 @@ export default function PricingPageClient() {
       {/* Pricing Cards */}
       <div className="grid gap-6 max-w-4xl mx-auto md:grid-cols-2 md:gap-8">
         {/* Free Tier */}
-        <Card className={`rounded-3xl border ${tier === 'free' ? 'border-primary-400 bg-primary-50/60' : 'border-graphite-200'} shadow-sm`}>
+        <Card className={`rounded-3xl border ${tier === 'free' ? 'border-primary-400 bg-primary-50/60' : 'border-warm-200'} shadow-sm`}>
           <div className="p-4 sm:p-6">
             {tier === 'free' && (
               <div className="mb-4">
@@ -69,40 +69,40 @@ export default function PricingPageClient() {
                 </span>
               </div>
             )}
-            <h2 className="text-2xl font-bold text-graphite-900 mb-2">Free</h2>
+            <h2 className="text-2xl font-bold text-warm-900 mb-2">Free</h2>
             <div className="mb-6">
-              <span className="text-5xl font-bold text-graphite-900">$0</span>
-              <span className="text-graphite-600 ml-2">/month</span>
+              <span className="text-5xl font-bold text-warm-900">$0</span>
+              <span className="text-warm-600 ml-2">/month</span>
             </div>
 
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">300 MB of storage</span>
+                <Check className="w-5 h-5 text-warm-400 flex-shrink-0 mt-0.5" />
+                <span className="text-warm-700">300 MB of storage</span>
               </li>
               <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">1 active release bundle</span>
+                <Check className="w-5 h-5 text-warm-400 flex-shrink-0 mt-0.5" />
+                <span className="text-warm-700">1 active release bundle</span>
               </li>
               <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">Up to 10 trustees per bundle</span>
+                <Check className="w-5 h-5 text-warm-400 flex-shrink-0 mt-0.5" />
+                <span className="text-warm-700">Up to 10 trustees per bundle</span>
               </li>
               <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">1 video recording</span>
+                <Check className="w-5 h-5 text-warm-400 flex-shrink-0 mt-0.5" />
+                <span className="text-warm-700">1 video recording</span>
               </li>
               <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">Unlimited file types</span>
+                <Check className="w-5 h-5 text-warm-400 flex-shrink-0 mt-0.5" />
+                <span className="text-warm-700">Unlimited file types</span>
               </li>
               <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">Monthly heartbeat check-ins</span>
+                <Check className="w-5 h-5 text-warm-400 flex-shrink-0 mt-0.5" />
+                <span className="text-warm-700">Monthly heartbeat check-ins</span>
               </li>
               <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">Email notifications</span>
+                <Check className="w-5 h-5 text-warm-400 flex-shrink-0 mt-0.5" />
+                <span className="text-warm-700">Email notifications</span>
               </li>
             </ul>
 
@@ -133,10 +133,10 @@ export default function PricingPageClient() {
             </div>
           )}
           <div className="p-4 mt-2 sm:p-6">
-            <h2 className="text-2xl font-bold text-graphite-900 mb-2">Plus</h2>
+            <h2 className="text-2xl font-bold text-warm-900 mb-2">Plus</h2>
             <div className="mb-2">
-              <span className="text-5xl font-bold text-graphite-900">$9.99</span>
-              <span className="text-graphite-600 ml-2">/month</span>
+              <span className="text-5xl font-bold text-warm-900">$9.99</span>
+              <span className="text-warm-600 ml-2">/month</span>
             </div>
             <p className="text-sm text-primary-600 font-semibold mb-6">
               or $7.50/month billed annually ($89.99/year — save $30)
@@ -145,35 +145,35 @@ export default function PricingPageClient() {
             <ul className="space-y-3 mb-8">
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">5 GB of storage</span>
+                <span className="text-warm-900 font-medium">5 GB of storage</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Unlimited release bundles</span>
+                <span className="text-warm-900 font-medium">Unlimited release bundles</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Unlimited trustees</span>
+                <span className="text-warm-900 font-medium">Unlimited trustees</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Unlimited video recordings</span>
+                <span className="text-warm-900 font-medium">Unlimited video recordings</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Bulk file uploads</span>
+                <span className="text-warm-900 font-medium">Bulk file uploads</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Custom heartbeat schedules</span>
+                <span className="text-warm-900 font-medium">Custom heartbeat schedules</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Conditional releases</span>
+                <span className="text-warm-900 font-medium">Conditional releases</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Letter scheduler</span>
+                <span className="text-warm-900 font-medium">Letter scheduler</span>
               </li>
             </ul>
 
@@ -194,7 +194,7 @@ export default function PricingPageClient() {
 
       {/* Benefits Section */}
       <div className="max-w-4xl mx-auto mt-12">
-        <h2 className="text-xl font-bold text-graphite-900 mb-6 text-center sm:text-2xl">
+        <h2 className="text-xl font-bold text-warm-900 mb-6 text-center sm:text-2xl">
           Why Upgrade to Plus?
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
@@ -203,8 +203,8 @@ export default function PricingPageClient() {
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
                 <Package className="w-6 h-6 text-primary-600" />
               </div>
-              <h3 className="font-semibold text-graphite-900 mb-2">Unlimited Bundles</h3>
-              <p className="text-sm text-graphite-600">
+              <h3 className="font-semibold text-warm-900 mb-2">Unlimited Bundles</h3>
+              <p className="text-sm text-warm-600">
                 Create separate release bundles for different groups of loved ones
               </p>
             </div>
@@ -215,8 +215,8 @@ export default function PricingPageClient() {
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
                 <Users className="w-6 h-6 text-primary-600" />
               </div>
-              <h3 className="font-semibold text-graphite-900 mb-2">Unlimited Trustees</h3>
-              <p className="text-sm text-graphite-600">
+              <h3 className="font-semibold text-warm-900 mb-2">Unlimited Trustees</h3>
+              <p className="text-sm text-warm-600">
                 Share your memories with as many people as you want
               </p>
             </div>
@@ -227,8 +227,8 @@ export default function PricingPageClient() {
               <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
                 <HardDrive className="w-6 h-6 text-primary-600" />
               </div>
-              <h3 className="font-semibold text-graphite-900 mb-2">16x More Storage</h3>
-              <p className="text-sm text-graphite-600">
+              <h3 className="font-semibold text-warm-900 mb-2">16x More Storage</h3>
+              <p className="text-sm text-warm-600">
                 5 GB lets you store thousands of photos and videos
               </p>
             </div>
@@ -238,27 +238,27 @@ export default function PricingPageClient() {
 
       {/* FAQ */}
       <div className="max-w-3xl mx-auto mt-12">
-        <h2 className="text-xl font-bold text-graphite-900 mb-6 text-center sm:text-2xl">
+        <h2 className="text-xl font-bold text-warm-900 mb-6 text-center sm:text-2xl">
           Common Questions
         </h2>
         <div className="space-y-3 sm:space-y-4">
           <Card>
-            <h3 className="font-semibold text-graphite-900 mb-2">Can I cancel anytime?</h3>
-            <p className="text-sm text-graphite-600">
+            <h3 className="font-semibold text-warm-900 mb-2">Can I cancel anytime?</h3>
+            <p className="text-sm text-warm-600">
               Yes! You can cancel your Plus subscription at any time. You&apos;ll continue to have Plus access until the end of your billing period.
             </p>
           </Card>
 
           <Card>
-            <h3 className="font-semibold text-graphite-900 mb-2">What happens if I downgrade?</h3>
-            <p className="text-sm text-graphite-600">
+            <h3 className="font-semibold text-warm-900 mb-2">What happens if I downgrade?</h3>
+            <p className="text-sm text-warm-600">
               If you downgrade from Plus to Free, you&apos;ll need to ensure you&apos;re within the free tier limits (1 bundle, 10 trustees per bundle, 300 MB storage). Your existing data remains accessible.
             </p>
           </Card>
 
           <Card>
-            <h3 className="font-semibold text-graphite-900 mb-2">Is my data still encrypted on Plus?</h3>
-            <p className="text-sm text-graphite-600">
+            <h3 className="font-semibold text-warm-900 mb-2">Is my data still encrypted on Plus?</h3>
+            <p className="text-sm text-warm-600">
               Absolutely! Both Free and Plus tiers use the same end-to-end encryption. Your data is always secure, regardless of your plan.
             </p>
           </Card>

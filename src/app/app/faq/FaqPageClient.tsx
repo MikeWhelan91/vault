@@ -7,10 +7,10 @@ export default function FaqPageClient() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-semibold text-graphite-900 mb-4">
+        <h1 className="text-4xl md:text-5xl font-semibold text-warm-900 mb-4">
           Frequently Asked Questions
         </h1>
-        <p className="text-lg text-graphite-600">
+        <p className="text-lg text-warm-600">
           Everything you need to know about Forebearer
         </p>
       </div>
@@ -18,7 +18,7 @@ export default function FaqPageClient() {
       <div className="space-y-6">
         {/* General Questions */}
         <section>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4">General</h2>
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4">General</h2>
 
           <FAQItem
             question="What is Forebearer?"
@@ -38,7 +38,7 @@ export default function FaqPageClient() {
 
         {/* Security & Privacy */}
         <section>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4 mt-12">Security & Privacy</h2>
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4 mt-12">Security & Privacy</h2>
 
           <FAQItem
             question="Is my data secure?"
@@ -63,7 +63,7 @@ export default function FaqPageClient() {
 
         {/* Pricing & Storage */}
         <section>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4 mt-12">Pricing & Storage</h2>
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4 mt-12">Pricing & Storage</h2>
 
           <FAQItem
             question="How much does Forebearer cost?"
@@ -88,7 +88,7 @@ export default function FaqPageClient() {
 
         {/* Features */}
         <section>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4 mt-12">Features</h2>
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4 mt-12">Features</h2>
 
           <FAQItem
             question="What is a time-lock release?"
@@ -118,7 +118,7 @@ export default function FaqPageClient() {
 
         {/* Trustees & Sharing */}
         <section>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4 mt-12">Trustees & Sharing</h2>
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4 mt-12">Trustees & Sharing</h2>
 
           <FAQItem
             question="Do trustees need an account?"
@@ -143,7 +143,7 @@ export default function FaqPageClient() {
 
         {/* Technical */}
         <section>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4 mt-12">Technical</h2>
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4 mt-12">Technical</h2>
 
           <FAQItem
             question="Where is my data stored?"
@@ -163,7 +163,7 @@ export default function FaqPageClient() {
 
         {/* Account Management */}
         <section>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4 mt-12">Account Management</h2>
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4 mt-12">Account Management</h2>
 
           <FAQItem
             question="How do I delete my account?"
@@ -185,10 +185,10 @@ export default function FaqPageClient() {
       {/* Still have questions? */}
       <Card className="mt-12">
         <div className="text-center py-8">
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-4">
+          <h2 className="text-2xl font-semibold text-warm-900 mb-4">
             Still have questions?
           </h2>
-          <p className="text-graphite-600 mb-6">
+          <p className="text-warm-600 mb-6">
             Can&apos;t find what you&apos;re looking for? Reach out to our support team.
           </p>
           <Link href="/app/support">
@@ -203,8 +203,8 @@ export default function FaqPageClient() {
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   return (
     <Card className="mb-4">
-      <h3 className="text-lg font-semibold text-graphite-900 mb-2">{question}</h3>
-      <p className="text-graphite-600 leading-relaxed">{answer}</p>
+      <h3 className="text-lg font-semibold text-warm-900 mb-2">{question}</h3>
+      <p className="text-warm-600 leading-relaxed">{answer}</p>
     </Card>
   );
 }

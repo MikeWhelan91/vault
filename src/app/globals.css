@@ -6,14 +6,14 @@
 @tailwind utilities;
 
 :root {
-  /* Updated 2025 color palette */
+  /* Warm Mauve & Soft Plum color palette */
   --background: #fdfcfb;
-  --foreground: #2d2622;
+  --foreground: #3e353e;
   --card: #ffffff;
-  --border: #e8dfd5;
+  --border: #e8dce8;
   --muted: #f9f7f4;
-  --primary: #a87c63;
-  --espresso: #3d342e;
+  --primary: #a68ba6;
+  --plum: #7d6b7d;
   --champagne: #f2ede7;
 }
 

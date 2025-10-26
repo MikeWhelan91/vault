@@ -162,7 +162,7 @@ export default function ItemsPageClient() {
             className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === 'all'
                 ? 'bg-primary-500 text-white'
-                : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+                : 'bg-champagne-100 text-plum-700 hover:bg-champagne-200'
             }`}
           >
             <FolderOpen className="h-4 w-4" />
@@ -174,7 +174,7 @@ export default function ItemsPageClient() {
               className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === 'images'
                   ? 'bg-primary-500 text-white'
-                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+                  : 'bg-champagne-100 text-plum-700 hover:bg-champagne-200'
               }`}
             >
               <ImageIcon className="h-4 w-4" />
@@ -187,7 +187,7 @@ export default function ItemsPageClient() {
               className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === 'videos'
                   ? 'bg-primary-500 text-white'
-                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+                  : 'bg-champagne-100 text-plum-700 hover:bg-champagne-200'
               }`}
             >
               <VideoIcon className="h-4 w-4" />
@@ -200,7 +200,7 @@ export default function ItemsPageClient() {
               className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === 'documents'
                   ? 'bg-primary-500 text-white'
-                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+                  : 'bg-champagne-100 text-plum-700 hover:bg-champagne-200'
               }`}
             >
               <FileText className="h-4 w-4" />
@@ -213,7 +213,7 @@ export default function ItemsPageClient() {
               className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === 'passwords'
                   ? 'bg-primary-500 text-white'
-                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+                  : 'bg-champagne-100 text-plum-700 hover:bg-champagne-200'
               }`}
             >
               <Key className="h-4 w-4" />
@@ -226,7 +226,7 @@ export default function ItemsPageClient() {
               className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 activeTab === 'other'
                   ? 'bg-primary-500 text-white'
-                  : 'bg-champagne-100 text-espresso-700 hover:bg-champagne-200'
+                  : 'bg-champagne-100 text-plum-700 hover:bg-champagne-200'
               }`}
             >
               <FileIcon className="h-4 w-4" />
@@ -240,11 +240,11 @@ export default function ItemsPageClient() {
       {items.length === 0 ? (
         <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
           <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-champagne-200 bg-champagne-50 text-espresso-500">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-champagne-200 bg-champagne-50 text-plum-500">
               <Archive className="h-7 w-7" />
             </div>
-            <h3 className="font-display text-xl font-semibold text-espresso-900">No items yet</h3>
-            <p className="mt-2 max-w-sm text-sm text-espresso-600">
+            <h3 className="font-display text-xl font-semibold text-plum-900">No items yet</h3>
+            <p className="mt-2 max-w-sm text-sm text-plum-600">
               Securely upload files or capture notes to begin curating your legacy inside Forebearer.
             </p>
             <Button onClick={() => setShowAddModal(true)} size="lg" className="mt-6">
@@ -256,7 +256,7 @@ export default function ItemsPageClient() {
       ) : tabItems.length === 0 ? (
         <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
           <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
-            <p className="text-sm text-espresso-600">No items in this category</p>
+            <p className="text-sm text-plum-600">No items in this category</p>
           </div>
         </Card>
       ) : (
@@ -293,15 +293,15 @@ function ThumbnailImage({ itemId, itemName, isVideo }: { itemId: string; itemNam
       <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-champagne-100 to-champagne-200">
         {isVideo ? (
           <div className="relative flex items-center justify-center">
-            <VideoIcon className="h-12 w-12 text-espresso-300 animate-pulse" />
+            <VideoIcon className="h-12 w-12 text-plum-300 animate-pulse" />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="h-8 w-8 rounded-full bg-white/80 flex items-center justify-center">
-                <div className="h-0 w-0 border-l-[8px] border-l-espresso-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
+                <div className="h-0 w-0 border-l-[8px] border-l-plum-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent ml-1"></div>
               </div>
             </div>
           </div>
         ) : (
-          <ImageIcon className="h-12 w-12 text-espresso-300 animate-pulse" />
+          <ImageIcon className="h-12 w-12 text-plum-300 animate-pulse" />
         )}
       </div>
     );
@@ -331,29 +331,29 @@ function ItemCard({ item, viewMode = 'list' }: { item: any; viewMode?: 'list' | 
 
   const getIcon = () => {
     if (item.type === 'password') {
-      return <Key className="w-4 h-4 text-espresso-500" />;
+      return <Key className="w-4 h-4 text-plum-500" />;
     }
     if (item.type === 'card') {
-      return <CreditCard className="w-4 h-4 text-espresso-500" />;
+      return <CreditCard className="w-4 h-4 text-plum-500" />;
     }
     if (item.type === 'secure_note') {
-      return <Lock className="w-4 h-4 text-espresso-500" />;
+      return <Lock className="w-4 h-4 text-plum-500" />;
     }
     if (fileInfo) {
       switch (fileInfo.category) {
         case 'image':
-          return <ImageIcon className="w-4 h-4 text-espresso-500" />;
+          return <ImageIcon className="w-4 h-4 text-plum-500" />;
         case 'video':
-          return <VideoIcon className="w-4 h-4 text-espresso-500" />;
+          return <VideoIcon className="w-4 h-4 text-plum-500" />;
         case 'audio':
-          return <MusicIcon className="w-4 h-4 text-espresso-500" />;
+          return <MusicIcon className="w-4 h-4 text-plum-500" />;
         case 'text':
-          return <FileText className="w-4 h-4 text-espresso-500" />;
+          return <FileText className="w-4 h-4 text-plum-500" />;
         default:
-          return <FileIcon className="w-4 h-4 text-espresso-500" />;
+          return <FileIcon className="w-4 h-4 text-plum-500" />;
       }
     }
-    return <FileText className="w-4 h-4 text-espresso-500" />;
+    return <FileText className="w-4 h-4 text-plum-500" />;
   };
 
   // Grid view for images/videos with thumbnails
@@ -381,12 +381,12 @@ function ItemCard({ item, viewMode = 'list' }: { item: any; viewMode?: 'list' | 
           </div>
           {/* Info */}
           <div className="p-3">
-            <h3 className="truncate text-sm font-medium text-espresso-900 group-hover:text-primary-700">
+            <h3 className="truncate text-sm font-medium text-plum-900 group-hover:text-primary-700">
               {item.name}
             </h3>
             <div className="mt-1 flex items-center justify-between">
-              <p className="text-xs text-espresso-500">{formatFileSize(item.size)}</p>
-              <p className="text-xs text-espresso-400">{formatDate(item.updatedAt)}</p>
+              <p className="text-xs text-plum-500">{formatFileSize(item.size)}</p>
+              <p className="text-xs text-plum-400">{formatDate(item.updatedAt)}</p>
             </div>
           </div>
         </Card>
@@ -400,21 +400,21 @@ function ItemCard({ item, viewMode = 'list' }: { item: any; viewMode?: 'list' | 
       <Card className="group border-champagne-200 p-0 transition-all hover:border-primary-300">
         <div className="flex items-center justify-between gap-4 px-5 py-4">
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-champagne-100 text-espresso-600 group-hover:bg-primary-100 group-hover:text-primary-700">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-champagne-100 text-plum-600 group-hover:bg-primary-100 group-hover:text-primary-700">
               {getIcon()}
             </div>
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-sm font-medium text-espresso-900">{item.name}</h3>
+              <h3 className="truncate text-sm font-medium text-plum-900">{item.name}</h3>
               <div className="flex items-center gap-3 mt-1">
-                <p className="text-xs text-espresso-500">{fileDescription}</p>
-                <span className="hidden sm:inline text-xs text-espresso-400">•</span>
-                <span className="hidden sm:inline text-xs text-espresso-500">{formatFileSize(item.size)}</span>
-                <span className="hidden md:inline text-xs text-espresso-400">•</span>
-                <span className="hidden md:inline text-xs text-espresso-500">{formatDate(item.updatedAt)}</span>
+                <p className="text-xs text-plum-500">{fileDescription}</p>
+                <span className="hidden sm:inline text-xs text-plum-400">•</span>
+                <span className="hidden sm:inline text-xs text-plum-500">{formatFileSize(item.size)}</span>
+                <span className="hidden md:inline text-xs text-plum-400">•</span>
+                <span className="hidden md:inline text-xs text-plum-500">{formatDate(item.updatedAt)}</span>
               </div>
             </div>
           </div>
-          <ArrowRight className="h-4 w-4 flex-shrink-0 text-espresso-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
+          <ArrowRight className="h-4 w-4 flex-shrink-0 text-plum-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
         </div>
       </Card>
     </Link>
@@ -792,12 +792,12 @@ function AddItemModal({
                   ? 'bg-primary-100'
                   : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <FileText className={`w-5 h-5 ${type === 'file' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
+                <FileText className={`w-5 h-5 ${type === 'file' ? 'text-primary-600' : 'text-plum-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'file' ? 'text-primary-900' : 'text-espresso-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'file' ? 'text-primary-900' : 'text-plum-900'}`}>
                 File Upload
               </span>
-              <span className="text-xs text-espresso-600 mt-0.5">Photos, documents & more</span>
+              <span className="text-xs text-plum-600 mt-0.5">Photos, documents & more</span>
             </div>
           </button>
           <button
@@ -814,12 +814,12 @@ function AddItemModal({
                   ? 'bg-primary-100'
                   : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <Key className={`w-5 h-5 ${type === 'password' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
+                <Key className={`w-5 h-5 ${type === 'password' ? 'text-primary-600' : 'text-plum-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'password' ? 'text-primary-900' : 'text-espresso-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'password' ? 'text-primary-900' : 'text-plum-900'}`}>
                 Password
               </span>
-              <span className="text-xs text-espresso-600 mt-0.5">Login credentials</span>
+              <span className="text-xs text-plum-600 mt-0.5">Login credentials</span>
             </div>
           </button>
           <button
@@ -836,12 +836,12 @@ function AddItemModal({
                   ? 'bg-primary-100'
                   : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <CreditCard className={`w-5 h-5 ${type === 'card' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
+                <CreditCard className={`w-5 h-5 ${type === 'card' ? 'text-primary-600' : 'text-plum-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'card' ? 'text-primary-900' : 'text-espresso-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'card' ? 'text-primary-900' : 'text-plum-900'}`}>
                 Credit Card
               </span>
-              <span className="text-xs text-espresso-600 mt-0.5">Payment information</span>
+              <span className="text-xs text-plum-600 mt-0.5">Payment information</span>
             </div>
           </button>
           <button
@@ -858,12 +858,12 @@ function AddItemModal({
                   ? 'bg-primary-100'
                   : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <Lock className={`w-5 h-5 ${type === 'secure_note' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
+                <Lock className={`w-5 h-5 ${type === 'secure_note' ? 'text-primary-600' : 'text-plum-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'secure_note' ? 'text-primary-900' : 'text-espresso-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'secure_note' ? 'text-primary-900' : 'text-plum-900'}`}>
                 Secure Note
               </span>
-              <span className="text-xs text-espresso-600 mt-0.5">Encrypted text</span>
+              <span className="text-xs text-plum-600 mt-0.5">Encrypted text</span>
             </div>
           </button>
         </div>
@@ -884,11 +884,11 @@ function AddItemModal({
             />
             {selectedFiles.length > 0 && (
               <div className="mt-2 space-y-1">
-                <p className="text-sm font-medium text-graphite-700">
+                <p className="text-sm font-medium text-warm-700">
                   {selectedFiles.length} file{selectedFiles.length > 1 ? 's' : ''} selected
                 </p>
                 {selectedFiles.map((file, index) => (
-                  <p key={index} className="text-xs text-graphite-600">
+                  <p key={index} className="text-xs text-warm-600">
                     • {file.name} ({formatFileSize(file.size)})
                   </p>
                 ))}
@@ -936,21 +936,21 @@ function AddItemModal({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
-                  className="w-full px-3 py-2 pr-20 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                  className="w-full px-3 py-2 pr-20 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-warm-900"
                   disabled={isUploading}
                 />
                 <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="p-1.5 hover:bg-graphite-100 rounded-lg transition-colors"
+                    className="p-1.5 hover:bg-warm-100 rounded-lg transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                   <button
                     type="button"
                     onClick={generateRandomPassword}
-                    className="p-1.5 hover:bg-graphite-100 rounded-lg transition-colors"
+                    className="p-1.5 hover:bg-warm-100 rounded-lg transition-colors"
                     title="Generate password"
                   >
                     <RefreshCw className="w-4 h-4" />
@@ -965,7 +965,7 @@ function AddItemModal({
               <textarea
                 value={passwordNotes}
                 onChange={(e) => setPasswordNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-espresso-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-plum-900"
                 rows={3}
                 placeholder="Additional notes..."
                 disabled={isUploading}
@@ -1021,7 +1021,7 @@ function AddItemModal({
               <textarea
                 value={passwordNotes}
                 onChange={(e) => setPasswordNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-espresso-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-plum-900"
                 rows={3}
                 placeholder="Additional notes..."
                 disabled={isUploading}
@@ -1047,7 +1047,7 @@ function AddItemModal({
               <textarea
                 value={secureNoteContent}
                 onChange={(e) => setSecureNoteContent(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-espresso-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-plum-900"
                 rows={8}
                 placeholder="Enter your secure note content..."
                 disabled={isUploading}
@@ -1070,7 +1070,7 @@ function AddItemModal({
         {isUploading && (
           <div className="space-y-2">
             {selectedFiles.length > 1 && (
-              <p className="text-sm text-graphite-700">
+              <p className="text-sm text-warm-700">
                 Uploading file {currentFileIndex + 1} of {selectedFiles.length}: {selectedFiles[currentFileIndex]?.name}
               </p>
             )}

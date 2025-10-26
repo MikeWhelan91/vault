@@ -45,7 +45,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <div className="hidden items-center gap-8 text-sm font-medium text-espresso-700 lg:flex">
+          <div className="hidden items-center gap-8 text-sm font-medium text-plum-700 lg:flex">
             {NAV_LINKS.map((link) => {
               const target = resolveHref(link.href);
               const isActive = pathname === target || pathname === link.href;
@@ -66,7 +66,7 @@ export function SiteHeader() {
         </div>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href={resolveHref("/signin")} className="text-sm font-medium text-espresso-700 transition-colors hover:text-primary-600">
+          <Link href={resolveHref("/signin")} className="text-sm font-medium text-plum-700 transition-colors hover:text-primary-600">
             Sign In
           </Link>
           <Link href={resolveHref("/signup")}>
@@ -77,7 +77,7 @@ export function SiteHeader() {
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="inline-flex items-center justify-center rounded-lg border border-champagne-300 p-2 text-espresso-800 transition-colors hover:bg-champagne-100 hover:text-primary-600 lg:hidden"
+          className="inline-flex items-center justify-center rounded-lg border border-champagne-300 p-2 text-plum-800 transition-colors hover:bg-champagne-100 hover:text-primary-600 lg:hidden"
           aria-label="Toggle navigation"
         >
           {isOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
@@ -94,7 +94,7 @@ export function SiteHeader() {
                   key={link.href}
                   href={target}
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium text-espresso-800 transition-colors hover:text-primary-600"
+                  className="text-base font-medium text-plum-800 transition-colors hover:text-primary-600"
                 >
                   {link.label}
                 </Link>
@@ -105,7 +105,7 @@ export function SiteHeader() {
               <Link
                 href={resolveHref("/signin")}
                 onClick={() => setIsOpen(false)}
-                className="text-base font-medium text-espresso-800 transition-colors hover:text-primary-600"
+                className="text-base font-medium text-plum-800 transition-colors hover:text-primary-600"
               >
                 Sign In
               </Link>

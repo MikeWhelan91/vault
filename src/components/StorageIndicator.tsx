@@ -34,11 +34,11 @@ export function StorageIndicator({ tier, usedBytes, limitBytes }: StorageIndicat
               <HardDrive className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-espresso-600">Storage usage</h3>
-              <p className="font-display text-lg font-semibold text-espresso-900">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-plum-600">Storage usage</h3>
+              <p className="font-display text-lg font-semibold text-plum-900">
                 {formatFileSize(usedBytes)} of {formatFileSize(limitBytes)}
               </p>
-              <p className="text-xs text-espresso-600">{tierLimits.displayName} plan</p>
+              <p className="text-xs text-plum-600">{tierLimits.displayName} plan</p>
             </div>
           </div>
 
@@ -59,7 +59,7 @@ export function StorageIndicator({ tier, usedBytes, limitBytes }: StorageIndicat
               style={{ width: `${percentage}%` }}
             />
           </div>
-          <div className="flex items-center justify-between text-xs text-espresso-600">
+          <div className="flex items-center justify-between text-xs text-plum-600">
             <span>{percentage.toFixed(1)}% utilised</span>
             <span>Free space: {formatFileSize(limitBytes - usedBytes)}</span>
           </div>

@@ -256,13 +256,13 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
     >
       <div className="space-y-6">
         {/* Media Type Toggle */}
-        <div className="flex gap-2 p-1 bg-graphite-100 rounded-lg">
+        <div className="flex gap-2 p-1 bg-warm-100 rounded-lg">
           <button
             onClick={() => setMediaType('video')}
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all ${
               mediaType === 'video'
                 ? 'bg-white text-primary-600 shadow-sm'
-                : 'text-graphite-600 hover:text-graphite-900'
+                : 'text-warm-600 hover:text-warm-900'
             }`}
           >
             <Video className="h-4 w-4" />
@@ -273,7 +273,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all ${
               mediaType === 'audio'
                 ? 'bg-white text-primary-600 shadow-sm'
-                : 'text-graphite-600 hover:text-graphite-900'
+                : 'text-warm-600 hover:text-warm-900'
             }`}
           >
             <Mic className="h-4 w-4" />
@@ -283,7 +283,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
 
         {/* Video Preview */}
         {mediaType === 'video' && (
-          <div className="relative aspect-video bg-graphite-900 rounded-xl overflow-hidden">
+          <div className="relative aspect-video bg-warm-900 rounded-xl overflow-hidden">
             <video
               ref={videoPreviewRef}
               autoPlay
@@ -354,7 +354,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
           />
 
           <div>
-            <label className="block text-sm font-medium text-graphite-700 mb-2">
+            <label className="block text-sm font-medium text-warm-700 mb-2">
               Category
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -367,11 +367,11 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
                     className={`p-3 rounded-lg border-2 transition-all text-center ${
                       category === option.value
                         ? 'border-primary-500 bg-primary-50'
-                        : 'border-graphite-200 hover:border-graphite-300'
+                        : 'border-warm-200 hover:border-warm-300'
                     }`}
                   >
                     <Icon className="w-5 h-5 mx-auto mb-1 text-primary-600" />
-                    <span className="text-xs font-medium text-graphite-900">{option.label}</span>
+                    <span className="text-xs font-medium text-warm-900">{option.label}</span>
                   </button>
                 );
               })}
@@ -379,7 +379,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-graphite-700 mb-2">
+            <label className="block text-sm font-medium text-warm-700 mb-2">
               Delivery Trigger
             </label>
             <div className="grid grid-cols-3 gap-3">
@@ -388,7 +388,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
                 className={`p-3 rounded-lg border-2 text-sm ${
                   triggerType === 'manual'
                     ? 'border-primary-500 bg-primary-50 text-primary-700 font-medium'
-                    : 'border-graphite-200 text-graphite-600 hover:border-graphite-300'
+                    : 'border-warm-200 text-warm-600 hover:border-warm-300'
                 }`}
               >
                 Manual Release
@@ -398,7 +398,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
                 className={`p-3 rounded-lg border-2 text-sm ${
                   triggerType === 'date'
                     ? 'border-primary-500 bg-primary-50 text-primary-700 font-medium'
-                    : 'border-graphite-200 text-graphite-600 hover:border-graphite-300'
+                    : 'border-warm-200 text-warm-600 hover:border-warm-300'
                 }`}
               >
                 On Date
@@ -408,7 +408,7 @@ export function RecordModal({ isOpen, onClose, onSave, defaultMediaType = 'video
                 className={`p-3 rounded-lg border-2 text-sm ${
                   triggerType === 'age'
                     ? 'border-primary-500 bg-primary-50 text-primary-700 font-medium'
-                    : 'border-graphite-200 text-graphite-600 hover:border-graphite-300'
+                    : 'border-warm-200 text-warm-600 hover:border-warm-300'
                 }`}
               >
                 At Age

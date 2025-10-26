@@ -75,17 +75,17 @@ export function BundleCheckIn({
         <div className="flex items-center gap-2">
           <Heart className={`w-5 h-5 ${isOverdue ? 'text-red-600' : isUrgent ? 'text-primary-600' : 'text-emerald-600'}`} />
           <div className="flex-1">
-            <h3 className="font-semibold text-espresso-900">
+            <h3 className="font-semibold text-plum-900">
               {isOverdue ? '⚠️ Check-In Overdue' : 'Heartbeat Check-In'}
             </h3>
-            <p className="text-sm text-espresso-700 font-medium">&quot;{bundleName}&quot;</p>
+            <p className="text-sm text-plum-700 font-medium">&quot;{bundleName}&quot;</p>
           </div>
         </div>
 
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-espresso-500" />
-            <span className="text-espresso-700">
+            <Clock className="w-4 h-4 text-plum-500" />
+            <span className="text-plum-700">
               {deadline ? (
                 isOverdue ? (
                   <span className="font-semibold text-red-700">
@@ -103,12 +103,12 @@ export function BundleCheckIn({
           </div>
 
           {lastHeartbeat && (
-            <div className="text-espresso-600">
+            <div className="text-plum-600">
               Last check-in: {formatDistanceToNow(new Date(lastHeartbeat), { addSuffix: true })}
             </div>
           )}
 
-          <div className="text-espresso-600">
+          <div className="text-plum-600">
             Check-in every {cadenceDays} {cadenceDays === 1 ? 'day' : 'days'}
           </div>
         </div>

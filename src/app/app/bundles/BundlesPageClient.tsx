@@ -134,8 +134,8 @@ export default function BundlesPageClient() {
             <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-champagne-200 bg-champagne-50 text-primary-600">
               <Package className="h-7 w-7" />
             </div>
-            <h2 className="font-display text-xl font-semibold text-espresso-900">No Release Bundles Yet</h2>
-            <p className="mt-2 max-w-sm text-sm text-espresso-600">
+            <h2 className="font-display text-xl font-semibold text-plum-900">No Release Bundles Yet</h2>
+            <p className="mt-2 max-w-sm text-sm text-plum-600">
               Create your first bundle to choreograph how and when encrypted memories unlock for the people you trust most.
             </p>
             <Link href="/app/release" className="mt-6">
@@ -159,7 +159,7 @@ export default function BundlesPageClient() {
                     </div>
                     <div className="min-w-0 flex-1 space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="break-words text-base font-semibold text-espresso-900 sm:text-lg">{bundle.name}</h3>
+                        <h3 className="break-words text-base font-semibold text-plum-900 sm:text-lg">{bundle.name}</h3>
                         <span className={`whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ${bundle.released ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}`}>
                           {bundle.released ? 'Released' : 'In progress'}
                         </span>
@@ -167,13 +167,13 @@ export default function BundlesPageClient() {
                           {isTimeLock ? 'Time-lock' : 'Heartbeat'}
                         </span>
                       </div>
-                      <div className="grid gap-3 text-sm text-espresso-600 sm:grid-cols-2">
+                      <div className="grid gap-3 text-sm text-plum-600 sm:grid-cols-2">
                         <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-espresso-500" />
+                          <Users className="h-4 w-4 text-plum-500" />
                           {bundle.trustees.length} {bundle.trustees.length === 1 ? 'trustee' : 'trustees'}
                         </div>
                         <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-espresso-500" />
+                          <FileText className="h-4 w-4 text-plum-500" />
                           {bundle.items.length} {bundle.items.length === 1 ? 'item' : 'items'}
                         </div>
                         {isTimeLock && releaseDate && (
@@ -194,7 +194,7 @@ export default function BundlesPageClient() {
                           </div>
                         )}
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-espresso-400" />
+                          <Calendar className="h-4 w-4 text-plum-400" />
                           Created {new Date(bundle.createdAt).toLocaleDateString()}
                         </div>
                       </div>
@@ -243,16 +243,16 @@ export default function BundlesPageClient() {
                 {isExpanded && (
                   <div className="mt-5 space-y-5 border-t border-champagne-100 pt-5">
                     <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-espresso-800">Trustees</h4>
+                      <h4 className="text-sm font-semibold text-plum-800">Trustees</h4>
                       <div className="grid gap-3 sm:grid-cols-2">
                         {bundle.trustees.map((trustee) => (
-                          <div key={trustee.id} className="flex items-center gap-3 rounded-2xl border border-champagne-100 bg-champagne-50/80 px-3 py-2 text-sm text-espresso-700">
+                          <div key={trustee.id} className="flex items-center gap-3 rounded-2xl border border-champagne-100 bg-champagne-50/80 px-3 py-2 text-sm text-plum-700">
                             <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600">
                               {(trustee.name || trustee.email).charAt(0).toUpperCase()}
                             </span>
                             <div className="min-w-0 flex-1">
-                              <p className="break-words font-medium text-espresso-900">{trustee.name || trustee.email}</p>
-                              <p className="break-all text-xs text-espresso-500">{trustee.email}</p>
+                              <p className="break-words font-medium text-plum-900">{trustee.name || trustee.email}</p>
+                              <p className="break-all text-xs text-plum-500">{trustee.email}</p>
                             </div>
                           </div>
                         ))}
@@ -261,12 +261,12 @@ export default function BundlesPageClient() {
 
                     {bundle.items.length > 0 && (
                       <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-espresso-800">Included Items</h4>
+                        <h4 className="text-sm font-semibold text-plum-800">Included Items</h4>
                         <div className="flex flex-wrap gap-2">
                           {bundle.items.map((item) => (
                             <span
                               key={item.id}
-                              className="inline-flex items-center gap-2 rounded-full border border-champagne-200 bg-white px-3 py-1 text-xs text-espresso-600"
+                              className="inline-flex items-center gap-2 rounded-full border border-champagne-200 bg-white px-3 py-1 text-xs text-plum-600"
                             >
                               {item.type === 'file' ? <FileText className="h-3.5 w-3.5" /> : <StickyNote className="h-3.5 w-3.5" />}
                               {item.name}

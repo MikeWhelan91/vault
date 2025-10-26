@@ -39,7 +39,7 @@ export function MediaViewer({ filename, data, onDownload }: MediaViewerProps) {
     return (
       <Card>
         <div className="text-center py-12">
-          <p className="text-graphite-600 mb-4">
+          <p className="text-warm-600 mb-4">
             Preview not available for this file type
           </p>
           <Button onClick={onDownload}>
@@ -55,7 +55,7 @@ export function MediaViewer({ filename, data, onDownload }: MediaViewerProps) {
     <Card>
       <div className="space-y-4">
         {/* Toolbar */}
-        <div className="flex items-center justify-between border-b border-graphite-200 pb-4">
+        <div className="flex items-center justify-between border-b border-warm-200 pb-4">
           <div className="flex items-center gap-2">
             {fileInfo.category === 'image' && (
               <>
@@ -67,7 +67,7 @@ export function MediaViewer({ filename, data, onDownload }: MediaViewerProps) {
                 >
                   <ZoomOut className="w-4 h-4" />
                 </Button>
-                <span className="text-sm text-graphite-600 min-w-[60px] text-center">
+                <span className="text-sm text-warm-600 min-w-[60px] text-center">
                   {zoom}%
                 </span>
                 <Button
@@ -95,7 +95,7 @@ export function MediaViewer({ filename, data, onDownload }: MediaViewerProps) {
         </div>
 
         {/* Content */}
-        <div className="min-h-[400px] flex items-center justify-center bg-graphite-50 rounded-lg overflow-auto">
+        <div className="min-h-[400px] flex items-center justify-center bg-warm-50 rounded-lg overflow-auto">
           {fileInfo.category === 'image' && objectUrl && (
             <img
               src={objectUrl}
@@ -124,10 +124,10 @@ export function MediaViewer({ filename, data, onDownload }: MediaViewerProps) {
                     <Volume2 className="w-8 h-8 text-primary-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-graphite-900 truncate">
+                    <h3 className="font-semibold text-warm-900 truncate">
                       {filename}
                     </h3>
-                    <p className="text-sm text-graphite-600">Audio file</p>
+                    <p className="text-sm text-warm-600">Audio file</p>
                   </div>
                 </div>
                 <audio
@@ -144,7 +144,7 @@ export function MediaViewer({ filename, data, onDownload }: MediaViewerProps) {
 
           {fileInfo.category === 'text' && textContent && (
             <div className="w-full h-[600px] overflow-auto">
-              <pre className="p-6 text-sm font-mono text-graphite-900 whitespace-pre-wrap break-words">
+              <pre className="p-6 text-sm font-mono text-warm-900 whitespace-pre-wrap break-words">
                 {textContent}
               </pre>
             </div>

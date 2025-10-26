@@ -83,7 +83,7 @@ export default function SignUpPage() {
   const showErrors = showValidation && !validation.valid && password.length > 0;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ivory-50 dark:bg-graphite-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-ivory-50 dark:bg-warm-900 px-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
@@ -94,10 +94,10 @@ export default function SignUpPage() {
               className="h-10 w-auto mx-auto"
             />
           </Link>
-          <h2 className="text-3xl font-light text-graphite-900 dark:text-ivory-50 mb-2">
+          <h2 className="text-3xl font-light text-warm-900 dark:text-ivory-50 mb-2">
             Create Your Account
           </h2>
-          <p className="text-graphite-600 dark:text-graphite-400 text-sm">
+          <p className="text-warm-600 dark:text-warm-400 text-sm">
             Start securing your digital legacy today
           </p>
         </div>
@@ -182,9 +182,9 @@ export default function SignUpPage() {
               </div>
             )}
 
-            <div className="bg-graphite-50 dark:bg-graphite-800 border border-graphite-200 dark:border-graphite-700 rounded-lg p-4">
-              <p className="text-xs text-graphite-600 dark:text-graphite-400 leading-relaxed">
-                <strong className="text-graphite-900 dark:text-ivory-50">Important:</strong> Your password encrypts all your data using zero-knowledge encryption.
+            <div className="bg-warm-50 dark:bg-warm-800 border border-warm-200 dark:border-warm-700 rounded-lg p-4">
+              <p className="text-xs text-warm-600 dark:text-warm-400 leading-relaxed">
+                <strong className="text-warm-900 dark:text-ivory-50">Important:</strong> Your password encrypts all your data using zero-knowledge encryption.
                 We cannot recover your password or decrypt your data if you forget it.
               </p>
             </div>
@@ -200,7 +200,7 @@ export default function SignUpPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-graphite-600 dark:text-graphite-400">
+            <p className="text-sm text-warm-600 dark:text-warm-400">
               Already have an account?{' '}
               <Link
                 href="/signin"
@@ -216,7 +216,7 @@ export default function SignUpPage() {
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-sm text-graphite-600 dark:text-graphite-400 hover:text-graphite-900 dark:hover:text-ivory-50 transition-colors"
+            className="text-sm text-warm-600 dark:text-warm-400 hover:text-warm-900 dark:hover:text-ivory-50 transition-colors"
           >
             ← Back to home
           </Link>

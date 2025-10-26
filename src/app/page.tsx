@@ -238,7 +238,7 @@ export default function LandingPage() {
               priority
             />
             {/* Flat Overlay */}
-            <div className="absolute inset-0 bg-espresso-900/80" />
+            <div className="absolute inset-0 bg-plum-900/80" />
           </div>
 
           {/* Content */}
@@ -263,7 +263,7 @@ export default function LandingPage() {
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white">
                       <Check className="h-4 w-4" aria-hidden="true" />
                     </span>
-                    <p className="text-sm font-medium text-espresso-900">{point}</p>
+                    <p className="text-sm font-medium text-plum-900">{point}</p>
                   </div>
                 ))}
               </div>
@@ -299,10 +299,10 @@ export default function LandingPage() {
 
         <section id="features" data-animate className="space-y-12 py-20">
           <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('features') ? 'animate-fade-in-up' : 'opacity-0'}`}>
-            <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-plum-900 sm:text-4xl">
               From Your Heart to Theirs, in Three Simple Steps
             </h2>
-            <p className="mx-auto max-w-2xl text-base text-espresso-600">
+            <p className="mx-auto max-w-2xl text-base text-plum-600">
               Whether it&apos;s a birthday surprise, anniversary gift, critical account access for your family, or a message for when you&apos;re gone—Forebearer makes it easy to share what matters most.
             </p>
           </div>
@@ -328,8 +328,8 @@ export default function LandingPage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-6">
-                  <h3 className="font-display text-xl font-semibold text-espresso-900">{feature.title}</h3>
-                  <p className="text-sm text-espresso-600">{feature.description}</p>
+                  <h3 className="font-display text-xl font-semibold text-plum-900">{feature.title}</h3>
+                  <p className="text-sm text-plum-600">{feature.description}</p>
                 </div>
               </Card>
             ))}
@@ -354,10 +354,10 @@ export default function LandingPage() {
               {/* Content Side */}
               <div className="p-8 lg:p-12 space-y-8">
                 <div className="space-y-4">
-                  <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
+                  <h2 className="font-display text-3xl font-semibold tracking-tight text-plum-900 sm:text-4xl">
                     How It Works
                   </h2>
-                  <p className="text-base text-espresso-600">
+                  <p className="text-base text-plum-600">
                     Creating and sharing your memory bundles is simple. Just follow these three steps.
                   </p>
                 </div>
@@ -372,8 +372,8 @@ export default function LandingPage() {
                         {index + 1}
                       </div>
                       <div className="space-y-1">
-                        <h3 className="font-display text-lg font-semibold text-espresso-900">{item.title}</h3>
-                        <p className="text-sm text-espresso-600">{item.description}</p>
+                        <h3 className="font-display text-lg font-semibold text-plum-900">{item.title}</h3>
+                        <p className="text-sm text-plum-600">{item.description}</p>
                       </div>
                     </li>
                   ))}
@@ -394,10 +394,10 @@ export default function LandingPage() {
           <div className={`rounded-3xl border border-champagne-200 bg-white p-8 sm:p-10 lg:p-12 shadow-sm transition-all duration-700 ${visibleSections.has('security') ? 'animate-scale-in' : 'opacity-0'}`}>
             <div className="mx-auto max-w-4xl space-y-8 text-center">
               <div className="space-y-3">
-                <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
+                <h2 className="font-display text-3xl font-semibold tracking-tight text-plum-900 sm:text-4xl">
                   Your Memories, Safe and Sound
                 </h2>
-                <p className="mx-auto max-w-2xl text-base text-espresso-600">
+                <p className="mx-auto max-w-2xl text-base text-plum-600">
                   We protect your precious moments with care. Everything is encrypted, backed up, and ready to share when the time comes.
                 </p>
               </div>
@@ -412,8 +412,8 @@ export default function LandingPage() {
                       animationFillMode: 'backwards'
                     }}
                   >
-                    <h3 className="font-display text-lg font-semibold text-espresso-900 mb-2">{feature.title}</h3>
-                    <p className="text-sm text-espresso-600">{feature.description}</p>
+                    <h3 className="font-display text-lg font-semibold text-plum-900 mb-2">{feature.title}</h3>
+                    <p className="text-sm text-plum-600">{feature.description}</p>
                   </div>
                 ))}
               </div>
@@ -430,10 +430,10 @@ export default function LandingPage() {
 
         <section id="faq" data-animate className="py-20">
           <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}>
-            <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-plum-900 sm:text-4xl">
               Questions? We&apos;ve Got Answers
             </h2>
-              <p className="mx-auto max-w-2xl text-base text-espresso-600">
+              <p className="mx-auto max-w-2xl text-base text-plum-600">
                 Here&apos;s what people usually want to know about creating and sharing their memory bundles.
               </p>
           </div>
@@ -448,8 +448,8 @@ export default function LandingPage() {
                   animationFillMode: 'backwards'
                 }}
               >
-                <h3 className="font-display text-lg font-semibold text-espresso-900">{faq.question}</h3>
-                <p className="mt-3 text-sm text-espresso-600">{faq.answer}</p>
+                <h3 className="font-display text-lg font-semibold text-plum-900">{faq.question}</h3>
+                <p className="mt-3 text-sm text-plum-600">{faq.answer}</p>
               </Card>
             ))}
           </div>
@@ -466,10 +466,10 @@ export default function LandingPage() {
 
         <section id="cta" data-animate className="py-24">
           <div className={`rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-sm sm:px-12 lg:px-16 transition-all duration-700 ${visibleSections.has('cta') ? 'animate-scale-in' : 'opacity-0'}`}>
-            <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-plum-900 sm:text-4xl">
               Start Sharing the Memories That Matter
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-espresso-600">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-plum-600">
               Create your first memory bundle with 300 MB of free storage. Upload photos, write messages, store passwords and account details, and choose when to share them with the people you love.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">

@@ -29,7 +29,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className={`flex min-h-screen flex-col overflow-x-hidden bg-graphite-50 text-graphite-900 ${isNativeApp ? 'pt-safe-top pb-safe-bottom' : ''}`}>
+    <div className={`flex min-h-screen flex-col overflow-x-hidden bg-warm-50 text-warm-900 ${isNativeApp ? 'pt-safe-top pb-safe-bottom' : ''}`}>
       <AppNav />
       <main className={`w-full flex-1 px-4 sm:px-6 lg:px-8 ${isNativeApp ? 'pt-6 pb-24' : 'py-8'}`}>
         {children}
@@ -83,7 +83,7 @@ function AppNav() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-graphite-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <nav className="sticky top-0 z-50 border-b border-warm-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link
@@ -106,7 +106,7 @@ function AppNav() {
               className={`inline-flex items-center rounded-full px-3 py-2 text-sm font-medium transition-colors ${
                 isActive(item.href)
                   ? 'bg-primary-50 text-primary-700'
-                  : 'text-graphite-600 hover:bg-graphite-100 hover:text-graphite-900'
+                  : 'text-warm-600 hover:bg-warm-100 hover:text-warm-900'
               }`}
             >
               {item.name}
@@ -125,7 +125,7 @@ function AppNav() {
           <div className="relative">
             <button
               onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-              className="flex items-center gap-2 rounded-full border border-graphite-200 px-3 py-2 text-sm text-graphite-700 transition-colors hover:bg-graphite-50"
+              className="flex items-center gap-2 rounded-full border border-warm-200 px-3 py-2 text-sm text-warm-700 transition-colors hover:bg-warm-50"
             >
               <span className="max-w-[200px] truncate">
                 {session.userId || metadata?.userId || 'User'}
@@ -134,12 +134,12 @@ function AppNav() {
             </button>
 
             {userDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-xl border border-graphite-200 bg-white shadow-lg">
+              <div className="absolute right-0 mt-2 w-48 rounded-xl border border-warm-200 bg-white shadow-lg">
                 <div className="py-1">
                   <Link
                     href="/app/settings"
                     onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-graphite-700 transition-colors hover:bg-graphite-50"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-warm-700 transition-colors hover:bg-warm-50"
                   >
                     <Settings className="h-4 w-4" />
                     Settings
@@ -149,7 +149,7 @@ function AppNav() {
                       setUserDropdownOpen(false);
                       lock();
                     }}
-                    className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-graphite-700 transition-colors hover:bg-graphite-50"
+                    className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-warm-700 transition-colors hover:bg-warm-50"
                   >
                     <Lock className="h-4 w-4" />
                     Lock vault
@@ -163,7 +163,7 @@ function AppNav() {
         {/* Mobile menu button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="rounded-full border border-graphite-200 p-2 text-graphite-600 hover:text-graphite-900 md:hidden"
+          className="rounded-full border border-warm-200 p-2 text-warm-600 hover:text-warm-900 md:hidden"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? (
@@ -180,7 +180,7 @@ function AppNav() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-graphite-200 bg-white md:hidden">
+        <div className="border-t border-warm-200 bg-white md:hidden">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4">
             {navigation.map((item) => (
               <Link
@@ -190,13 +190,13 @@ function AppNav() {
                 className={`rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
                   isActive(item.href)
                     ? 'bg-primary-50 text-primary-700'
-                    : 'text-graphite-600 hover:bg-graphite-100 hover:text-graphite-900'
+                    : 'text-warm-600 hover:bg-warm-100 hover:text-warm-900'
                 }`}
               >
                 {item.name}
               </Link>
             ))}
-            <div className="rounded-xl border border-graphite-200 px-3 py-2 text-sm text-graphite-600">
+            <div className="rounded-xl border border-warm-200 px-3 py-2 text-sm text-warm-600">
               <div className="flex items-center justify-between gap-2 mb-3">
                 <p className="truncate font-medium">{session.userId || metadata?.userId || 'User'}</p>
                 {metadata?.tier === 'plus' && (
@@ -210,7 +210,7 @@ function AppNav() {
                 <Link
                   href="/app/settings"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 text-sm font-medium text-graphite-700 hover:text-primary-600"
+                  className="flex items-center gap-2 text-sm font-medium text-warm-700 hover:text-primary-600"
                 >
                   <Settings className="h-4 w-4" />
                   Settings
@@ -220,7 +220,7 @@ function AppNav() {
                     setMobileMenuOpen(false);
                     lock();
                   }}
-                  className="flex items-center gap-2 text-sm font-medium text-graphite-700 hover:text-primary-600"
+                  className="flex items-center gap-2 text-sm font-medium text-warm-700 hover:text-primary-600"
                 >
                   <Lock className="h-4 w-4" />
                   Lock vault

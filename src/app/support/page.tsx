@@ -46,7 +46,7 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-graphite-50">
+    <div className="min-h-screen bg-warm-50">
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-5xl px-4 pb-24 sm:px-6 lg:px-8">
@@ -56,19 +56,19 @@ export default function SupportPage() {
               <MessageCircle className="h-4 w-4" aria-hidden="true" />
               Support team
             </span>
-            <h1 className="text-4xl font-semibold tracking-tight text-graphite-900 sm:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-tight text-warm-900 sm:text-5xl">
               How can we help you today?
             </h1>
-            <p className="max-w-2xl text-base text-graphite-600 sm:text-lg">
+            <p className="max-w-2xl text-base text-warm-600 sm:text-lg">
               Send us a message and we will reply within 24–48 hours on business days. Include as much detail as you can so we can assist quickly.
             </p>
           </div>
         </section>
 
         <section className="grid gap-8 lg:grid-cols-[1.2fr,0.8fr]">
-          <Card className="border-graphite-200/80 bg-white/95 p-8 shadow-lg">
-            <h2 className="text-2xl font-semibold text-graphite-900">Send us a message</h2>
-            <p className="mt-2 text-sm text-graphite-600">
+          <Card className="border-warm-200/80 bg-white/95 p-8 shadow-lg">
+            <h2 className="text-2xl font-semibold text-warm-900">Send us a message</h2>
+            <p className="mt-2 text-sm text-warm-600">
               We read every message. If your request is urgent, add &ldquo;URGENT&rdquo; to the subject line.
             </p>
 
@@ -89,7 +89,7 @@ export default function SupportPage() {
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
               <div className="grid gap-6 sm:grid-cols-2">
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="name" className="text-sm font-medium text-graphite-700">
+                  <label htmlFor="name" className="text-sm font-medium text-warm-700">
                     Name
                   </label>
                   <input
@@ -99,12 +99,12 @@ export default function SupportPage() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="rounded-xl border border-graphite-200 px-4 py-3 text-sm text-graphite-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                    className="rounded-xl border border-warm-200 px-4 py-3 text-sm text-warm-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
                   />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="email" className="text-sm font-medium text-graphite-700">
+                  <label htmlFor="email" className="text-sm font-medium text-warm-700">
                     Email
                   </label>
                   <input
@@ -114,13 +114,13 @@ export default function SupportPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="rounded-xl border border-graphite-200 px-4 py-3 text-sm text-graphite-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                    className="rounded-xl border border-warm-200 px-4 py-3 text-sm text-warm-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="subject" className="text-sm font-medium text-graphite-700">
+                <label htmlFor="subject" className="text-sm font-medium text-warm-700">
                   Subject
                 </label>
                 <input
@@ -130,12 +130,12 @@ export default function SupportPage() {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="rounded-xl border border-graphite-200 px-4 py-3 text-sm text-graphite-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  className="rounded-xl border border-warm-200 px-4 py-3 text-sm text-warm-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="message" className="text-sm font-medium text-graphite-700">
+                <label htmlFor="message" className="text-sm font-medium text-warm-700">
                   Message
                 </label>
                 <textarea
@@ -145,7 +145,7 @@ export default function SupportPage() {
                   onChange={handleChange}
                   required
                   rows={6}
-                  className="resize-none rounded-xl border border-graphite-200 px-4 py-3 text-sm text-graphite-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                  className="resize-none rounded-xl border border-warm-200 px-4 py-3 text-sm text-warm-900 shadow-sm transition focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
                 />
               </div>
 
@@ -161,9 +161,9 @@ export default function SupportPage() {
           </Card>
 
           <div className="flex flex-col gap-6">
-            <Card className="border-graphite-200/70 bg-white p-6">
-              <h2 className="text-xl font-semibold text-graphite-900">Quick help</h2>
-              <p className="mt-2 text-sm text-graphite-600">Check these pages before you write in—we keep them updated.</p>
+            <Card className="border-warm-200/70 bg-white p-6">
+              <h2 className="text-xl font-semibold text-warm-900">Quick help</h2>
+              <p className="mt-2 text-sm text-warm-600">Check these pages before you write in—we keep them updated.</p>
               <ul className="mt-4 space-y-2 text-sm text-primary-600">
                 <li>
                   <Link href="/faq" className="transition-colors hover:text-primary-700">
@@ -184,8 +184,8 @@ export default function SupportPage() {
             </Card>
 
             <Card className="border-primary-200/80 bg-primary-50/80 p-6">
-              <h2 className="text-xl font-semibold text-graphite-900">Prefer email?</h2>
-              <p className="mt-2 text-sm text-graphite-600">
+              <h2 className="text-xl font-semibold text-warm-900">Prefer email?</h2>
+              <p className="mt-2 text-sm text-warm-600">
                 Email us directly and we will create a ticket for you.
               </p>
               <a

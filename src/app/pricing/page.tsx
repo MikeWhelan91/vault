@@ -97,10 +97,10 @@ export default function PricingPage() {
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
               Simple pricing
             </span>
-            <h1 className="font-display max-w-3xl text-4xl font-semibold tracking-tight text-espresso-900 sm:text-5xl">
+            <h1 className="font-display max-w-3xl text-4xl font-semibold tracking-tight text-plum-900 sm:text-5xl">
               Secure storage and delivery that scales with your legacy
             </h1>
-            <p className="max-w-2xl text-base text-espresso-600 sm:text-lg">
+            <p className="max-w-2xl text-base text-plum-600 sm:text-lg">
               Start with a free vault and upgrade when you need more capacity or advanced automations. No hidden fees, no setup charges, cancel anytime.
             </p>
           </div>
@@ -121,17 +121,17 @@ export default function PricingPage() {
                   <p className="text-sm font-semibold uppercase tracking-wide text-primary-600">
                     {plan.badge}
                   </p>
-                  <h2 className="font-display mt-2 text-3xl font-semibold text-espresso-900">{plan.name}</h2>
+                  <h2 className="font-display mt-2 text-3xl font-semibold text-plum-900">{plan.name}</h2>
                 </div>
                 <div className="text-right">
                   <p className="font-display text-4xl font-semibold text-primary-600">{plan.price}</p>
-                  <p className="text-xs uppercase tracking-wide text-espresso-500">{plan.cadence}</p>
+                  <p className="text-xs uppercase tracking-wide text-plum-500">{plan.cadence}</p>
                 </div>
               </div>
 
-              <p className="mt-6 text-sm text-espresso-600">{plan.description}</p>
+              <p className="mt-6 text-sm text-plum-600">{plan.description}</p>
 
-              <ul className="mt-8 flex flex-1 flex-col gap-3 text-sm text-espresso-700">
+              <ul className="mt-8 flex flex-1 flex-col gap-3 text-sm text-plum-700">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3 rounded-lg border border-champagne-200 bg-champagne-50 px-4 py-3">
                     <span className="mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-primary-50 text-primary-600">
@@ -149,7 +149,7 @@ export default function PricingPage() {
                   </Button>
                 </Link>
                 {plan.footnote ? (
-                  <p className="text-xs text-espresso-500">{plan.footnote}</p>
+                  <p className="text-xs text-plum-500">{plan.footnote}</p>
                 ) : null}
               </div>
             </Card>
@@ -158,8 +158,8 @@ export default function PricingPage() {
 
         <section className="mt-20 grid gap-8 lg:grid-cols-[1.2fr,1fr]">
           <div className="rounded-3xl border border-champagne-200 bg-white p-10 shadow-sm">
-            <h2 className="font-display text-2xl font-semibold text-espresso-900 sm:text-3xl">Need a custom arrangement?</h2>
-            <p className="mt-4 text-base text-espresso-600">
+            <h2 className="font-display text-2xl font-semibold text-plum-900 sm:text-3xl">Need a custom arrangement?</h2>
+            <p className="mt-4 text-base text-plum-600">
               Planning to archive large media libraries or coordinate releases for an estate? Talk to us about volume discounts, concierge onboarding, and bespoke support.
             </p>
             <Link
@@ -173,18 +173,18 @@ export default function PricingPage() {
           <div className="space-y-5">
             {differentiators.map((item) => (
               <Card key={item.title} className="border-champagne-200 bg-white p-6">
-                <h3 className="font-display text-lg font-semibold text-espresso-900">{item.title}</h3>
-                <p className="mt-2 text-sm text-espresso-600">{item.detail}</p>
+                <h3 className="font-display text-lg font-semibold text-plum-900">{item.title}</h3>
+                <p className="mt-2 text-sm text-plum-600">{item.detail}</p>
               </Card>
             ))}
           </div>
         </section>
 
         <section className="mt-20 rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-sm sm:px-12 lg:px-16">
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-plum-900 sm:text-4xl">
             Try Forebearer free and upgrade when you are ready
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-espresso-600">
+          <p className="mx-auto mt-4 max-w-2xl text-base text-plum-600">
             Create your vault in minutes. Add trustees, configure releases, and only upgrade once you are confident it fits your needs.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">

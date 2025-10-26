@@ -257,14 +257,14 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
     >
       <div className="space-y-6">
         {/* Media Type Toggle */}
-        <div className="flex gap-2 p-1 bg-graphite-100 rounded-lg">
+        <div className="flex gap-2 p-1 bg-warm-100 rounded-lg">
           <button
             onClick={() => !isRecording && setMediaType('video')}
             disabled={isRecording}
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all ${
               mediaType === 'video'
                 ? 'bg-white text-primary-600 shadow-sm'
-                : 'text-graphite-600 hover:text-graphite-900'
+                : 'text-warm-600 hover:text-warm-900'
             } ${isRecording ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Video className="h-4 w-4" />
@@ -276,7 +276,7 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
             className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all ${
               mediaType === 'audio'
                 ? 'bg-white text-primary-600 shadow-sm'
-                : 'text-graphite-600 hover:text-graphite-900'
+                : 'text-warm-600 hover:text-warm-900'
             } ${isRecording ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Mic className="h-4 w-4" />
@@ -286,7 +286,7 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
 
         {/* Video Preview */}
         {mediaType === 'video' && (
-          <div className="relative aspect-video bg-graphite-900 rounded-xl overflow-hidden">
+          <div className="relative aspect-video bg-warm-900 rounded-xl overflow-hidden">
             <video
               ref={videoPreviewRef}
               autoPlay
@@ -355,7 +355,7 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
             onChange={(e) => setFileName(e.target.value)}
             placeholder="e.g., Birthday Message 2024"
           />
-          <p className="text-xs text-graphite-500 mt-1">Will be saved as: {fileName || 'filename'}.webm</p>
+          <p className="text-xs text-warm-500 mt-1">Will be saved as: {fileName || 'filename'}.webm</p>
         </div>
 
         {/* Save Button */}

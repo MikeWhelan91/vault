@@ -168,7 +168,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-graphite-500">Loading...</p>
+        <p className="text-warm-500">Loading...</p>
       </div>
     );
   }
@@ -180,10 +180,10 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
             <AlertCircle className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-2xl font-semibold text-graphite-900 mb-2">
+          <h2 className="text-2xl font-semibold text-warm-900 mb-2">
             Item Not Found
           </h2>
-          <p className="text-graphite-600 mb-6">
+          <p className="text-warm-600 mb-6">
             The item you&apos;re looking for doesn&apos;t exist or has been deleted.
           </p>
           <Button onClick={() => router.push('/app/items')}>
@@ -228,10 +228,10 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl sm:text-3xl font-bold text-graphite-900 break-words">
+              <h1 className="text-2xl sm:text-3xl font-bold text-warm-900 break-words">
                 {item.name}
               </h1>
-              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 text-sm text-graphite-600">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-2 text-sm text-warm-600">
                 <span className="flex items-center gap-1.5">
                   {item.type === 'file' ? <FileText className="w-4 h-4" /> : <StickyNote className="w-4 h-4" />}
                   {item.type === 'file' ? 'File' : 'Note'}
@@ -277,7 +277,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 flex items-center justify-center">
                   <Download className="w-8 h-8 text-primary-600" />
                 </div>
-                <p className="text-graphite-600 mb-4">
+                <p className="text-warm-600 mb-4">
                   {canPreviewFile(item.name)
                     ? 'Click below to load preview'
                     : 'Preview not available for this file type'}
@@ -290,7 +290,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
           ) : (
             <Card>
               <div className="text-center py-8">
-                <p className="text-graphite-600 mb-4">
+                <p className="text-warm-600 mb-4">
                   Preview not available for this file type
                 </p>
                 <Button onClick={handleDownloadFile} size="lg">
@@ -306,15 +306,15 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
       {/* Note Content */}
       {item.type === 'note' && (
         <Card>
-          <h2 className="text-xl font-semibold text-graphite-900 mb-4">
+          <h2 className="text-xl font-semibold text-warm-900 mb-4">
             Content
           </h2>
           {decryptedContent ? (
-            <div className="bg-graphite-50 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap">
+            <div className="bg-warm-50 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap">
               {decryptedContent}
             </div>
           ) : isDownloading ? (
-            <div className="text-center py-8 text-graphite-500">
+            <div className="text-center py-8 text-warm-500">
               Loading...
             </div>
           ) : (
@@ -329,38 +329,38 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
 
       {/* Metadata */}
       <Card>
-        <h2 className="text-xl font-semibold text-graphite-900 mb-6 flex items-center gap-2">
+        <h2 className="text-xl font-semibold text-warm-900 mb-6 flex items-center gap-2">
           <Hash className="w-5 h-5" />
           Metadata
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <MetadataItem
-            icon={<Hash className="w-5 h-5 text-graphite-400" />}
+            icon={<Hash className="w-5 h-5 text-warm-400" />}
             label="ID"
             value={item.id}
           />
           <MetadataItem
-            icon={item.type === 'file' ? <FileText className="w-5 h-5 text-graphite-400" /> : <StickyNote className="w-5 h-5 text-graphite-400" />}
+            icon={item.type === 'file' ? <FileText className="w-5 h-5 text-warm-400" /> : <StickyNote className="w-5 h-5 text-warm-400" />}
             label="Type"
             value={item.type}
           />
           <MetadataItem
-            icon={<HardDrive className="w-5 h-5 text-graphite-400" />}
+            icon={<HardDrive className="w-5 h-5 text-warm-400" />}
             label="Size"
             value={formatFileSize(item.size)}
           />
           <MetadataItem
-            icon={<Hash className="w-5 h-5 text-graphite-400" />}
+            icon={<Hash className="w-5 h-5 text-warm-400" />}
             label="Version"
             value={item.version.toString()}
           />
           <MetadataItem
-            icon={<Calendar className="w-5 h-5 text-graphite-400" />}
+            icon={<Calendar className="w-5 h-5 text-warm-400" />}
             label="Created"
             value={new Date(item.createdAt).toLocaleString()}
           />
           <MetadataItem
-            icon={<Clock className="w-5 h-5 text-graphite-400" />}
+            icon={<Clock className="w-5 h-5 text-warm-400" />}
             label="Updated"
             value={new Date(item.updatedAt).toLocaleString()}
           />
@@ -374,7 +374,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
         title="Delete Item"
       >
         <div className="space-y-4">
-          <p className="text-graphite-600">
+          <p className="text-warm-600">
             Are you sure you want to delete <strong>{item.name}</strong>?
             This action cannot be undone.
           </p>
@@ -402,13 +402,13 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
 
 function MetadataItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-start gap-3 p-4 rounded-lg bg-graphite-50">
+    <div className="flex items-start gap-3 p-4 rounded-lg bg-warm-50">
       <div className="flex-shrink-0 mt-0.5">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
         <dt className="text-sm font-medium text-gray-700 mb-1">{label}</dt>
-        <dd className="text-sm text-graphite-600 font-mono break-all">{value}</dd>
+        <dd className="text-sm text-warm-600 font-mono break-all">{value}</dd>
       </div>
     </div>
   );

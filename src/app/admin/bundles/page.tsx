@@ -85,7 +85,7 @@ export default function AdminBundlesPage() {
     return (
       <div className="min-h-screen bg-primary-50 flex items-center justify-center">
         <Card>
-          <p className="text-graphite-900">Loading bundles...</p>
+          <p className="text-warm-900">Loading bundles...</p>
         </Card>
       </div>
     );
@@ -96,8 +96,8 @@ export default function AdminBundlesPage() {
       <div className="min-h-screen bg-primary-50 flex items-center justify-center p-6">
         <Card className="max-w-md">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-graphite-900 mb-4">Access Denied</h1>
-            <p className="text-graphite-600 mb-4">{error}</p>
+            <h1 className="text-2xl font-bold text-warm-900 mb-4">Access Denied</h1>
+            <p className="text-warm-600 mb-4">{error}</p>
             <Link href="/app">
               <Button>Return to Vault</Button>
             </Link>
@@ -110,10 +110,10 @@ export default function AdminBundlesPage() {
   return (
     <div className="min-h-screen bg-primary-50">
       {/* Header */}
-      <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm sticky top-0 z-10">
+      <header className="border-b border-warm-200 bg-white/95 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-graphite-900">Bundle Management</h1>
+            <h1 className="text-xl font-semibold text-warm-900">Bundle Management</h1>
             <div className="flex gap-3">
               <Link href="/admin">
                 <Button variant="secondary" size="sm">Dashboard</Button>
@@ -135,7 +135,7 @@ export default function AdminBundlesPage() {
         <Card className="mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-graphite-700 mb-2">
+              <label className="block text-sm font-medium text-warm-700 mb-2">
                 Search Bundles
               </label>
               <input
@@ -143,17 +143,17 @@ export default function AdminBundlesPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by name, owner email, or ID..."
-                className="w-full px-4 py-2 border border-graphite-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-graphite-700 mb-2">
+              <label className="block text-sm font-medium text-warm-700 mb-2">
                 Filter by Mode
               </label>
               <select
                 value={filterMode}
                 onChange={(e) => setFilterMode(e.target.value)}
-                className="px-4 py-2 border border-graphite-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="px-4 py-2 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="all">All Modes</option>
                 <option value="time-lock">Time Lock</option>
@@ -161,13 +161,13 @@ export default function AdminBundlesPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-graphite-700 mb-2">
+              <label className="block text-sm font-medium text-warm-700 mb-2">
                 Filter by Status
               </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-2 border border-graphite-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="px-4 py-2 border border-warm-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -183,7 +183,7 @@ export default function AdminBundlesPage() {
           <Card>
             <div className="text-center">
               <div className="text-3xl font-bold text-primary-600">{filteredBundles.length}</div>
-              <div className="text-sm text-graphite-600">Total Bundles</div>
+              <div className="text-sm text-warm-600">Total Bundles</div>
             </div>
           </Card>
           <Card>
@@ -191,7 +191,7 @@ export default function AdminBundlesPage() {
               <div className="text-3xl font-bold text-green-600">
                 {filteredBundles.filter((b) => b.released).length}
               </div>
-              <div className="text-sm text-graphite-600">Released</div>
+              <div className="text-sm text-warm-600">Released</div>
             </div>
           </Card>
           <Card>
@@ -199,7 +199,7 @@ export default function AdminBundlesPage() {
               <div className="text-3xl font-bold text-yellow-600">
                 {filteredBundles.filter((b) => !b.released).length}
               </div>
-              <div className="text-sm text-graphite-600">Pending</div>
+              <div className="text-sm text-warm-600">Pending</div>
             </div>
           </Card>
           <Card>
@@ -207,7 +207,7 @@ export default function AdminBundlesPage() {
               <div className="text-3xl font-bold text-red-600">
                 {filteredBundles.filter((b) => b.expirationStatus === 'expired').length}
               </div>
-              <div className="text-sm text-graphite-600">Expired</div>
+              <div className="text-sm text-warm-600">Expired</div>
             </div>
           </Card>
         </div>
@@ -217,30 +217,30 @@ export default function AdminBundlesPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-graphite-200">
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Bundle</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Owner</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Mode</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Status</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Items</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Trustees</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Release Date</th>
-                  <th className="text-left py-3 px-4 text-sm font-semibold text-graphite-700">Created</th>
+                <tr className="border-b border-warm-200">
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Bundle</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Owner</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Mode</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Status</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Items</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Trustees</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Release Date</th>
+                  <th className="text-left py-3 px-4 text-sm font-semibold text-warm-700">Created</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredBundles.map((bundle) => (
-                  <tr key={bundle.id} className="border-b border-graphite-100 hover:bg-graphite-50">
+                  <tr key={bundle.id} className="border-b border-warm-100 hover:bg-warm-50">
                     <td className="py-3 px-4">
                       <div>
-                        <div className="font-medium text-graphite-900">{bundle.name}</div>
-                        <div className="text-xs text-graphite-500 font-mono">{bundle.id}</div>
+                        <div className="font-medium text-warm-900">{bundle.name}</div>
+                        <div className="text-xs text-warm-500 font-mono">{bundle.id}</div>
                       </div>
                     </td>
                     <td className="py-3 px-4">
                       <div>
-                        <div className="text-sm text-graphite-900">{bundle.user.email}</div>
-                        <div className="text-xs text-graphite-600">{bundle.user.name || 'No name'}</div>
+                        <div className="text-sm text-warm-900">{bundle.user.email}</div>
+                        <div className="text-xs text-warm-600">{bundle.user.name || 'No name'}</div>
                       </div>
                     </td>
                     <td className="py-3 px-4">
@@ -265,7 +265,7 @@ export default function AdminBundlesPage() {
                             Released
                           </span>
                           {bundle.firstAccessedAt && (
-                            <div className="text-xs text-graphite-600 mt-1">
+                            <div className="text-xs text-warm-600 mt-1">
                               Accessed {new Date(bundle.firstAccessedAt).toLocaleDateString()}
                             </div>
                           )}
@@ -277,33 +277,33 @@ export default function AdminBundlesPage() {
                       )}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="text-sm text-graphite-900">{bundle._count.bundleItems}</div>
+                      <div className="text-sm text-warm-900">{bundle._count.bundleItems}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="text-sm text-graphite-900">{bundle._count.trustees}</div>
+                      <div className="text-sm text-warm-900">{bundle._count.trustees}</div>
                     </td>
                     <td className="py-3 px-4">
                       {bundle.mode === 'time-lock' && bundle.releaseDate ? (
-                        <div className="text-sm text-graphite-900">
+                        <div className="text-sm text-warm-900">
                           {new Date(bundle.releaseDate).toLocaleString()}
                         </div>
                       ) : bundle.mode === 'heartbeat' ? (
                         <div>
-                          <div className="text-sm text-graphite-900">
+                          <div className="text-sm text-warm-900">
                             {bundle.heartbeatCadenceDays}d cadence
                           </div>
                           {bundle.lastHeartbeat && (
-                            <div className="text-xs text-graphite-600">
+                            <div className="text-xs text-warm-600">
                               Last: {new Date(bundle.lastHeartbeat).toLocaleDateString()}
                             </div>
                           )}
                         </div>
                       ) : (
-                        <span className="text-sm text-graphite-500">N/A</span>
+                        <span className="text-sm text-warm-500">N/A</span>
                       )}
                     </td>
                     <td className="py-3 px-4">
-                      <div className="text-sm text-graphite-900">
+                      <div className="text-sm text-warm-900">
                         {new Date(bundle.createdAt).toLocaleDateString()}
                       </div>
                     </td>
@@ -315,7 +315,7 @@ export default function AdminBundlesPage() {
 
           {filteredBundles.length === 0 && (
             <div className="text-center py-8">
-              <p className="text-graphite-600">No bundles found matching your criteria.</p>
+              <p className="text-warm-600">No bundles found matching your criteria.</p>
             </div>
           )}
         </Card>

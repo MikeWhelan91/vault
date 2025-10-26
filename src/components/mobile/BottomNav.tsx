@@ -79,7 +79,7 @@ export function BottomNav() {
                 className={`flex flex-col items-center justify-center gap-1 transition-colors ${
                   active
                     ? 'text-primary-600'
-                    : 'text-espresso-600 active:bg-champagne-50'
+                    : 'text-plum-600 active:bg-champagne-50'
                 }`}
               >
                 <Icon className={`w-5 h-5 ${active ? 'stroke-2' : 'stroke-[1.5]'}`} />
@@ -96,7 +96,7 @@ export function BottomNav() {
             className={`flex flex-col items-center justify-center gap-1 transition-colors ${
               isMoreActive
                 ? 'text-primary-600'
-                : 'text-espresso-600 active:bg-champagne-50'
+                : 'text-plum-600 active:bg-champagne-50'
             }`}
           >
             <MoreHorizontal className={`w-5 h-5 ${isMoreActive ? 'stroke-2' : 'stroke-[1.5]'}`} />
@@ -121,10 +121,10 @@ export function BottomNav() {
             <div className="p-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="font-display text-lg font-semibold text-espresso-900">Menu</h3>
+                <h3 className="font-display text-lg font-semibold text-plum-900">Menu</h3>
                 <button
                   onClick={handleCloseMenu}
-                  className="p-2 -mr-2 rounded-full text-espresso-600 hover:bg-champagne-100 active:bg-champagne-200 transition-colors"
+                  className="p-2 -mr-2 rounded-full text-plum-600 hover:bg-champagne-100 active:bg-champagne-200 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -148,7 +148,7 @@ export function BottomNav() {
                       className={`w-full flex items-center gap-4 p-4 rounded-xl transition-colors ${
                         active
                           ? 'bg-primary-50 text-primary-700'
-                          : 'text-espresso-800 hover:bg-champagne-50 active:bg-champagne-100'
+                          : 'text-plum-800 hover:bg-champagne-50 active:bg-champagne-100'
                       }`}
                     >
                       <Icon className={`w-5 h-5 ${active ? 'stroke-2' : 'stroke-[1.5]'}`} />

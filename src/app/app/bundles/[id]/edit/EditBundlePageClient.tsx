@@ -233,11 +233,11 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
-      <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
+      <section className="rounded-3xl border border-warm-200 bg-white px-6 py-6 shadow-sm sm:px-8">
         <div className="flex flex-col gap-4 text-center">
           <div>
-            <h1 className="text-3xl font-semibold text-graphite-900">Edit {bundle.name}</h1>
-            <p className="mt-2 text-sm text-graphite-600">
+            <h1 className="text-3xl font-semibold text-warm-900">Edit {bundle.name}</h1>
+            <p className="mt-2 text-sm text-warm-600">
               Manage bundle name, trustees, and items. Release settings cannot be changed after creation.
             </p>
           </div>
@@ -245,9 +245,9 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
       </section>
 
       {/* Bundle Name */}
-      <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+      <Card className="rounded-3xl border border-warm-200 bg-white shadow-sm">
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-graphite-900">Bundle Name</h2>
+          <h2 className="text-lg font-semibold text-warm-900">Bundle Name</h2>
           <div className="flex gap-3">
             <Input
               value={bundleName}
@@ -263,11 +263,11 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
       </Card>
 
       {/* Trustees */}
-      <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+      <Card className="rounded-3xl border border-warm-200 bg-white shadow-sm">
         <div className="space-y-5">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary-600" />
-            <h2 className="text-lg font-semibold text-graphite-900">Trustees</h2>
+            <h2 className="text-lg font-semibold text-warm-900">Trustees</h2>
           </div>
 
           {bundle.trustees.length > 0 && (
@@ -275,15 +275,15 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
               {bundle.trustees.map((trustee) => (
                 <div
                   key={trustee.id}
-                  className="flex items-center justify-between gap-3 rounded-2xl border border-graphite-100 bg-graphite-50/80 px-4 py-3"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-warm-100 bg-warm-50/80 px-4 py-3"
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-3">
                     <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600 font-semibold">
                       {(trustee.name || trustee.email).charAt(0).toUpperCase()}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="break-words font-medium text-graphite-900">{trustee.name || trustee.email}</p>
-                      <p className="break-all text-sm text-graphite-500">{trustee.email}</p>
+                      <p className="break-words font-medium text-warm-900">{trustee.name || trustee.email}</p>
+                      <p className="break-all text-sm text-warm-500">{trustee.email}</p>
                     </div>
                   </div>
                   {!bundle.released && (
@@ -302,8 +302,8 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
           )}
 
           {!bundle.released && (
-            <div className="space-y-3 border-t border-graphite-100 pt-5">
-              <h3 className="text-sm font-medium text-graphite-700">Add Trustee</h3>
+            <div className="space-y-3 border-t border-warm-100 pt-5">
+              <h3 className="text-sm font-medium text-warm-700">Add Trustee</h3>
               <div className="grid gap-3 sm:grid-cols-2">
                 <Input
                   type="email"
@@ -327,11 +327,11 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
       </Card>
 
       {/* Items */}
-      <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+      <Card className="rounded-3xl border border-warm-200 bg-white shadow-sm">
         <div className="space-y-5">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary-600" />
-            <h2 className="text-lg font-semibold text-graphite-900">Included Items</h2>
+            <h2 className="text-lg font-semibold text-warm-900">Included Items</h2>
           </div>
 
           {bundle.items.length > 0 && (
@@ -339,15 +339,15 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
               {bundle.items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between gap-3 rounded-2xl border border-graphite-100 bg-graphite-50/80 px-4 py-3"
+                  className="flex items-center justify-between gap-3 rounded-2xl border border-warm-100 bg-warm-50/80 px-4 py-3"
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-3">
                     <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600">
                       {item.type === 'file' ? <FileText className="h-5 w-5" /> : <StickyNote className="h-5 w-5" />}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="break-words font-medium text-graphite-900">{item.name}</p>
-                      <p className="text-xs text-graphite-500">{item.type === 'file' ? 'File' : 'Note'}</p>
+                      <p className="break-words font-medium text-warm-900">{item.name}</p>
+                      <p className="text-xs text-warm-500">{item.type === 'file' ? 'File' : 'Note'}</p>
                     </div>
                   </div>
                   {!bundle.released && (
@@ -366,9 +366,9 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
           )}
 
           {!bundle.released && (
-            <div className="space-y-4 border-t border-graphite-100 pt-5">
+            <div className="space-y-4 border-t border-warm-100 pt-5">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-graphite-800">Add Items to Bundle</h3>
+                <h3 className="text-sm font-semibold text-warm-800">Add Items to Bundle</h3>
                 {showAddItems && (
                   <Button
                     variant="ghost"
@@ -387,21 +387,21 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
                 </Button>
               ) : (
                 <div className="space-y-2">
-                  <p className="text-xs text-graphite-500">Click the + icon to add an item to this bundle</p>
+                  <p className="text-xs text-warm-500">Click the + icon to add an item to this bundle</p>
                   {availableItems
                     .filter((item) => !bundle.items.find((bi) => bi.id === item.id))
                     .map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-graphite-200 bg-white px-4 py-3 hover:border-primary-300 hover:bg-primary-50/50 transition-colors"
+                        className="flex items-center justify-between gap-3 rounded-xl border border-warm-200 bg-white px-4 py-3 hover:border-primary-300 hover:bg-primary-50/50 transition-colors"
                       >
                         <div className="flex min-w-0 flex-1 items-center gap-3">
-                          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-graphite-100">
-                            {item.type === 'file' ? <FileText className="h-4 w-4 text-graphite-600" /> : <StickyNote className="h-4 w-4 text-graphite-600" />}
+                          <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-warm-100">
+                            {item.type === 'file' ? <FileText className="h-4 w-4 text-warm-600" /> : <StickyNote className="h-4 w-4 text-warm-600" />}
                           </span>
                           <div className="min-w-0 flex-1">
-                            <p className="break-words text-sm font-medium text-graphite-900">{item.name}</p>
-                            <p className="text-xs text-graphite-500">{item.type === 'file' ? 'File' : 'Note'}</p>
+                            <p className="break-words text-sm font-medium text-warm-900">{item.name}</p>
+                            <p className="text-xs text-warm-500">{item.type === 'file' ? 'File' : 'Note'}</p>
                           </div>
                         </div>
                         <Button
@@ -416,8 +416,8 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
                       </div>
                     ))}
                   {availableItems.filter((item) => !bundle.items.find((bi) => bi.id === item.id)).length === 0 && (
-                    <div className="rounded-xl border border-dashed border-graphite-200 bg-graphite-50 px-4 py-8 text-center">
-                      <p className="text-sm text-graphite-500">All your items are already in this bundle</p>
+                    <div className="rounded-xl border border-dashed border-warm-200 bg-warm-50 px-4 py-8 text-center">
+                      <p className="text-sm text-warm-500">All your items are already in this bundle</p>
                     </div>
                   )}
                 </div>
@@ -440,7 +440,7 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
         title="Remove Item"
       >
         <div className="space-y-4">
-          <p className="text-sm text-graphite-600">
+          <p className="text-sm text-warm-600">
             Are you sure you want to remove <strong>{itemToRemove?.name}</strong> from this bundle?
           </p>
           <div className="flex justify-end gap-3">
@@ -461,7 +461,7 @@ export default function EditBundlePageClient({ bundleId }: EditBundlePageClientP
         title="Remove Trustee"
       >
         <div className="space-y-4">
-          <p className="text-sm text-graphite-600">
+          <p className="text-sm text-warm-600">
             Are you sure you want to remove <strong>{trusteeToRemove?.name || trusteeToRemove?.email}</strong> from this bundle?
           </p>
           <div className="flex justify-end gap-3">

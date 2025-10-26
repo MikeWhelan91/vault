@@ -162,7 +162,7 @@ export default function ReleasePage() {
     return (
       <div className="min-h-screen bg-primary-50 flex items-center justify-center">
         <Card>
-          <p className="text-graphite-900">Loading...</p>
+          <p className="text-warm-900">Loading...</p>
         </Card>
       </div>
     );
@@ -173,10 +173,10 @@ export default function ReleasePage() {
       <div className="min-h-screen bg-primary-50 flex items-center justify-center p-6">
         <Card className="max-w-md">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-graphite-900 mb-4">
+            <h1 className="text-2xl font-bold text-warm-900 mb-4">
               Release Not Found
             </h1>
-            <p className="text-graphite-600">
+            <p className="text-warm-600">
               {error || 'This release link is invalid or has expired.'}
             </p>
           </div>
@@ -188,9 +188,9 @@ export default function ReleasePage() {
   return (
     <div className="min-h-screen bg-primary-50">
       {/* Header */}
-      <header className="border-b border-graphite-200 bg-white/95 backdrop-blur-sm">
+      <header className="border-b border-warm-200 bg-white/95 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-4">
-          <h1 className="text-xl font-semibold text-graphite-900">Forebearer</h1>
+          <h1 className="text-xl font-semibold text-warm-900">Forebearer</h1>
         </div>
       </header>
 
@@ -199,10 +199,10 @@ export default function ReleasePage() {
         {/* Info Card */}
         <Card className="mb-8">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-graphite-900 mb-2 sm:text-3xl">
+            <h1 className="text-2xl font-bold text-warm-900 mb-2 sm:text-3xl">
               You&apos;ve Received Memories
             </h1>
-            <p className="text-base text-graphite-600 break-words sm:text-lg">
+            <p className="text-base text-warm-600 break-words sm:text-lg">
               From <strong className="break-words">{release.user.name}</strong> (<span className="break-all">{release.user.email}</span>)
             </p>
           </div>
@@ -210,12 +210,12 @@ export default function ReleasePage() {
           <div className="bg-primary-50 rounded-lg p-4 sm:p-6">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <p className="text-sm text-graphite-600">Release Name</p>
-                <p className="font-semibold text-graphite-900 break-words">{release.bundle.name}</p>
+                <p className="text-sm text-warm-600">Release Name</p>
+                <p className="font-semibold text-warm-900 break-words">{release.bundle.name}</p>
               </div>
               <div>
-                <p className="text-sm text-graphite-600">Items</p>
-                <p className="font-semibold text-graphite-900">
+                <p className="text-sm text-warm-600">Items</p>
+                <p className="font-semibold text-warm-900">
                   {release.items.length} {release.items.length === 1 ? 'memory' : 'memories'}
                 </p>
               </div>
@@ -241,10 +241,10 @@ export default function ReleasePage() {
         {/* Items List */}
         <Card>
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-graphite-900 mb-2">
+            <h2 className="text-xl font-semibold text-warm-900 mb-2">
               Shared Memories
             </h2>
-            <p className="text-sm text-graphite-600">
+            <p className="text-sm text-warm-600">
               {release.items.length} {release.items.length === 1 ? 'item' : 'items'} ready to download
             </p>
           </div>
@@ -253,14 +253,14 @@ export default function ReleasePage() {
             {release.items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 p-3 bg-graphite-50 rounded-lg sm:p-4"
+                className="flex items-center gap-3 p-3 bg-warm-50 rounded-lg sm:p-4"
               >
                 <span className="text-xl flex-shrink-0 sm:text-2xl">
                   {item.type === 'file' ? '📄' : '📝'}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-graphite-900 break-words">{item.name}</p>
-                  <p className="text-sm text-graphite-600">
+                  <p className="font-medium text-warm-900 break-words">{item.name}</p>
+                  <p className="text-sm text-warm-600">
                     {item.type === 'file' ? 'File' : 'Note'} • {formatFileSize(parseInt(item.size))}
                   </p>
                 </div>
@@ -299,8 +299,8 @@ export default function ReleasePage() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-graphite-200 py-12 bg-white mt-12">
-        <div className="container mx-auto px-6 text-center text-graphite-600">
+      <footer className="border-t border-warm-200 py-12 bg-white mt-12">
+        <div className="container mx-auto px-6 text-center text-warm-600">
           <p className="text-sm">Forebearer - Share what matters</p>
         </div>
       </footer>

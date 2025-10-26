@@ -26,11 +26,11 @@ export function UpgradePrompt({ isOpen, onClose, reason }: UpgradePromptProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={message.title} size="md">
       <div className="space-y-6">
-        <p className="text-graphite-600 leading-relaxed">{message.message}</p>
+        <p className="text-warm-600 leading-relaxed">{message.message}</p>
 
         <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
-          <h3 className="font-semibold text-graphite-900 mb-2">Plus Tier Benefits</h3>
-          <ul className="space-y-2 text-sm text-graphite-700">
+          <h3 className="font-semibold text-warm-900 mb-2">Plus Tier Benefits</h3>
+          <ul className="space-y-2 text-sm text-warm-700">
             <li className="flex items-start gap-2">
               <span className="text-primary-500 mt-0.5">✓</span>
               <span>5 GB of storage (vs 300 MB)</span>
@@ -58,9 +58,9 @@ export function UpgradePrompt({ isOpen, onClose, reason }: UpgradePromptProps) {
           </ul>
         </div>
 
-        <div className="bg-graphite-50 rounded-lg p-4 text-center">
-          <div className="text-3xl font-bold text-graphite-900 mb-1">$9/month</div>
-          <div className="text-sm text-graphite-600">or $99/year (save $9)</div>
+        <div className="bg-warm-50 rounded-lg p-4 text-center">
+          <div className="text-3xl font-bold text-warm-900 mb-1">$9/month</div>
+          <div className="text-sm text-warm-600">or $99/year (save $9)</div>
         </div>
 
         <div className="flex gap-3">

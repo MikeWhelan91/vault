@@ -44,42 +44,42 @@ export default function SupportPageClient() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-10">
-      <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-8 text-center shadow-sm">
+      <section className="rounded-3xl border border-warm-200 bg-white px-6 py-8 text-center shadow-sm">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-primary-100 bg-primary-50 text-primary-600">
           <LifeBuoy className="h-6 w-6" />
         </div>
-        <h1 className="mt-6 text-3xl font-semibold text-graphite-900 sm:text-4xl">How Can We Help?</h1>
-        <p className="mt-3 text-sm text-graphite-600 sm:text-base">
+        <h1 className="mt-6 text-3xl font-semibold text-warm-900 sm:text-4xl">How Can We Help?</h1>
+        <p className="mt-3 text-sm text-warm-600 sm:text-base">
           Have a question about your vault or a bundle configuration? Raise a secure ticket and our team will respond within 24–48 hours.
         </p>
       </section>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold text-graphite-900">Quick Links</h2>
+        <Card className="rounded-3xl border border-warm-200 shadow-sm">
+          <h2 className="mb-4 text-lg font-semibold text-warm-900">Quick Links</h2>
           <div className="space-y-3 text-sm">
-            <Link href="/app/faq" className="group flex items-center justify-between rounded-xl border border-graphite-100 px-3 py-2 text-primary-700 transition-colors hover:border-primary-200">
+            <Link href="/app/faq" className="group flex items-center justify-between rounded-xl border border-warm-100 px-3 py-2 text-primary-700 transition-colors hover:border-primary-200">
               <span>View vault FAQs</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <a href="mailto:hello@forebearer.app" className="group flex items-center justify-between rounded-xl border border-graphite-100 px-3 py-2 text-primary-700 transition-colors hover:border-primary-200">
+            <a href="mailto:hello@forebearer.app" className="group flex items-center justify-between rounded-xl border border-warm-100 px-3 py-2 text-primary-700 transition-colors hover:border-primary-200">
               <span>hello@forebearer.app</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </a>
           </div>
         </Card>
 
-        <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-          <h2 className="mb-3 text-lg font-semibold text-graphite-900">Response Time</h2>
-          <p className="text-sm text-graphite-600">
-            We typically respond within <span className="font-semibold text-graphite-900">24–48 hours</span> on business days. For urgent matters, mention “URGENT” in the subject line so we can triage quickly.
+        <Card className="rounded-3xl border border-warm-200 shadow-sm">
+          <h2 className="mb-3 text-lg font-semibold text-warm-900">Response Time</h2>
+          <p className="text-sm text-warm-600">
+            We typically respond within <span className="font-semibold text-warm-900">24–48 hours</span> on business days. For urgent matters, mention “URGENT” in the subject line so we can triage quickly.
           </p>
         </Card>
       </div>
 
       {/* Contact Form */}
       <Card>
-        <h2 className="text-2xl font-semibold text-graphite-900 mb-6">Send Us a Message</h2>
+        <h2 className="text-2xl font-semibold text-warm-900 mb-6">Send Us a Message</h2>
 
         {status === 'success' && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
@@ -98,7 +98,7 @@ export default function SupportPageClient() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-graphite-700 mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-warm-700 mb-2">
                 Name
               </label>
               <input
@@ -108,12 +108,12 @@ export default function SupportPageClient() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-graphite-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-warm-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-graphite-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-warm-700 mb-2">
                 Email
               </label>
               <input
@@ -123,13 +123,13 @@ export default function SupportPageClient() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-graphite-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-warm-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="subject" className="block text-sm font-medium text-graphite-700 mb-2">
+            <label htmlFor="subject" className="block text-sm font-medium text-warm-700 mb-2">
               Subject
             </label>
             <input
@@ -139,12 +139,12 @@ export default function SupportPageClient() {
               value={formData.subject}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-graphite-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-warm-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label htmlFor="message" className="block text-sm font-medium text-graphite-700 mb-2">
+            <label htmlFor="message" className="block text-sm font-medium text-warm-700 mb-2">
               Message
             </label>
             <textarea
@@ -154,7 +154,7 @@ export default function SupportPageClient() {
               onChange={handleChange}
               required
               rows={6}
-              className="w-full px-4 py-2 border border-graphite-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+              className="w-full px-4 py-2 border border-warm-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
             />
           </div>
 

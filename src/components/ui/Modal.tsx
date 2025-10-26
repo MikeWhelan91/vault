@@ -75,14 +75,14 @@ export function Modal({
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between border-b border-champagne-300 p-4">
             {title && (
-              <h2 className="font-display text-2xl font-semibold text-espresso-900">
+              <h2 className="font-display text-2xl font-semibold text-plum-900">
                 {title}
               </h2>
             )}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-graphite-400 transition-colors hover:text-primary-600 text-2xl leading-none"
+                className="text-warm-400 transition-colors hover:text-primary-600 text-2xl leading-none"
                 aria-label="Close"
               >
                 ×
