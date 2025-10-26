@@ -26,7 +26,21 @@
       "Bash(npx prisma studio:*)",
       "Bash(git check-ignore:*)",
       "Bash(dir:*)",
-      "Bash(./gradlew bundleRelease:*)"
+      "Bash(./gradlew bundleRelease:*)",
+      "Bash(gh workflow run \"Hourly Cron Job\")",
+      "Bash(findstr CRON_SECRET)",
+      "Bash(cat .env)",
+      "Bash(adb kill-server)",
+      "Bash(adb start-server)",
+      "Bash(where adb)",
+      "Bash(ipconfig)",
+      "Bash(findstr /i \"IPv4\")",
+      "Bash(netsh advfirewall show currentprofile)",
+      "Bash(ping -n 4 192.168.1.14)",
+      "Bash(./gradlew --version)",
+      "Bash(gh run list:*)",
+      "Bash(findstr:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []
