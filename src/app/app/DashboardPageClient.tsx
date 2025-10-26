@@ -667,7 +667,7 @@ export default function DashboardPageClient() {
                       {/* View Button */}
                       <div className="mt-4 border-t border-graphite-100 pt-4">
                         <Link
-                          href="/app/release"
+                          href="/app/bundles"
                           className="group inline-flex w-full items-center justify-between text-sm font-medium text-primary-600 hover:text-primary-700"
                         >
                           <span>Manage bundles</span>
