@@ -30,7 +30,6 @@ export function BottomNav() {
 
   const moreMenuItems = [
     { name: 'My Bundles', href: '/app/bundles', icon: Package, requiresPaid: false, isAction: false },
-    { name: 'Letters', href: '/app/letters', icon: Mail, requiresPaid: true, isAction: false },
     { name: 'Settings', href: '/app/settings', icon: Settings, requiresPaid: false, isAction: false },
   ];
 

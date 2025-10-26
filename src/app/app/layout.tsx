@@ -68,7 +68,6 @@ function AppNav() {
     { name: 'My Vault', href: '/app/items' },
     { name: 'Releases', href: '/app/release' },
     { name: 'My Bundles', href: '/app/bundles' },
-    ...(isPaidUser ? [{ name: 'Letters', href: '/app/letters' }] : []),
   ];
 
   const isActive = (href: string) => {
