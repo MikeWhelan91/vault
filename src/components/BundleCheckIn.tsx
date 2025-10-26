@@ -51,7 +51,7 @@ export function BundleCheckIn({
       }
 
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      // Don't reset success - keep it persistent
 
       // Call success callback to refresh bundle data
       if (onCheckInSuccess) {
@@ -132,13 +132,15 @@ export function BundleCheckIn({
         <Button
           onClick={handleCheckIn}
           isLoading={isCheckingIn}
+          disabled={success}
           size="sm"
           className={`
             ${isOverdue ? 'bg-red-600 hover:bg-red-700' : ''}
             ${isUrgent && !isOverdue ? 'bg-amber-600 hover:bg-amber-700' : ''}
+            ${success ? 'bg-emerald-600 hover:bg-emerald-600' : ''}
           `}
         >
-          {isOverdue ? '⚠️ Check In Now' : success ? '✓ Checked In' : "I'm Alive"}
+          {success ? '✓ Checked In' : isOverdue ? '⚠️ Check In Now' : "I'm Alive"}
         </Button>
       </div>
     </Card>
