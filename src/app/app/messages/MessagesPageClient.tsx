@@ -100,7 +100,17 @@ export default function MessagesPageClient() {
         videoRef.current.srcObject = stream;
       }
 
-      const mediaRecorder = new MediaRecorder(stream);
+      // Try to use supported codec for Android compatibility
+      let options = {};
+      if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
+        options = { mimeType: 'video/webm;codecs=vp9' };
+      } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
+        options = { mimeType: 'video/webm;codecs=vp8' };
+      } else if (MediaRecorder.isTypeSupported('video/webm')) {
+        options = { mimeType: 'video/webm' };
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
 

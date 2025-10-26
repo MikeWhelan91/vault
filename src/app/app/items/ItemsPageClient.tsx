@@ -153,7 +153,7 @@ export default function ItemsPageClient() {
       />
 
       {/* Tab Navigation */}
-      <div className="border-b border-graphite-200 bg-white rounded-t-2xl overflow-x-auto">
+      <div className="border-b border-graphite-200 bg-white rounded-t-2xl overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
         <div className="flex gap-1 p-2 min-w-max">
           {tabs.map((tab) => {
             const Icon = tab.icon;
