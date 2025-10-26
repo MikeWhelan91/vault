@@ -48,24 +48,44 @@ model User {
   @@index([email])
 }
 
-// Encrypted items (files & notes)
+// Encrypted items (files, notes, passwords, cards)
 model Item {
   id        String   @id @default(cuid())
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  type      String   // 'file' | 'note'
+  type      String   // 'file' | 'note' | 'password' | 'card' | 'secure_note'
   name      String
   size      BigInt   // encrypted size in bytes
   version   Int      @default(1)
 
-  // Storage location
-  r2Key     String   // path in R2: userId/itemId/version.bin
+  // Storage location (for files and notes)
+  r2Key     String?  // path in R2: userId/itemId/version.bin (null for password/card types)
 
   // Cryptographic data
   itemKeySalt       String // hex-encoded salt
   wrappedItemKey    String // hex-encoded wrapped item key
   wrappedItemKeyIV  String // hex-encoded IV
+
+  // Password-specific fields (for type='password', 'card', 'secure_note')
+  url               String?  // Website URL (for passwords)
+  username          String?  // Username/email (for passwords)
+  favorite          Boolean  @default(false) // For passwords
+  lastUsed          DateTime? // For passwords
+
+  // Encrypted password data
+  passwordEncrypted String? // The actual password/PIN
+  passwordIV        String? // IV for password decryption
+
+  // Card-specific encrypted fields
+  cardNumberEncrypted String? // Card number
+  cardExpiryEncrypted String? // Expiry date
+  cardCVVEncrypted    String? // CVV
+  cardCVVIV           String? // IV for CVV decryption
+
+  // Notes/additional data
+  notesEncrypted    String? // Additional notes
+  notesIV           String? // IV for notes decryption
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -75,6 +95,8 @@ model Item {
 
   @@index([userId])
   @@index([userId, updatedAt])
+  @@index([userId, type])
+  @@index([userId, favorite])
 }
 
 // Password Vault - encrypted password storage

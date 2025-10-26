@@ -1,6 +1,6 @@
 // Core data types for the vault application
 
-export type ItemType = 'file' | 'note';
+export type ItemType = 'file' | 'note' | 'password' | 'card' | 'secure_note';
 
 export type FileCategory = 'video' | 'image' | 'document' | 'audio' | 'other';
 
