@@ -31,6 +31,9 @@ import {
   Eye,
   EyeOff,
   RefreshCw,
+  Vault,
+  Mail,
+  Briefcase,
 } from 'lucide-react';
 import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
 import type { FileCategory } from '@/lib/file-types';
@@ -48,11 +51,14 @@ const CATEGORY_LABELS: Record<FileCategory, string> = {
   other: 'File',
 };
 
+type VaultTab = 'files' | 'messages' | 'letters' | 'assets';
+
 export default function ItemsPageClient() {
   const { metadata, addItem, getItemKey, session } = useCrypto();
   const { showToast } = useToast();
   const [showAddModal, setShowAddModal] = useState(false);
   const [addType, setAddType] = useState<ItemType>('file');
+  const [activeTab, setActiveTab] = useState<VaultTab>('files');
 
   if (!metadata) {
     return <div>Loading...</div>;
@@ -96,33 +102,70 @@ export default function ItemsPageClient() {
     }),
   };
 
+  const tabs = [
+    { id: 'files' as VaultTab, label: 'Files & Passwords', icon: FolderOpen, count: items.length },
+    { id: 'messages' as VaultTab, label: 'Video Messages', icon: VideoIcon, count: 0 },
+    { id: 'letters' as VaultTab, label: 'Letters', icon: Mail, count: 0 },
+    { id: 'assets' as VaultTab, label: 'Digital Assets', icon: Briefcase, count: 0 },
+  ];
+
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Header */}
       <MobilePageHeader
-        title="Your Items"
-        subtitle={items.length === 0
-          ? 'Upload files or notes to start building your protected estate.'
-          : `Organize ${items.length} encrypted ${items.length === 1 ? 'asset' : 'assets'} by type, preview metadata, and manage storage.`}
-        icon={FolderOpen}
+        title="My Vault"
+        subtitle="All your encrypted files, messages, letters, and digital assets in one place."
+        icon={Vault}
         actions={
           <>
             <Button onClick={() => setShowAddModal(true)} size="sm">
               <Plus className="h-4 w-4" />
-              <span className="ml-2">Add new item</span>
+              <span className="ml-2">
+                {activeTab === 'files' ? 'Add Item' :
+                 activeTab === 'messages' ? 'Record Message' :
+                 activeTab === 'letters' ? 'Write Letter' :
+                 'Add Asset'}
+              </span>
             </Button>
-            {tier === 'free' && (
-              <Link href="/app/pricing">
-                <Button variant="secondary" size="sm">
-                  Expand storage
-                </Button>
-              </Link>
-            )}
           </>
         }
       />
 
-      {/* Storage Indicator */}
+      {/* Tab Navigation */}
+      <div className="border-b border-graphite-200 bg-white rounded-t-2xl overflow-x-auto">
+        <div className="flex gap-1 p-2 min-w-max">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all whitespace-nowrap ${
+                  isActive
+                    ? 'bg-primary-500 text-white shadow-md'
+                    : 'text-graphite-600 hover:bg-graphite-50 hover:text-graphite-900'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-sm font-medium">{tab.label}</span>
+                {tab.count > 0 && (
+                  <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-graphite-100 text-graphite-600'
+                  }`}>
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'files' && (
+        <>
+          {/* Storage Indicator */}
       <StorageIndicator
         tier={tier}
         usedBytes={metadata.totalSize}
@@ -228,6 +271,67 @@ export default function ItemsPageClient() {
             />
           )}
         </div>
+      )}
+      </>
+      )}
+
+      {/* Messages Tab */}
+      {activeTab === 'messages' && (
+        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
+              <VideoIcon className="h-7 w-7" />
+            </div>
+            <h3 className="text-xl font-semibold text-graphite-900">No video messages yet</h3>
+            <p className="mt-2 max-w-sm text-sm text-graphite-600">
+              Record heartfelt video or audio messages for future delivery to loved ones on special occasions.
+            </p>
+            <Button onClick={() => setShowAddModal(true)} size="lg" className="mt-6">
+              <Plus className="h-4 w-4" />
+              <span className="ml-2">Record Your First Message</span>
+            </Button>
+          </div>
+        </Card>
+      )}
+
+      {/* Letters Tab */}
+      {activeTab === 'letters' && (
+        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
+              <Mail className="h-7 w-7" />
+            </div>
+            <h3 className="text-xl font-semibold text-graphite-900">No scheduled letters yet</h3>
+            <p className="mt-2 max-w-sm text-sm text-graphite-600">
+              Write and schedule letters to be delivered on specific dates or occasions.
+            </p>
+            <Link href="/app/letters">
+              <Button size="lg" className="mt-6">
+                <Plus className="h-4 w-4" />
+                <span className="ml-2">Write Your First Letter</span>
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      )}
+
+      {/* Digital Assets Tab */}
+      {activeTab === 'assets' && (
+        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
+              <Briefcase className="h-7 w-7" />
+            </div>
+            <h3 className="text-xl font-semibold text-graphite-900">No digital assets yet</h3>
+            <p className="mt-2 max-w-sm text-sm text-graphite-600">
+              Create an inventory of your bank accounts, subscriptions, crypto wallets, and online accounts.
+            </p>
+            <Button onClick={() => setShowAddModal(true)} size="lg" className="mt-6">
+              <Plus className="h-4 w-4" />
+              <span className="ml-2">Add Your First Asset</span>
+            </Button>
+          </div>
+        </Card>
       )}
 
       {/* Add Item Modal */}

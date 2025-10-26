@@ -694,40 +694,8 @@ export default function DashboardPageClient() {
                     <Upload className="h-4 w-4" />
                   </span>
                   <div className="text-left">
-                    <div className="font-semibold text-graphite-900">Upload Files</div>
-                    <div className="text-xs text-graphite-500">Add items to vault</div>
-                  </div>
-                </span>
-                <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
-              </Link>
-
-              <Link
-                href="/app/messages"
-                className="group flex items-center justify-between rounded-xl border border-graphite-100 bg-gradient-to-br from-white to-graphite-50/50 px-4 py-3 text-sm font-medium text-graphite-700 transition-all hover:border-primary-300 hover:shadow-md hover:scale-[1.02]"
-              >
-                <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
-                    <Video className="h-4 w-4" />
-                  </span>
-                  <div className="text-left">
-                    <div className="font-semibold text-graphite-900">Record Message</div>
-                    <div className="text-xs text-graphite-500">Create video/audio</div>
-                  </div>
-                </span>
-                <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
-              </Link>
-
-              <Link
-                href="/app/assets"
-                className="group flex items-center justify-between rounded-xl border border-graphite-100 bg-gradient-to-br from-white to-graphite-50/50 px-4 py-3 text-sm font-medium text-graphite-700 transition-all hover:border-primary-300 hover:shadow-md hover:scale-[1.02]"
-              >
-                <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
-                    <Briefcase className="h-4 w-4" />
-                  </span>
-                  <div className="text-left">
-                    <div className="font-semibold text-graphite-900">Track Assets</div>
-                    <div className="text-xs text-graphite-500">Digital inventory</div>
+                    <div className="font-semibold text-graphite-900">Open My Vault</div>
+                    <div className="text-xs text-graphite-500">Files, messages & assets</div>
                   </div>
                 </span>
                 <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />

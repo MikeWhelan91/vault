@@ -505,7 +505,7 @@ export default function MessagesPageClient() {
             >
               Cancel
             </Button>
-            <Button onClick={saveMessage} disabled={isRecording || recordingDuration === 0}>
+            <Button onClick={saveMessage} disabled={recordingDuration === 0 || !messageTitle.trim()}>
               <Send className="h-4 w-4" />
               <span className="ml-2">Save Message</span>
             </Button>

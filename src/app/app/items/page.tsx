@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import ItemsPageClient from './ItemsPageClient';
 
 export const metadata: Metadata = {
-  title: 'Vault Items | Forebearer',
+  title: 'My Vault | Forebearer',
   description:
-    'Review encrypted notes and files, organise by category, and upload new material directly to your Forebearer vault.',
+    'Manage all your encrypted files, video messages, letters, and digital assets in one secure vault.',
   robots: {
     index: false,
     follow: false,

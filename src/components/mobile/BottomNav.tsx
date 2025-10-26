@@ -24,13 +24,11 @@ export function BottomNav() {
 
   const navItems = [
     { name: 'Home', href: '/app', icon: Home },
-    { name: 'Items', href: '/app/items', icon: FileText },
+    { name: 'My Vault', href: '/app/items', icon: FileText },
     { name: 'Releases', href: '/app/release', icon: Send },
   ];
 
   const moreMenuItems = [
-    { name: 'Messages', href: '/app/messages', icon: Video, requiresPaid: false, isAction: false },
-    { name: 'Digital Assets', href: '/app/assets', icon: Briefcase, requiresPaid: false, isAction: false },
     { name: 'My Bundles', href: '/app/bundles', icon: Package, requiresPaid: false, isAction: false },
     { name: 'Letters', href: '/app/letters', icon: Mail, requiresPaid: true, isAction: false },
     { name: 'Settings', href: '/app/settings', icon: Settings, requiresPaid: false, isAction: false },

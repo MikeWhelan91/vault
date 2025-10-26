@@ -40,7 +40,8 @@
       "Bash(./gradlew --version)",
       "Bash(gh run list:*)",
       "Bash(findstr:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(del nul)"
     ],
     "deny": [],
     "ask": []
