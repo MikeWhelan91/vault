@@ -318,22 +318,20 @@ export default function DashboardPageClient() {
         </div>
       )}
 
-      {/* Heartbeat Check-In Section */}
-      {heartbeatBundles.length > 0 && (
-        <div ref={checkInBundleId ? checkInRef : null} className="space-y-4">
-          {checkInBundleId && (
-            <div className="rounded-2xl border-2 border-primary-300 bg-primary-50 p-4">
-              <div className="flex items-start gap-3">
-                <Heart className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h3 className="text-lg font-semibold text-primary-900">Check-In Required</h3>
-                  <p className="mt-1 text-sm text-primary-700">
-                    Click the &quot;I&apos;m Alive&quot; button below to reset your heartbeat timer and prevent automatic release.
-                  </p>
-                </div>
+      {/* Heartbeat Check-In Section - Only shows when coming from email link */}
+      {checkInBundleId && heartbeatBundles.length > 0 && (
+        <div ref={checkInRef} className="space-y-4">
+          <div className="rounded-2xl border-2 border-primary-300 bg-primary-50 p-4">
+            <div className="flex items-start gap-3">
+              <Heart className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-lg font-semibold text-primary-900">Check-In Required</h3>
+                <p className="mt-1 text-sm text-primary-700">
+                  Click the &quot;I&apos;m Alive&quot; button below to reset your heartbeat timer and prevent automatic release.
+                </p>
               </div>
             </div>
-          )}
+          </div>
           {heartbeatBundles.map((bundle) => (
             <BundleCheckIn
               key={bundle.id}

@@ -68,80 +68,82 @@ export function BundleCheckIn({
     <Card
       className={`
         ${isOverdue ? 'border-2 border-red-400 bg-red-50' : ''}
-        ${isUrgent && !isOverdue ? 'border-2 border-amber-400 bg-amber-50' : ''}
+        ${isUrgent && !isOverdue ? 'border-2 border-primary-400 bg-primary-50' : ''}
       `}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <Heart className={`w-5 h-5 ${isOverdue ? 'text-red-600' : isUrgent ? 'text-amber-600' : 'text-emerald-600'}`} />
-            <div className="flex-1">
-              <h3 className="font-semibold text-graphite-900">
-                {isOverdue ? '⚠️ Check-In Overdue' : 'Heartbeat Check-In'}
-              </h3>
-              <p className="text-sm text-graphite-700 font-medium">&quot;{bundleName}&quot;</p>
-            </div>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Heart className={`w-5 h-5 ${isOverdue ? 'text-red-600' : isUrgent ? 'text-primary-600' : 'text-emerald-600'}`} />
+          <div className="flex-1">
+            <h3 className="font-semibold text-espresso-900">
+              {isOverdue ? '⚠️ Check-In Overdue' : 'Heartbeat Check-In'}
+            </h3>
+            <p className="text-sm text-espresso-700 font-medium">&quot;{bundleName}&quot;</p>
           </div>
-
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-graphite-500" />
-              <span className="text-graphite-700">
-                {deadline ? (
-                  isOverdue ? (
-                    <span className="font-semibold text-red-700">
-                      Overdue by {formatDistanceToNow(deadline)}
-                    </span>
-                  ) : (
-                    <>
-                      Next check-in: <span className="font-medium">{formatDistanceToNow(deadline, { addSuffix: true })}</span>
-                    </>
-                  )
-                ) : (
-                  'No deadline set'
-                )}
-              </span>
-            </div>
-
-            {lastHeartbeat && (
-              <div className="text-graphite-600">
-                Last check-in: {formatDistanceToNow(new Date(lastHeartbeat), { addSuffix: true })}
-              </div>
-            )}
-
-            <div className="text-graphite-600">
-              Check-in every {cadenceDays} {cadenceDays === 1 ? 'day' : 'days'}
-            </div>
-          </div>
-
-          {error && (
-            <div className="mt-3 flex items-center gap-2 text-sm text-red-700">
-              <AlertCircle className="w-4 h-4" />
-              {error}
-            </div>
-          )}
-
-          {success && (
-            <div className="mt-3 flex items-center gap-2 text-sm text-emerald-700">
-              <CheckCircle className="w-4 h-4" />
-              Check-in successful! Timer reset.
-            </div>
-          )}
         </div>
 
-        <Button
-          onClick={handleCheckIn}
-          isLoading={isCheckingIn}
-          disabled={success}
-          size="sm"
-          className={`
-            ${isOverdue ? 'bg-red-600 hover:bg-red-700' : ''}
-            ${isUrgent && !isOverdue ? 'bg-amber-600 hover:bg-amber-700' : ''}
-            ${success ? 'bg-emerald-600 hover:bg-emerald-600' : ''}
-          `}
-        >
-          {success ? '✓ Checked In' : isOverdue ? '⚠️ Check In Now' : "I'm Alive"}
-        </Button>
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-espresso-500" />
+            <span className="text-espresso-700">
+              {deadline ? (
+                isOverdue ? (
+                  <span className="font-semibold text-red-700">
+                    Overdue by {formatDistanceToNow(deadline)}
+                  </span>
+                ) : (
+                  <>
+                    Next check-in: <span className="font-medium">{formatDistanceToNow(deadline, { addSuffix: true })}</span>
+                  </>
+                )
+              ) : (
+                'No deadline set'
+              )}
+            </span>
+          </div>
+
+          {lastHeartbeat && (
+            <div className="text-espresso-600">
+              Last check-in: {formatDistanceToNow(new Date(lastHeartbeat), { addSuffix: true })}
+            </div>
+          )}
+
+          <div className="text-espresso-600">
+            Check-in every {cadenceDays} {cadenceDays === 1 ? 'day' : 'days'}
+          </div>
+        </div>
+
+        {error && (
+          <div className="flex items-center gap-2 text-sm text-red-700">
+            <AlertCircle className="w-4 h-4" />
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="flex items-center gap-2 text-sm text-emerald-700">
+            <CheckCircle className="w-4 h-4" />
+            Check-in successful! Timer reset.
+          </div>
+        )}
+
+        <div className="pt-2 border-t border-champagne-200">
+          <Button
+            onClick={handleCheckIn}
+            isLoading={isCheckingIn}
+            disabled={success}
+            size="lg"
+            className={`w-full ${
+              isOverdue ? 'bg-red-600 hover:bg-red-700' : ''
+            } ${
+              isUrgent && !isOverdue ? 'bg-primary-600 hover:bg-primary-700' : ''
+            } ${
+              success ? 'bg-emerald-600 hover:bg-emerald-600' : ''
+            }`}
+          >
+            {success ? '✓ Checked In' : isOverdue ? '⚠️ Check In Now' : "I'm Alive"}
+          </Button>
+        </div>
       </div>
     </Card>
   );
