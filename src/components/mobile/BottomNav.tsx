@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, FileText, Send, MoreHorizontal, Package, Mail, Settings, X, Crown, Lock, Key } from 'lucide-react';
+import { Home, FileText, Send, MoreHorizontal, Package, Mail, Settings, X, Crown, Lock, Key, Video, Briefcase } from 'lucide-react';
 import { haptics } from '@/lib/mobile';
 import { useIsNativeApp } from '@/lib/platform';
 import { useState } from 'react';
@@ -29,6 +29,8 @@ export function BottomNav() {
   ];
 
   const moreMenuItems = [
+    { name: 'Messages', href: '/app/messages', icon: Video, requiresPaid: false, isAction: false },
+    { name: 'Digital Assets', href: '/app/assets', icon: Briefcase, requiresPaid: false, isAction: false },
     { name: 'My Bundles', href: '/app/bundles', icon: Package, requiresPaid: false, isAction: false },
     { name: 'Letters', href: '/app/letters', icon: Mail, requiresPaid: true, isAction: false },
     { name: 'Settings', href: '/app/settings', icon: Settings, requiresPaid: false, isAction: false },
