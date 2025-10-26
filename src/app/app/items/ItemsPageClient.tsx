@@ -344,21 +344,23 @@ function ItemCard({ item }: { item: any }) {
 
   return (
     <Link href={`/app/items/${item.id}`} className="block">
-      <div className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-primary-50/60">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-champagne-100 text-espresso-600 group-hover:bg-primary-100 group-hover:text-primary-700">
-          {getIcon()}
-        </div>
-        <div className="flex min-w-0 flex-1 items-center gap-6">
-          <div className="min-w-0">
+      <div className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-primary-50/60">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-champagne-100 text-espresso-600 group-hover:bg-primary-100 group-hover:text-primary-700">
+            {getIcon()}
+          </div>
+          <div className="min-w-0 flex-1">
             <h3 className="truncate text-sm font-medium text-espresso-900">{item.name}</h3>
-            <p className="mt-1 text-xs text-espresso-500">{fileDescription}</p>
+            <div className="flex items-center gap-3 mt-1">
+              <p className="text-xs text-espresso-500">{fileDescription}</p>
+              <span className="hidden sm:inline text-xs text-espresso-400">•</span>
+              <span className="hidden sm:inline text-xs text-espresso-500">{formatFileSize(item.size)}</span>
+              <span className="hidden md:inline text-xs text-espresso-400">•</span>
+              <span className="hidden md:inline text-xs text-espresso-500">{formatDate(item.updatedAt)}</span>
+            </div>
           </div>
-          <div className="hidden shrink-0 items-center gap-6 text-xs text-espresso-500 md:flex">
-            <span className="w-20 text-right font-medium text-espresso-700">{formatFileSize(item.size)}</span>
-            <span className="w-28 text-right">{formatDate(item.updatedAt)}</span>
-          </div>
-          <ArrowRight className="h-4 w-4 flex-shrink-0 text-espresso-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
         </div>
+        <ArrowRight className="h-4 w-4 flex-shrink-0 text-espresso-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
       </div>
     </Link>
   );
