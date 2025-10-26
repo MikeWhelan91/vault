@@ -76,7 +76,24 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
       }, 1000);
     } catch (error) {
       console.error('Error starting recording:', error);
-      showToast('Failed to access camera/microphone', 'error');
+
+      // Show more specific error message
+      let errorMessage = 'Failed to access camera/microphone';
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          errorMessage = 'Permission denied. Please allow camera/microphone access in your browser settings.';
+        } else if (error.name === 'NotFoundError') {
+          errorMessage = 'No camera or microphone found. Please check your device.';
+        } else if (error.name === 'NotReadableError') {
+          errorMessage = 'Camera/microphone is already in use by another application.';
+        } else if (error.name === 'OverconstrainedError') {
+          errorMessage = 'Camera/microphone constraints could not be satisfied.';
+        } else {
+          errorMessage = `Error: ${error.message}`;
+        }
+      }
+
+      showToast(errorMessage, 'error');
     }
   };
 
