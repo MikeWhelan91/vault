@@ -69,7 +69,6 @@ export default function ItemsPageClient() {
     passwords: items.filter(item => item.type === 'password'),
     cards: items.filter(item => item.type === 'card'),
     secureNotes: items.filter(item => item.type === 'secure_note'),
-    notes: items.filter(item => item.type === 'note'),
     images: items.filter(item => {
       if (item.type !== 'file') return false;
       const fileInfo = getFileTypeInfo(item.name);
@@ -176,16 +175,6 @@ export default function ItemsPageClient() {
               icon={<Lock className="w-5 h-5" />}
               items={categorizedItems.secureNotes}
               count={categorizedItems.secureNotes.length}
-            />
-          )}
-
-          {/* Notes */}
-          {categorizedItems.notes.length > 0 && (
-            <CategorySection
-              title="Notes"
-              icon={<StickyNote className="w-5 h-5" />}
-              items={categorizedItems.notes}
-              count={categorizedItems.notes.length}
             />
           )}
 
@@ -300,13 +289,11 @@ function CategorySection({
 
 function ItemCard({ item }: { item: any }) {
   const fileInfo = item.type === 'file' ? getFileTypeInfo(item.name) : null;
-  const hasPreview = item.type === 'note' || (item.type === 'file' && canPreviewFile(item.name));
 
   const getDescription = () => {
     if (item.type === 'password') return 'Login credentials';
     if (item.type === 'card') return 'Credit card';
     if (item.type === 'secure_note') return 'Secure note';
-    if (item.type === 'note') return 'Secure note';
     if (fileInfo) return CATEGORY_LABELS[fileInfo.category];
     return 'File';
   };
@@ -322,9 +309,6 @@ function ItemCard({ item }: { item: any }) {
     }
     if (item.type === 'secure_note') {
       return <Lock className="w-4 h-4 text-graphite-500" />;
-    }
-    if (item.type === 'note') {
-      return <StickyNote className="w-4 h-4 text-graphite-500" />;
     }
     if (fileInfo) {
       switch (fileInfo.category) {
@@ -380,8 +364,6 @@ function AddItemModal({
   const { showToast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [noteName, setNoteName] = useState('');
-  const [noteContent, setNoteContent] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
@@ -408,8 +390,6 @@ function AddItemModal({
     if (!isOpen) {
       setUploadError(null);
       setSelectedFiles([]);
-      setNoteName('');
-      setNoteContent('');
       setCurrentFileIndex(0);
       setPasswordName('');
       setPasswordUrl('');
@@ -423,58 +403,6 @@ function AddItemModal({
       setShowPassword(false);
     }
   }, [isOpen]);
-
-  const handleAddNote = async () => {
-    if (!noteName.trim() || !noteContent.trim()) {
-      showToast('Please enter a name and content for your note', 'error');
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      // Generate new item key and encrypt content
-      const { generateItemKey } = await import('@/lib/crypto');
-      const itemKey = await generateItemKey();
-      const encryptedData = await encryptFile(noteContent, itemKey);
-
-      // Create item metadata in database (this also stores wrapped key)
-      const item = await addItem({
-        type: 'note',
-        name: noteName,
-        size: encryptedData.length,
-        itemKeySalt: '',
-      }, itemKey);
-
-      try {
-        // Upload encrypted data to R2
-        await uploadObject(
-          session.userId,
-          item.id,
-          1,
-          encryptedData,
-          (progress) => setUploadProgress(progress.percentage)
-        );
-      } catch (uploadError) {
-        // If R2 upload fails, delete the database entry to keep things consistent
-        console.error('R2 upload failed, cleaning up database entry:', uploadError);
-        await fetch(`/api/items/${item.id}?userId=${session.dbUserId}`, {
-          method: 'DELETE',
-        });
-        throw new Error('Upload failed. Please try again.');
-      }
-
-      showToast('Note added successfully', 'success');
-      onClose();
-      setNoteName('');
-      setNoteContent('');
-    } catch (error) {
-      showToast(error instanceof Error ? error.message : 'Failed to add note', 'error');
-      console.error(error);
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
-    }
-  };
 
   const handleAddFile = async () => {
     if (selectedFiles.length === 0) {
@@ -762,9 +690,7 @@ function AddItemModal({
   };
 
   const handleSubmit = () => {
-    if (type === 'note') {
-      handleAddNote();
-    } else if (type === 'password') {
+    if (type === 'password') {
       handleAddPassword();
     } else if (type === 'card') {
       handleAddCard();
@@ -779,61 +705,94 @@ function AddItemModal({
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Item" size="lg">
       <div className="space-y-6">
         {/* Type Selector */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <button
             onClick={() => onTypeChange('file')}
-            className={`p-3 rounded-lg border-2 transition-colors ${
+            className={`group relative p-6 rounded-2xl border-2 transition-all ${
               type === 'file'
-                ? 'border-primary-500 bg-primary-50'
-                : 'border-graphite-200 hover:border-graphite-300'
+                ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
+                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
-            <FileText className={`w-6 h-6 mx-auto mb-1 ${type === 'file' ? 'text-primary-600' : 'text-graphite-400'}`} />
-            <span className="text-xs font-medium text-graphite-900">File</span>
-          </button>
-          <button
-            onClick={() => onTypeChange('note')}
-            className={`p-3 rounded-lg border-2 transition-colors ${
-              type === 'note'
-                ? 'border-primary-500 bg-primary-50'
-                : 'border-graphite-200 hover:border-graphite-300'
-            }`}
-          >
-            <StickyNote className={`w-6 h-6 mx-auto mb-1 ${type === 'note' ? 'text-primary-600' : 'text-graphite-400'}`} />
-            <span className="text-xs font-medium text-graphite-900">Note</span>
+            <div className="flex flex-col items-center">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+                type === 'file'
+                  ? 'bg-primary-100'
+                  : 'bg-graphite-100 group-hover:bg-primary-50'
+              }`}>
+                <FileText className={`w-7 h-7 ${type === 'file' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+              </div>
+              <span className={`text-sm font-semibold ${type === 'file' ? 'text-primary-900' : 'text-graphite-900'}`}>
+                File Upload
+              </span>
+              <span className="text-xs text-graphite-600 mt-1">Photos, documents & more</span>
+            </div>
           </button>
           <button
             onClick={() => onTypeChange('password')}
-            className={`p-3 rounded-lg border-2 transition-colors ${
+            className={`group relative p-6 rounded-2xl border-2 transition-all ${
               type === 'password'
-                ? 'border-primary-500 bg-primary-50'
-                : 'border-graphite-200 hover:border-graphite-300'
+                ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
+                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
-            <Key className={`w-6 h-6 mx-auto mb-1 ${type === 'password' ? 'text-primary-600' : 'text-graphite-400'}`} />
-            <span className="text-xs font-medium text-graphite-900">Password</span>
+            <div className="flex flex-col items-center">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+                type === 'password'
+                  ? 'bg-primary-100'
+                  : 'bg-graphite-100 group-hover:bg-primary-50'
+              }`}>
+                <Key className={`w-7 h-7 ${type === 'password' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+              </div>
+              <span className={`text-sm font-semibold ${type === 'password' ? 'text-primary-900' : 'text-graphite-900'}`}>
+                Password
+              </span>
+              <span className="text-xs text-graphite-600 mt-1">Login credentials</span>
+            </div>
           </button>
           <button
             onClick={() => onTypeChange('card')}
-            className={`p-3 rounded-lg border-2 transition-colors ${
+            className={`group relative p-6 rounded-2xl border-2 transition-all ${
               type === 'card'
-                ? 'border-primary-500 bg-primary-50'
-                : 'border-graphite-200 hover:border-graphite-300'
+                ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
+                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
-            <CreditCard className={`w-6 h-6 mx-auto mb-1 ${type === 'card' ? 'text-primary-600' : 'text-graphite-400'}`} />
-            <span className="text-xs font-medium text-graphite-900">Card</span>
+            <div className="flex flex-col items-center">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+                type === 'card'
+                  ? 'bg-primary-100'
+                  : 'bg-graphite-100 group-hover:bg-primary-50'
+              }`}>
+                <CreditCard className={`w-7 h-7 ${type === 'card' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+              </div>
+              <span className={`text-sm font-semibold ${type === 'card' ? 'text-primary-900' : 'text-graphite-900'}`}>
+                Credit Card
+              </span>
+              <span className="text-xs text-graphite-600 mt-1">Payment information</span>
+            </div>
           </button>
           <button
             onClick={() => onTypeChange('secure_note')}
-            className={`p-3 rounded-lg border-2 transition-colors ${
+            className={`group relative p-6 rounded-2xl border-2 transition-all ${
               type === 'secure_note'
-                ? 'border-primary-500 bg-primary-50'
-                : 'border-graphite-200 hover:border-graphite-300'
+                ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
+                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
-            <Lock className={`w-6 h-6 mx-auto mb-1 ${type === 'secure_note' ? 'text-primary-600' : 'text-graphite-400'}`} />
-            <span className="text-xs font-medium text-graphite-900">Secure Note</span>
+            <div className="flex flex-col items-center">
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-3 transition-all ${
+                type === 'secure_note'
+                  ? 'bg-primary-100'
+                  : 'bg-graphite-100 group-hover:bg-primary-50'
+              }`}>
+                <Lock className={`w-7 h-7 ${type === 'secure_note' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+              </div>
+              <span className={`text-sm font-semibold ${type === 'secure_note' ? 'text-primary-900' : 'text-graphite-900'}`}>
+                Secure Note
+              </span>
+              <span className="text-xs text-graphite-600 mt-1">Encrypted text</span>
+            </div>
           </button>
         </div>
 
@@ -868,32 +827,6 @@ function AddItemModal({
                 Upgrade to Plus to upload multiple files at once
               </p>
             )}
-          </div>
-        )}
-
-        {/* Note Input */}
-        {type === 'note' && (
-          <div className="space-y-4">
-            <Input
-              label="Note Name"
-              value={noteName}
-              onChange={(e) => setNoteName(e.target.value)}
-              placeholder="My Secret Note"
-              disabled={isUploading}
-            />
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Content
-              </label>
-              <textarea
-                value={noteContent}
-                onChange={(e) => setNoteContent(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
-                rows={8}
-                placeholder="Enter your note content..."
-                disabled={isUploading}
-              />
-            </div>
           </div>
         )}
 
@@ -1085,8 +1018,6 @@ function AddItemModal({
           <Button onClick={handleSubmit} isLoading={isUploading}>
             {type === 'file'
               ? (selectedFiles.length > 1 ? `Upload ${selectedFiles.length} Files` : 'Upload File')
-              : type === 'note'
-              ? 'Add Note'
               : type === 'password'
               ? 'Add Password'
               : type === 'card'
