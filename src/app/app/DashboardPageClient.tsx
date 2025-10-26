@@ -25,7 +25,10 @@ import {
   File,
   ArrowRight,
   Crown,
-  Home
+  Home,
+  Briefcase,
+  Zap,
+  Activity
 } from 'lucide-react';
 import { getFileTypeInfo } from '@/lib/file-types';
 import { getTierLimits, type TierName } from '@/lib/pricing';
@@ -310,15 +313,16 @@ export default function DashboardPageClient() {
           icon={<Upload className="w-5 h-5" />}
           label="Total Items"
           value={metadata.items.length.toString()}
-          subtext="files & notes"
+          subtext="encrypted assets"
           tone="primary"
           href="/app/items"
+          trend={metadata.items.length > 0 ? 'up' : undefined}
         />
         <MetricCard
           icon={<Package className="w-5 h-5" />}
           label="Active Bundles"
           value={activeBundles.length.toString()}
-          subtext={tierLimits.bundles.max ? `of ${tierLimits.bundles.max}` : 'unlimited'}
+          subtext={tierLimits.bundles.max ? `of ${tierLimits.bundles.max} max` : 'unlimited'}
           tone="emerald"
           href="/app/bundles"
         />
@@ -326,7 +330,7 @@ export default function DashboardPageClient() {
           icon={<CheckCircle className="w-5 h-5" />}
           label="Released"
           value={releasedBundles.length.toString()}
-          subtext="bundles sent"
+          subtext="bundles delivered"
           tone="violet"
           href="/app/bundles"
         />
@@ -337,6 +341,7 @@ export default function DashboardPageClient() {
           subtext={formatBytes(metadata.totalSize)}
           tone={storagePercentage > 85 ? 'red' : 'amber'}
           href="/app/items"
+          trend={storagePercentage > 50 ? 'up' : undefined}
         />
       </div>
 
@@ -612,64 +617,134 @@ export default function DashboardPageClient() {
             )}
           </Card>
 
-          {/* Recent Activity */}
-          {recentItems.length > 0 && (
-            <Card>
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-graphite-900">Recent Activity</h2>
-                <Link href="/app/items">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                    View All
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
+          {/* Activity Timeline */}
+          <Card className="rounded-3xl border border-graphite-200 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                <Activity className="h-4 w-4" />
               </div>
+              <h2 className="text-lg font-semibold text-graphite-900">Activity</h2>
+            </div>
+
+            {recentItems.length === 0 ? (
+              <div className="rounded-xl border border-dashed border-graphite-200 bg-graphite-50 p-8 text-center">
+                <Activity className="h-8 w-8 mx-auto mb-2 text-graphite-400" />
+                <p className="text-sm text-graphite-600">No recent activity</p>
+                <p className="text-xs text-graphite-500 mt-1">Your uploads will appear here</p>
+              </div>
+            ) : (
               <div className="space-y-3">
-                {recentItems.map((item) => (
+                {recentItems.map((item, index) => (
                   <Link key={item.id} href={`/app/items/${item.id}`}>
-                    <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-graphite-50 transition-colors">
-                      {getItemIcon(item)}
+                    <div className="group flex items-start gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-primary-50/50 hover:to-transparent transition-all border border-transparent hover:border-primary-100">
+                      <div className="relative">
+                        {getItemIcon(item)}
+                        {index !== recentItems.length - 1 && (
+                          <div className="absolute left-5 top-10 w-[2px] h-6 bg-gradient-to-b from-graphite-200 to-transparent" />
+                        )}
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-graphite-900 truncate">{item.name}</p>
-                        <p className="text-sm text-graphite-500">
-                          {formatBytes(item.size)} • {formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}
-                        </p>
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-medium text-graphite-900 truncate group-hover:text-primary-700 transition-colors">
+                              {item.name}
+                            </p>
+                            <p className="text-xs text-graphite-500 mt-0.5">
+                              {formatBytes(item.size)}
+                            </p>
+                          </div>
+                          <span className="text-xs text-graphite-400 whitespace-nowrap">
+                            {formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </Link>
                 ))}
+                <Link href="/app/items" className="block">
+                  <Button variant="ghost" size="sm" className="w-full justify-center mt-2">
+                    View All Items
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </Link>
               </div>
-            </Card>
-          )}
+            )}
+          </Card>
         </div>
 
         {/* Right Column - 1/3 width */}
         <div className="space-y-6">
           {/* Quick Actions */}
-          <Card className="rounded-3xl border border-graphite-200 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-graphite-900">Quick Actions</h2>
-            <div className="space-y-3">
+          <Card className="rounded-3xl border border-graphite-200 shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-br from-primary-50 to-white p-4 border-b border-primary-100">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-500 text-white">
+                  <Zap className="h-4 w-4" />
+                </div>
+                <h2 className="text-lg font-semibold text-graphite-900">Quick Actions</h2>
+              </div>
+            </div>
+            <div className="p-4 space-y-2">
               <Link
                 href="/app/items"
-                className="group flex items-center justify-between rounded-2xl border border-graphite-100 bg-graphite-50/60 px-4 py-3 text-sm font-medium text-graphite-700 transition-colors hover:border-primary-200 hover:bg-primary-50 hover:text-primary-700"
+                className="group flex items-center justify-between rounded-xl border border-graphite-100 bg-gradient-to-br from-white to-graphite-50/50 px-4 py-3 text-sm font-medium text-graphite-700 transition-all hover:border-primary-300 hover:shadow-md hover:scale-[1.02]"
               >
                 <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-primary-600 shadow-sm">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
                     <Upload className="h-4 w-4" />
                   </span>
-                  Upload items
+                  <div className="text-left">
+                    <div className="font-semibold text-graphite-900">Upload Files</div>
+                    <div className="text-xs text-graphite-500">Add items to vault</div>
+                  </div>
                 </span>
                 <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
               </Link>
+
               <Link
-                href="/app/release"
-                className="group flex items-center justify-between rounded-2xl border border-graphite-100 bg-graphite-50/60 px-4 py-3 text-sm font-medium text-graphite-700 transition-colors hover:border-primary-200 hover:bg-primary-50 hover:text-primary-700"
+                href="/app/messages"
+                className="group flex items-center justify-between rounded-xl border border-graphite-100 bg-gradient-to-br from-white to-graphite-50/50 px-4 py-3 text-sm font-medium text-graphite-700 transition-all hover:border-primary-300 hover:shadow-md hover:scale-[1.02]"
               >
                 <span className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-primary-600 shadow-sm">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
+                    <Video className="h-4 w-4" />
+                  </span>
+                  <div className="text-left">
+                    <div className="font-semibold text-graphite-900">Record Message</div>
+                    <div className="text-xs text-graphite-500">Create video/audio</div>
+                  </div>
+                </span>
+                <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
+              </Link>
+
+              <Link
+                href="/app/assets"
+                className="group flex items-center justify-between rounded-xl border border-graphite-100 bg-gradient-to-br from-white to-graphite-50/50 px-4 py-3 text-sm font-medium text-graphite-700 transition-all hover:border-primary-300 hover:shadow-md hover:scale-[1.02]"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
+                    <Briefcase className="h-4 w-4" />
+                  </span>
+                  <div className="text-left">
+                    <div className="font-semibold text-graphite-900">Track Assets</div>
+                    <div className="text-xs text-graphite-500">Digital inventory</div>
+                  </div>
+                </span>
+                <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
+              </Link>
+
+              <Link
+                href="/app/release"
+                className="group flex items-center justify-between rounded-xl border border-graphite-100 bg-gradient-to-br from-white to-graphite-50/50 px-4 py-3 text-sm font-medium text-graphite-700 transition-all hover:border-primary-300 hover:shadow-md hover:scale-[1.02]"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
                     <Package className="h-4 w-4" />
                   </span>
-                  Build a bundle
+                  <div className="text-left">
+                    <div className="font-semibold text-graphite-900">Create Bundle</div>
+                    <div className="text-xs text-graphite-500">Plan release</div>
+                  </div>
                 </span>
                 <ArrowRight className="h-4 w-4 text-graphite-400 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
               </Link>
@@ -800,6 +875,7 @@ function MetricCard({
   subtext,
   tone = 'primary',
   href,
+  trend,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -807,6 +883,7 @@ function MetricCard({
   subtext: string;
   tone?: keyof typeof metricThemes;
   href?: string;
+  trend?: 'up' | 'down';
 }) {
   const theme = metricThemes[tone] ?? metricThemes.primary;
 
@@ -816,7 +893,16 @@ function MetricCard({
         {icon}
       </div>
       <p className="text-xs font-semibold uppercase tracking-wide text-graphite-500">{label}</p>
-      <p className="mt-2 text-3xl font-semibold text-graphite-900">{value}</p>
+      <div className="mt-2 flex items-center gap-2">
+        <p className="text-3xl font-semibold text-graphite-900">{value}</p>
+        {trend && (
+          <div className={`flex items-center gap-0.5 text-xs font-semibold ${
+            trend === 'up' ? 'text-emerald-600' : 'text-red-600'
+          }`}>
+            {trend === 'up' ? '↑' : '↓'}
+          </div>
+        )}
+      </div>
       <p className="mt-1 text-sm text-graphite-500">{subtext}</p>
     </div>
   );
