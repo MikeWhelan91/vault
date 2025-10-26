@@ -138,13 +138,13 @@ export default function ItemsPageClient() {
 
       {/* Items List */}
       {items.length === 0 ? (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+        <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
           <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-champagne-200 bg-champagne-50 text-espresso-500">
               <Archive className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-graphite-900">No items yet</h3>
-            <p className="mt-2 max-w-sm text-sm text-graphite-600">
+            <h3 className="font-display text-xl font-semibold text-espresso-900">No items yet</h3>
+            <p className="mt-2 max-w-sm text-sm text-espresso-600">
               Securely upload files or capture notes to begin curating your legacy inside Forebearer.
             </p>
             <Button onClick={() => setShowAddModal(true)} size="lg" className="mt-6">
@@ -270,7 +270,7 @@ function CategorySection({
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <div className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+    <div className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
       {/* Category Header - Collapsible */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
@@ -281,18 +281,18 @@ function CategorySection({
             {icon}
           </div>
           <div>
-            <h2 className="text-base font-semibold text-graphite-900">{title}</h2>
-            <p className="text-xs text-graphite-500">{count} {count === 1 ? 'item' : 'items'}</p>
+            <h2 className="font-display text-base font-semibold text-espresso-900">{title}</h2>
+            <p className="text-xs text-espresso-500">{count} {count === 1 ? 'item' : 'items'}</p>
           </div>
         </div>
-        <span className="flex h-8 w-8 items-center justify-center rounded-full border border-graphite-200 text-graphite-500 transition-transform">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full border border-champagne-200 text-espresso-500 transition-transform">
           <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
         </span>
       </button>
 
       {/* Items List */}
       {isExpanded && (
-        <div className="divide-y divide-graphite-100">
+        <div className="divide-y divide-champagne-100">
           {items.map((item) => (
             <ItemCard key={item.id} item={item} />
           ))}
@@ -317,47 +317,47 @@ function ItemCard({ item }: { item: any }) {
 
   const getIcon = () => {
     if (item.type === 'password') {
-      return <Key className="w-4 h-4 text-graphite-500" />;
+      return <Key className="w-4 h-4 text-espresso-500" />;
     }
     if (item.type === 'card') {
-      return <CreditCard className="w-4 h-4 text-graphite-500" />;
+      return <CreditCard className="w-4 h-4 text-espresso-500" />;
     }
     if (item.type === 'secure_note') {
-      return <Lock className="w-4 h-4 text-graphite-500" />;
+      return <Lock className="w-4 h-4 text-espresso-500" />;
     }
     if (fileInfo) {
       switch (fileInfo.category) {
         case 'image':
-          return <ImageIcon className="w-4 h-4 text-graphite-500" />;
+          return <ImageIcon className="w-4 h-4 text-espresso-500" />;
         case 'video':
-          return <VideoIcon className="w-4 h-4 text-graphite-500" />;
+          return <VideoIcon className="w-4 h-4 text-espresso-500" />;
         case 'audio':
-          return <MusicIcon className="w-4 h-4 text-graphite-500" />;
+          return <MusicIcon className="w-4 h-4 text-espresso-500" />;
         case 'text':
-          return <FileText className="w-4 h-4 text-graphite-500" />;
+          return <FileText className="w-4 h-4 text-espresso-500" />;
         default:
-          return <FileIcon className="w-4 h-4 text-graphite-500" />;
+          return <FileIcon className="w-4 h-4 text-espresso-500" />;
       }
     }
-    return <FileText className="w-4 h-4 text-graphite-500" />;
+    return <FileText className="w-4 h-4 text-espresso-500" />;
   };
 
   return (
     <Link href={`/app/items/${item.id}`} className="block">
       <div className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-primary-50/60">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-graphite-100 text-graphite-600 group-hover:bg-primary-100 group-hover:text-primary-700">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-champagne-100 text-espresso-600 group-hover:bg-primary-100 group-hover:text-primary-700">
           {getIcon()}
         </div>
         <div className="flex min-w-0 flex-1 items-center gap-6">
           <div className="min-w-0">
-            <h3 className="truncate text-sm font-medium text-graphite-900">{item.name}</h3>
-            <p className="mt-1 text-xs text-graphite-500">{fileDescription}</p>
+            <h3 className="truncate text-sm font-medium text-espresso-900">{item.name}</h3>
+            <p className="mt-1 text-xs text-espresso-500">{fileDescription}</p>
           </div>
-          <div className="hidden shrink-0 items-center gap-6 text-xs text-graphite-500 md:flex">
-            <span className="w-20 text-right font-medium text-graphite-700">{formatFileSize(item.size)}</span>
+          <div className="hidden shrink-0 items-center gap-6 text-xs text-espresso-500 md:flex">
+            <span className="w-20 text-right font-medium text-espresso-700">{formatFileSize(item.size)}</span>
             <span className="w-28 text-right">{formatDate(item.updatedAt)}</span>
           </div>
-          <ArrowRight className="h-4 w-4 flex-shrink-0 text-graphite-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
+          <ArrowRight className="h-4 w-4 flex-shrink-0 text-espresso-300 transition-transform group-hover:translate-x-1 group-hover:text-primary-600" />
         </div>
       </div>
     </Link>
@@ -726,21 +726,21 @@ function AddItemModal({
             className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'file'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
-                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
+                : 'border-champagne-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'file'
                   ? 'bg-primary-100'
-                  : 'bg-graphite-100 group-hover:bg-primary-50'
+                  : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <FileText className={`w-5 h-5 ${type === 'file' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <FileText className={`w-5 h-5 ${type === 'file' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'file' ? 'text-primary-900' : 'text-graphite-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'file' ? 'text-primary-900' : 'text-espresso-900'}`}>
                 File Upload
               </span>
-              <span className="text-xs text-graphite-600 mt-0.5">Photos, documents & more</span>
+              <span className="text-xs text-espresso-600 mt-0.5">Photos, documents & more</span>
             </div>
           </button>
           <button
@@ -748,21 +748,21 @@ function AddItemModal({
             className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'password'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
-                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
+                : 'border-champagne-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'password'
                   ? 'bg-primary-100'
-                  : 'bg-graphite-100 group-hover:bg-primary-50'
+                  : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <Key className={`w-5 h-5 ${type === 'password' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <Key className={`w-5 h-5 ${type === 'password' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'password' ? 'text-primary-900' : 'text-graphite-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'password' ? 'text-primary-900' : 'text-espresso-900'}`}>
                 Password
               </span>
-              <span className="text-xs text-graphite-600 mt-0.5">Login credentials</span>
+              <span className="text-xs text-espresso-600 mt-0.5">Login credentials</span>
             </div>
           </button>
           <button
@@ -770,21 +770,21 @@ function AddItemModal({
             className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'card'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
-                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
+                : 'border-champagne-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'card'
                   ? 'bg-primary-100'
-                  : 'bg-graphite-100 group-hover:bg-primary-50'
+                  : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <CreditCard className={`w-5 h-5 ${type === 'card' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <CreditCard className={`w-5 h-5 ${type === 'card' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'card' ? 'text-primary-900' : 'text-graphite-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'card' ? 'text-primary-900' : 'text-espresso-900'}`}>
                 Credit Card
               </span>
-              <span className="text-xs text-graphite-600 mt-0.5">Payment information</span>
+              <span className="text-xs text-espresso-600 mt-0.5">Payment information</span>
             </div>
           </button>
           <button
@@ -792,21 +792,21 @@ function AddItemModal({
             className={`group relative p-4 rounded-xl border-2 transition-all ${
               type === 'secure_note'
                 ? 'border-primary-500 bg-gradient-to-br from-primary-50 to-primary-100 shadow-md'
-                : 'border-graphite-200 hover:border-primary-300 hover:shadow-sm'
+                : 'border-champagne-200 hover:border-primary-300 hover:shadow-sm'
             }`}
           >
             <div className="flex flex-col items-center">
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-2 transition-all ${
                 type === 'secure_note'
                   ? 'bg-primary-100'
-                  : 'bg-graphite-100 group-hover:bg-primary-50'
+                  : 'bg-champagne-100 group-hover:bg-primary-50'
               }`}>
-                <Lock className={`w-5 h-5 ${type === 'secure_note' ? 'text-primary-600' : 'text-graphite-500 group-hover:text-primary-500'}`} />
+                <Lock className={`w-5 h-5 ${type === 'secure_note' ? 'text-primary-600' : 'text-espresso-500 group-hover:text-primary-500'}`} />
               </div>
-              <span className={`text-sm font-semibold ${type === 'secure_note' ? 'text-primary-900' : 'text-graphite-900'}`}>
+              <span className={`text-sm font-semibold ${type === 'secure_note' ? 'text-primary-900' : 'text-espresso-900'}`}>
                 Secure Note
               </span>
-              <span className="text-xs text-graphite-600 mt-0.5">Encrypted text</span>
+              <span className="text-xs text-espresso-600 mt-0.5">Encrypted text</span>
             </div>
           </button>
         </div>
@@ -908,7 +908,7 @@ function AddItemModal({
               <textarea
                 value={passwordNotes}
                 onChange={(e) => setPasswordNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-espresso-900"
                 rows={3}
                 placeholder="Additional notes..."
                 disabled={isUploading}
@@ -964,7 +964,7 @@ function AddItemModal({
               <textarea
                 value={passwordNotes}
                 onChange={(e) => setPasswordNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-espresso-900"
                 rows={3}
                 placeholder="Additional notes..."
                 disabled={isUploading}
@@ -990,7 +990,7 @@ function AddItemModal({
               <textarea
                 value={secureNoteContent}
                 onChange={(e) => setSecureNoteContent(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-espresso-900"
                 rows={8}
                 placeholder="Enter your secure note content..."
                 disabled={isUploading}
@@ -1020,7 +1020,7 @@ function AddItemModal({
             <Progress
               value={uploadProgress}
               label={selectedFiles.length > 1 ? "Encrypting and uploading..." : "Encrypting and uploading..."}
-              color="blue"
+              color="primary"
             />
           </div>
         )}

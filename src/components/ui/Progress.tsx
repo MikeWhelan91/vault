@@ -5,7 +5,7 @@ export interface ProgressProps {
   label?: string;
   showPercentage?: boolean;
   size?: 'sm' | 'md' | 'lg';
-  color?: 'blue' | 'green' | 'red' | 'yellow';
+  color?: 'primary' | 'accent' | 'warning' | 'danger';
 }
 
 export function Progress({
@@ -13,7 +13,7 @@ export function Progress({
   label,
   showPercentage = true,
   size = 'md',
-  color = 'blue',
+  color = 'primary',
 }: ProgressProps) {
   const clampedValue = Math.min(Math.max(value, 0), 100);
 
@@ -24,10 +24,10 @@ export function Progress({
   };
 
   const colors = {
-    blue: 'bg-blue-600',
-    green: 'bg-green-600',
-    red: 'bg-red-600',
-    yellow: 'bg-yellow-600',
+    primary: 'bg-primary-600',
+    accent: 'bg-accent-600',
+    warning: 'bg-primary-500',
+    danger: 'bg-primary-700',
   };
 
   return (
@@ -35,18 +35,18 @@ export function Progress({
       {(label || showPercentage) && (
         <div className="flex justify-between items-center mb-1">
           {label && (
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-sm font-medium text-espresso-800">
               {label}
             </span>
           )}
           {showPercentage && (
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-espresso-600">
               {Math.round(clampedValue)}%
             </span>
           )}
         </div>
       )}
-      <div className={`w-full ${heights[size]} bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden`}>
+      <div className={`w-full ${heights[size]} bg-champagne-200 rounded-full overflow-hidden`}>
         <div
           className={`${heights[size]} ${colors[color]} rounded-full transition-all duration-300 ease-out`}
           style={{ width: `${clampedValue}%` }}

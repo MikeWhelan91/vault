@@ -66,7 +66,7 @@ export function BottomNav() {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-graphite-200 bg-white pb-safe-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-champagne-300 bg-white pb-safe-bottom">
         <div className="grid grid-cols-4 h-16">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -79,7 +79,7 @@ export function BottomNav() {
                 className={`flex flex-col items-center justify-center gap-1 transition-colors ${
                   active
                     ? 'text-primary-600'
-                    : 'text-graphite-500 active:bg-graphite-50'
+                    : 'text-espresso-600 active:bg-champagne-50'
                 }`}
               >
                 <Icon className={`w-5 h-5 ${active ? 'stroke-2' : 'stroke-[1.5]'}`} />
@@ -96,7 +96,7 @@ export function BottomNav() {
             className={`flex flex-col items-center justify-center gap-1 transition-colors ${
               isMoreActive
                 ? 'text-primary-600'
-                : 'text-graphite-500 active:bg-graphite-50'
+                : 'text-espresso-600 active:bg-champagne-50'
             }`}
           >
             <MoreHorizontal className={`w-5 h-5 ${isMoreActive ? 'stroke-2' : 'stroke-[1.5]'}`} />
@@ -121,10 +121,10 @@ export function BottomNav() {
             <div className="p-6">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-graphite-900">Menu</h3>
+                <h3 className="font-display text-lg font-semibold text-espresso-900">Menu</h3>
                 <button
                   onClick={handleCloseMenu}
-                  className="p-2 -mr-2 rounded-full text-graphite-500 hover:bg-graphite-100 active:bg-graphite-200 transition-colors"
+                  className="p-2 -mr-2 rounded-full text-espresso-600 hover:bg-champagne-100 active:bg-champagne-200 transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -148,7 +148,7 @@ export function BottomNav() {
                       className={`w-full flex items-center gap-4 p-4 rounded-xl transition-colors ${
                         active
                           ? 'bg-primary-50 text-primary-700'
-                          : 'text-graphite-700 hover:bg-graphite-50 active:bg-graphite-100'
+                          : 'text-espresso-800 hover:bg-champagne-50 active:bg-champagne-100'
                       }`}
                     >
                       <Icon className={`w-5 h-5 ${active ? 'stroke-2' : 'stroke-[1.5]'}`} />
@@ -156,17 +156,17 @@ export function BottomNav() {
                         {item.name}
                       </span>
                       {item.requiresPaid && (
-                        <Crown className="w-4 h-4 ml-auto text-amber-600" />
+                        <Crown className="w-4 h-4 ml-auto text-accent-600" />
                       )}
                     </button>
                   );
                 })}
 
                 {/* Lock Vault - Separator and Lock button */}
-                <div className="pt-2 mt-2 border-t border-graphite-200">
+                <div className="pt-2 mt-2 border-t border-champagne-300">
                   <button
                     onClick={handleLockVault}
-                    className="w-full flex items-center gap-4 p-4 rounded-xl text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors"
+                    className="w-full flex items-center gap-4 p-4 rounded-xl text-primary-700 hover:bg-primary-50 active:bg-primary-100 transition-colors"
                   >
                     <Lock className="w-5 h-5 stroke-[1.5]" />
                     <span className="text-base font-medium">Lock Vault</span>
@@ -176,21 +176,21 @@ export function BottomNav() {
 
               {/* Upgrade prompt for free users */}
               {!isPaidUser && (
-                <div className="mt-6 p-4 rounded-xl bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200">
+                <div className="mt-6 p-4 rounded-xl bg-gradient-to-br from-accent-50 to-accent-100 border border-accent-200">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-full bg-amber-200">
-                      <Crown className="w-4 h-4 text-amber-700" />
+                    <div className="p-2 rounded-full bg-accent-200">
+                      <Crown className="w-4 h-4 text-accent-700" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-amber-900 mb-1">
+                      <h4 className="text-sm font-semibold text-accent-900 mb-1">
                         Upgrade to Plus
                       </h4>
-                      <p className="text-xs text-amber-800 mb-3">
+                      <p className="text-xs text-accent-800 mb-3">
                         Unlock Letters and premium features
                       </p>
                       <button
                         onClick={() => handleNavigate('/app/pricing')}
-                        className="text-xs font-semibold text-amber-700 hover:text-amber-900 transition-colors"
+                        className="text-xs font-semibold text-accent-700 hover:text-accent-900 transition-colors"
                       >
                         Learn more →
                       </button>

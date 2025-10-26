@@ -112,7 +112,7 @@ export default function UnlockPage({ params }: { params: Promise<{ token: string
                 <Progress
                   value={50}
                   label="Unlocking bundle..."
-                  color="blue"
+                  color="primary"
                   showPercentage={false}
                 />
               )}

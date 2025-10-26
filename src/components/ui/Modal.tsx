@@ -67,22 +67,22 @@ export function Modal({
 
       {/* Modal */}
       <div
-        className={`relative mx-4 w-full max-h-[90vh] overflow-y-auto rounded-xl border border-graphite-200 bg-white shadow-xl ${sizes[size]}`}
+        className={`relative mx-4 w-full max-h-[90vh] overflow-y-auto rounded-xl border border-champagne-300 bg-white shadow-xl ${sizes[size]}`}
         role="dialog"
         aria-modal="true"
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between border-b border-graphite-200 p-4 dark:border-graphite-700">
+          <div className="flex items-center justify-between border-b border-champagne-300 p-4">
             {title && (
-              <h2 className="text-xl font-semibold text-graphite-900 dark:text-ivory-50">
+              <h2 className="font-display text-2xl font-semibold text-espresso-900">
                 {title}
               </h2>
             )}
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-graphite-400 transition-colors hover:text-graphite-600 dark:text-graphite-400 dark:hover:text-ivory-200 text-2xl leading-none"
+                className="text-graphite-400 transition-colors hover:text-primary-600 text-2xl leading-none"
                 aria-label="Close"
               >
                 ×

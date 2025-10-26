@@ -210,54 +210,54 @@ export default function AssetsPageClient() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <Card className="rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm">
+        <Card className="rounded-2xl border border-champagne-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
               <Briefcase className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-graphite-900">{activeAssets.length}</p>
-              <p className="text-xs text-graphite-500">Active Assets</p>
+              <p className="text-2xl font-bold text-espresso-900">{activeAssets.length}</p>
+              <p className="text-xs text-espresso-500">Active Assets</p>
             </div>
           </div>
         </Card>
 
-        <Card className="rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm">
+        <Card className="rounded-2xl border border-champagne-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
               <TrendingUp className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-graphite-900">
+              <p className="text-2xl font-bold text-espresso-900">
                 ${totalValue.toLocaleString()}
               </p>
-              <p className="text-xs text-graphite-500">Total Value</p>
+              <p className="text-xs text-espresso-500">Total Value</p>
             </div>
           </div>
         </Card>
 
-        <Card className="rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm">
+        <Card className="rounded-2xl border border-champagne-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
               <Star className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-graphite-900">
+              <p className="text-2xl font-bold text-espresso-900">
                 {activeAssets.filter(a => a.important).length}
               </p>
-              <p className="text-xs text-graphite-500">High Priority</p>
+              <p className="text-xs text-espresso-500">High Priority</p>
             </div>
           </div>
         </Card>
 
-        <Card className="rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm">
+        <Card className="rounded-2xl border border-champagne-200 bg-white p-5 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
               <Archive className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-graphite-900">{archivedAssets.length}</p>
-              <p className="text-xs text-graphite-500">Archived</p>
+              <p className="text-2xl font-bold text-espresso-900">{archivedAssets.length}</p>
+              <p className="text-xs text-espresso-500">Archived</p>
             </div>
           </div>
         </Card>
@@ -265,17 +265,17 @@ export default function AssetsPageClient() {
 
       {/* Assets List */}
       {isLoading ? (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
-          <p className="py-12 text-center text-sm text-graphite-500">Loading assets...</p>
+        <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
+          <p className="py-12 text-center text-sm text-espresso-500">Loading assets...</p>
         </Card>
       ) : assets.length === 0 ? (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+        <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
           <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-champagne-200 bg-champagne-50 text-espresso-500">
               <Briefcase className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-graphite-900">No digital assets yet</h3>
-            <p className="mt-2 max-w-sm text-sm text-graphite-600">
+            <h3 className="text-xl font-semibold text-espresso-900">No digital assets yet</h3>
+            <p className="mt-2 max-w-sm text-sm text-espresso-600">
               Create an inventory of your bank accounts, subscriptions, crypto wallets, and online accounts to help your beneficiaries.
             </p>
             <Button onClick={() => setShowAddModal(true)} size="lg" className="mt-6">
@@ -288,12 +288,12 @@ export default function AssetsPageClient() {
         <div className="space-y-6">
           {/* Active Assets */}
           <div>
-            <h2 className="mb-4 text-lg font-semibold text-graphite-900">Active Assets</h2>
+            <h2 className="mb-4 text-lg font-semibold text-espresso-900">Active Assets</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {activeAssets.map((asset) => {
                 const colorClass = getCategoryColor(asset.category);
                 return (
-                  <Card key={asset.id} className="rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
+                  <Card key={asset.id} className="rounded-2xl border border-champagne-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-start justify-between">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
                         <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-${colorClass}-50 text-${colorClass}-600`}>
@@ -301,13 +301,13 @@ export default function AssetsPageClient() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
-                            <h3 className="font-semibold text-graphite-900 truncate">{asset.name}</h3>
+                            <h3 className="font-semibold text-espresso-900 truncate">{asset.name}</h3>
                             {asset.important && (
                               <Star className="h-4 w-4 text-amber-500 flex-shrink-0 fill-current" />
                             )}
                           </div>
                           {asset.platform && (
-                            <p className="mt-1 text-sm text-graphite-500 truncate">{asset.platform}</p>
+                            <p className="mt-1 text-sm text-espresso-500 truncate">{asset.platform}</p>
                           )}
                           {asset.estimatedValue && (
                             <p className="mt-2 text-lg font-semibold text-emerald-600">
@@ -319,7 +319,7 @@ export default function AssetsPageClient() {
                     </div>
 
                     {asset.renewalDate && (
-                      <div className="mt-4 flex items-center gap-2 text-xs text-graphite-500">
+                      <div className="mt-4 flex items-center gap-2 text-xs text-espresso-500">
                         <Calendar className="h-4 w-4" />
                         <span>Renews: {new Date(asset.renewalDate).toLocaleDateString()}</span>
                       </div>
@@ -360,7 +360,7 @@ export default function AssetsPageClient() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-graphite-700 mb-2">
+            <label className="block text-sm font-medium text-espresso-700 mb-2">
               Category *
             </label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -373,11 +373,11 @@ export default function AssetsPageClient() {
                     className={`p-3 rounded-lg border-2 transition-all ${
                       category === option.value
                         ? 'border-primary-500 bg-primary-50'
-                        : 'border-graphite-200 hover:border-graphite-300'
+                        : 'border-champagne-200 hover:border-graphite-300'
                     }`}
                   >
                     <Icon className={`w-5 h-5 mx-auto mb-1 text-${option.color}-600`} />
-                    <span className="text-xs font-medium text-graphite-900 block">{option.label}</span>
+                    <span className="text-xs font-medium text-espresso-900 block">{option.label}</span>
                   </button>
                 );
               })}
@@ -406,13 +406,13 @@ export default function AssetsPageClient() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-graphite-700 mb-1">
+            <label className="block text-sm font-medium text-espresso-700 mb-1">
               Instructions for Beneficiaries
             </label>
             <textarea
               value={instructions}
               onChange={(e) => setInstructions(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-espresso-900"
               rows={3}
               placeholder="e.g., Close this account, Transfer to spouse, Archive and download data..."
             />
@@ -443,7 +443,7 @@ export default function AssetsPageClient() {
               onChange={(e) => setImportant(e.target.checked)}
               className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
             />
-            <label htmlFor="important" className="text-sm font-medium text-graphite-700 cursor-pointer">
+            <label htmlFor="important" className="text-sm font-medium text-espresso-700 cursor-pointer">
               Mark as high priority
             </label>
           </div>

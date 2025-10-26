@@ -15,13 +15,13 @@ export function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseStyles = 'font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center whitespace-nowrap';
+  const baseStyles = 'font-medium rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center whitespace-nowrap';
 
   const variants = {
-    primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500 shadow-sm hover:shadow-md',
-    secondary: 'bg-graphite-100 text-graphite-900 hover:bg-graphite-200 focus:ring-graphite-500',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm hover:shadow-md',
-    ghost: 'text-graphite-700 hover:bg-graphite-100 focus:ring-graphite-500',
+    primary: 'bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-400 shadow-sm hover-lift',
+    secondary: 'bg-champagne-200 text-espresso-900 hover:bg-champagne-300 focus:ring-champagne-400 border border-champagne-300',
+    danger: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-400 shadow-sm hover-lift',
+    ghost: 'text-espresso-800 hover:bg-champagne-100 focus:ring-champagne-300',
   };
 
   const sizes = {

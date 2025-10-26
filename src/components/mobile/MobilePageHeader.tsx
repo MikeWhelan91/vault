@@ -26,7 +26,7 @@ export function MobilePageHeader({
   // Desktop: left-aligned professional layout
   if (!isNativeApp) {
     return (
-      <section className="rounded-3xl border border-graphite-200 bg-white px-6 py-6 shadow-sm sm:px-8">
+      <section className="rounded-3xl border border-champagne-300 bg-white px-6 py-6 shadow-sm sm:px-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           {/* Left side: Icon, title, subtitle */}
           <div className="flex items-start gap-4 flex-1">
@@ -37,10 +37,10 @@ export function MobilePageHeader({
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 flex-wrap">
-                <h1 className="text-2xl font-semibold text-graphite-900 sm:text-3xl">{title}</h1>
+                <h1 className="font-display text-2xl font-semibold text-espresso-900 sm:text-3xl">{title}</h1>
                 {badge && <div>{badge}</div>}
               </div>
-              {subtitle && <p className="mt-2 text-sm text-graphite-600 leading-relaxed max-w-2xl">{subtitle}</p>}
+              {subtitle && <p className="mt-2 text-sm text-espresso-700 leading-relaxed max-w-2xl">{subtitle}</p>}
             </div>
           </div>
 
@@ -57,7 +57,7 @@ export function MobilePageHeader({
 
   // Mobile native: left-aligned, compact, modern
   return (
-    <div className="bg-white border-b border-graphite-100 px-4 py-4">
+    <div className="bg-white border-b border-champagne-300 px-4 py-4">
       <div className="flex items-start gap-3">
         {Icon && (
           <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary-50 ${iconColor}`}>
@@ -66,11 +66,11 @@ export function MobilePageHeader({
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <h1 className="text-xl font-bold text-graphite-900 leading-tight">{title}</h1>
+            <h1 className="font-display text-xl font-bold text-espresso-900 leading-tight">{title}</h1>
             {badge && <div className="flex-shrink-0">{badge}</div>}
           </div>
           {subtitle && (
-            <p className="mt-1 text-sm text-graphite-600 leading-snug">{subtitle}</p>
+            <p className="mt-1 text-sm text-espresso-700 leading-snug">{subtitle}</p>
           )}
         </div>
       </div>

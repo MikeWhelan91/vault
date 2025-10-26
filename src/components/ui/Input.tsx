@@ -16,7 +16,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-graphite-700 mb-2">
+          <label className="block text-sm font-medium text-espresso-800 mb-2">
             {label}
           </label>
         )}
@@ -26,12 +26,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={inputType}
             className={`
               w-full px-4 py-2.5 border rounded-lg
-              bg-white text-graphite-900
-              focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
-              disabled:bg-graphite-50 disabled:cursor-not-allowed
+              bg-white text-espresso-900
+              focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent
+              disabled:bg-champagne-100 disabled:cursor-not-allowed
               transition-all duration-200
-              placeholder:text-graphite-400
-              ${error ? 'border-red-500' : 'border-graphite-300'}
+              placeholder:text-espresso-500
+              ${error ? 'border-primary-600' : 'border-champagne-300'}
               ${isPasswordField ? 'pr-10' : ''}
               ${className}
             `}
@@ -41,7 +41,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-graphite-500 hover:text-graphite-700 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-espresso-600 hover:text-primary-600 transition-colors"
               tabIndex={-1}
             >
               {showPassword ? (
@@ -53,10 +53,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error && (
-          <p className="mt-2 text-sm text-red-600">{error}</p>
+          <p className="mt-2 text-sm text-primary-700">{error}</p>
         )}
         {helperText && !error && (
-          <p className="mt-2 text-sm text-graphite-500">{helperText}</p>
+          <p className="mt-2 text-sm text-espresso-600">{helperText}</p>
         )}
       </div>
     );

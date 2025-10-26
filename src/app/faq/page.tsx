@@ -181,7 +181,7 @@ const faqSections = [
 
 export default function FAQPage() {
   return (
-    <div className="min-h-screen bg-graphite-50">
+    <div className="min-h-screen bg-champagne-50">
       <SiteHeader />
 
       <main className="mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 lg:px-8">
@@ -191,10 +191,10 @@ export default function FAQPage() {
               <Search className="h-4 w-4" aria-hidden="true" />
               Help centre
             </span>
-            <h1 className="text-4xl font-semibold tracking-tight text-graphite-900 sm:text-5xl">
+            <h1 className="font-display text-4xl font-semibold tracking-tight text-espresso-900 sm:text-5xl">
               Answers to the questions we hear most
             </h1>
-            <p className="text-base text-graphite-600 sm:text-lg">
+            <p className="text-base text-espresso-600 sm:text-lg">
               Learn how Forebearer protects your memories, automates delivery, and keeps your trustees informed at every step.
             </p>
           </div>
@@ -204,12 +204,12 @@ export default function FAQPage() {
           <div className="space-y-10">
             {faqSections.map((section) => (
               <div key={section.title} className="space-y-4">
-                <h2 className="text-2xl font-semibold tracking-tight text-graphite-900">{section.title}</h2>
+                <h2 className="font-display text-2xl font-semibold tracking-tight text-espresso-900">{section.title}</h2>
                 <div className="space-y-4">
                   {section.items.map((item) => (
-                    <Card key={item.question} className="border-graphite-200/70 bg-white p-6">
-                      <h3 className="text-lg font-semibold text-graphite-900">{item.question}</h3>
-                      <p className="mt-2 text-sm text-graphite-600 leading-relaxed">{item.answer}</p>
+                    <Card key={item.question} className="border-champagne-200 bg-white p-6">
+                      <h3 className="font-display text-lg font-semibold text-espresso-900">{item.question}</h3>
+                      <p className="mt-2 text-sm text-espresso-600 leading-relaxed">{item.answer}</p>
                     </Card>
                   ))}
                 </div>
@@ -218,31 +218,31 @@ export default function FAQPage() {
           </div>
 
           <aside className="flex flex-col gap-6">
-            <Card className="border-primary-200/80 bg-primary-50/80 p-8">
-              <h2 className="text-xl font-semibold text-graphite-900">Need more help?</h2>
-              <p className="mt-3 text-sm text-graphite-600">
+            <Card className="border-primary-200 bg-primary-50 p-8">
+              <h2 className="font-display text-xl font-semibold text-espresso-900">Need more help?</h2>
+              <p className="mt-3 text-sm text-espresso-600">
                 Our support team usually replies within 24 hours. Share as much detail as possible so we can help quickly.
               </p>
-              <Link href="/support" className="mt-6 inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
+              <Link href="/support" className="hover-underline mt-6 inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
                 Contact support &rarr;
               </Link>
             </Card>
 
-            <Card className="border-graphite-200/70 bg-white p-8">
-              <h2 className="text-xl font-semibold text-graphite-900">Popular resources</h2>
+            <Card className="border-champagne-200 bg-white p-8">
+              <h2 className="font-display text-xl font-semibold text-espresso-900">Popular resources</h2>
               <ul className="mt-4 space-y-3 text-sm text-primary-600">
                 <li>
-                  <Link href="/pricing" className="transition-colors hover:text-primary-700">
+                  <Link href="/pricing" className="hover-underline transition-colors hover:text-primary-700">
                     Compare plans
                   </Link>
                 </li>
                 <li>
-                  <Link href="/support" className="transition-colors hover:text-primary-700">
+                  <Link href="/support" className="hover-underline transition-colors hover:text-primary-700">
                     Submit a support ticket
                   </Link>
                 </li>
                 <li>
-                  <Link href="/release" className="transition-colors hover:text-primary-700">
+                  <Link href="/release" className="hover-underline transition-colors hover:text-primary-700">
                     Read release notes
                   </Link>
                 </li>
@@ -251,11 +251,11 @@ export default function FAQPage() {
           </aside>
         </section>
 
-        <section className="mt-20 rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-lg sm:px-12 lg:px-16">
-          <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+        <section className="mt-20 rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-sm sm:px-12 lg:px-16">
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
             Ready to put your legacy on autopilot?
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-graphite-600">
+          <p className="mx-auto mt-4 max-w-2xl text-base text-espresso-600">
             Create a free vault, add your first bundle, and schedule a release in minutes. Upgrade whenever you need more storage or trustees.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -264,7 +264,7 @@ export default function FAQPage() {
                 Create free account
               </Button>
             </Link>
-            <Link href="/pricing" className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
+            <Link href="/pricing" className="hover-underline text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
               Review plan details
             </Link>
           </div>

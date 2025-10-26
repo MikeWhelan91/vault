@@ -298,16 +298,16 @@ export default function MessagesPageClient() {
 
       {/* Messages Grid */}
       {isLoading ? (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
-          <p className="py-12 text-center text-sm text-graphite-500">Loading messages...</p>
+        <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
+          <p className="py-12 text-center text-sm text-espresso-500">Loading messages...</p>
         </Card>
       ) : messages.length === 0 ? (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
+        <Card className="rounded-3xl border border-champagne-200 bg-white shadow-sm">
           <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-champagne-200 bg-champagne-50 text-espresso-500">
               <Video className="h-7 w-7" />
             </div>
-            <h3 className="text-xl font-semibold text-graphite-900">No messages yet</h3>
+            <h3 className="text-xl font-semibold text-espresso-900">No messages yet</h3>
             <p className="mt-2 max-w-sm text-sm text-graphite-600">
               Create meaningful video or audio messages for birthdays, graduations, weddings, or just to share your wisdom.
             </p>
@@ -320,14 +320,14 @@ export default function MessagesPageClient() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2">
           {messages.map((message) => (
-            <Card key={message.id} className="rounded-2xl border border-graphite-200 bg-white p-5 shadow-sm">
+            <Card key={message.id} className="rounded-2xl border border-champagne-200 bg-white p-5 shadow-sm">
               <div className="flex items-start gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600">
                   <Video className="h-6 w-6" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-graphite-900">{message.title}</h3>
-                  <p className="mt-1 text-sm text-graphite-500">{message.category}</p>
+                  <h3 className="font-semibold text-espresso-900">{message.title}</h3>
+                  <p className="mt-1 text-sm text-espresso-500">{message.category}</p>
                 </div>
               </div>
             </Card>
@@ -351,7 +351,7 @@ export default function MessagesPageClient() {
         <div className="space-y-6">
           {/* Media Type Selection */}
           <div>
-            <label className="block text-sm font-medium text-graphite-700 mb-2">
+            <label className="block text-sm font-medium text-espresso-700 mb-2">
               Recording Type
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -361,11 +361,11 @@ export default function MessagesPageClient() {
                 className={`p-4 rounded-xl border-2 transition-all ${
                   mediaType === 'video'
                     ? 'border-primary-500 bg-primary-50'
-                    : 'border-graphite-200 hover:border-graphite-300'
+                    : 'border-champagne-200 hover:border-graphite-300'
                 } ${isRecording ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 <Video className="w-6 h-6 mx-auto mb-2 text-primary-600" />
-                <span className="text-sm font-medium text-graphite-900">Video</span>
+                <span className="text-sm font-medium text-espresso-900">Video</span>
               </button>
               <button
                 onClick={() => !isRecording && setMediaType('audio')}
@@ -373,11 +373,11 @@ export default function MessagesPageClient() {
                 className={`p-4 rounded-xl border-2 transition-all ${
                   mediaType === 'audio'
                     ? 'border-primary-500 bg-primary-50'
-                    : 'border-graphite-200 hover:border-graphite-300'
+                    : 'border-champagne-200 hover:border-graphite-300'
                 } ${isRecording ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 <Mic className="w-6 h-6 mx-auto mb-2 text-primary-600" />
-                <span className="text-sm font-medium text-graphite-900">Audio Only</span>
+                <span className="text-sm font-medium text-espresso-900">Audio Only</span>
               </button>
             </div>
           </div>
@@ -454,7 +454,7 @@ export default function MessagesPageClient() {
             />
 
             <div>
-              <label className="block text-sm font-medium text-graphite-700 mb-2">
+              <label className="block text-sm font-medium text-espresso-700 mb-2">
                 Category
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -467,11 +467,11 @@ export default function MessagesPageClient() {
                       className={`p-3 rounded-lg border-2 transition-all text-center ${
                         category === option.value
                           ? 'border-primary-500 bg-primary-50'
-                          : 'border-graphite-200 hover:border-graphite-300'
+                          : 'border-champagne-200 hover:border-graphite-300'
                       }`}
                     >
                       <Icon className="w-5 h-5 mx-auto mb-1 text-primary-600" />
-                      <span className="text-xs font-medium text-graphite-900">{option.label}</span>
+                      <span className="text-xs font-medium text-espresso-900">{option.label}</span>
                     </button>
                   );
                 })}
@@ -479,7 +479,7 @@ export default function MessagesPageClient() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-graphite-700 mb-2">
+              <label className="block text-sm font-medium text-espresso-700 mb-2">
                 Delivery Trigger
               </label>
               <div className="grid grid-cols-3 gap-3">
@@ -488,7 +488,7 @@ export default function MessagesPageClient() {
                   className={`p-3 rounded-lg border-2 text-sm ${
                     triggerType === 'manual'
                       ? 'border-primary-500 bg-primary-50 font-semibold'
-                      : 'border-graphite-200'
+                      : 'border-champagne-200'
                   }`}
                 >
                   Manual
@@ -498,7 +498,7 @@ export default function MessagesPageClient() {
                   className={`p-3 rounded-lg border-2 text-sm ${
                     triggerType === 'date'
                       ? 'border-primary-500 bg-primary-50 font-semibold'
-                      : 'border-graphite-200'
+                      : 'border-champagne-200'
                   }`}
                 >
                   Specific Date
@@ -508,7 +508,7 @@ export default function MessagesPageClient() {
                   className={`p-3 rounded-lg border-2 text-sm ${
                     triggerType === 'age'
                       ? 'border-primary-500 bg-primary-50 font-semibold'
-                      : 'border-graphite-200'
+                      : 'border-champagne-200'
                   }`}
                 >
                   Age Milestone

@@ -213,7 +213,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-graphite-50">
+    <div className="min-h-screen bg-champagne-50">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }} />
@@ -237,58 +237,58 @@ export default function LandingPage() {
               className="object-cover"
               priority
             />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-graphite-900/85 via-graphite-900/70 to-graphite-900/60" />
+            {/* Flat Overlay */}
+            <div className="absolute inset-0 bg-espresso-900/80" />
           </div>
 
           {/* Content */}
           <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
             <div className="max-w-3xl space-y-8">
-              <h1 className="animate-fade-in-down text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="font-display animate-fade-in-down text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
                 A Memory Box for the Moments That Matter Most
               </h1>
-              <p className="animate-fade-in-up max-w-2xl text-lg text-graphite-100 lg:text-xl" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+              <p className="animate-fade-in-up max-w-2xl text-lg text-champagne-100 lg:text-xl" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
                 Store your cherished photos, heartfelt letters, important passwords, and account details in one secure place. Share them with loved ones when the time is right—whether that&apos;s a special date or when you&apos;re no longer around.
               </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 {bulletPoints.map((point, index) => (
                   <div
                     key={point}
-                    className="animate-fade-in-up flex items-start gap-3 rounded-xl border border-white/20 bg-white/10 p-4 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-white/15"
+                    className="animate-fade-in-up flex items-start gap-3 rounded-xl border border-champagne-200 bg-white p-4 shadow-md transition-all duration-300 hover-lift"
                     style={{
                       animationDelay: `${0.4 + index * 0.1}s`,
                       animationFillMode: 'backwards'
                     }}
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500/80 text-white">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white">
                       <Check className="h-4 w-4" aria-hidden="true" />
                     </span>
-                    <p className="text-sm font-medium text-white">{point}</p>
+                    <p className="text-sm font-medium text-espresso-900">{point}</p>
                   </div>
                 ))}
               </div>
               <div className="animate-fade-in-up flex flex-col gap-3 sm:flex-row sm:items-center" style={{ animationDelay: '0.7s', animationFillMode: 'backwards' }}>
                 <Link href="/signup">
-                  <Button size="lg" className="w-full transition-transform hover:scale-105 sm:w-auto">
+                  <Button size="lg" className="w-full hover-lift sm:w-auto">
                     Start for free
                   </Button>
                 </Link>
-                <Link href="/pricing" className="text-sm font-medium text-primary-200 transition-colors hover:text-primary-100">
+                <Link href="/pricing" className="hover-underline text-sm font-medium text-champagne-100 transition-colors hover:text-white">
                   View pricing &rarr;
                 </Link>
               </div>
               <div className="animate-fade-in-up flex flex-wrap gap-8 pt-4 text-sm" style={{ animationDelay: '0.9s', animationFillMode: 'backwards' }}>
-                <div className="transition-transform hover:scale-105">
-                  <p className="text-3xl font-semibold text-primary-300">Unlimited</p>
-                  <p className="mt-1 max-w-[14ch] text-xs uppercase tracking-wide text-graphite-200">Bundles you can create</p>
+                <div className="hover-lift">
+                  <p className="font-display text-3xl font-semibold text-primary-300">Unlimited</p>
+                  <p className="mt-1 max-w-[14ch] text-xs uppercase tracking-wide text-champagne-200">Bundles you can create</p>
                 </div>
-                <div className="transition-transform hover:scale-105">
-                  <p className="text-3xl font-semibold text-primary-300">Forever</p>
-                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-200">Your memories are safe</p>
+                <div className="hover-lift">
+                  <p className="font-display text-3xl font-semibold text-primary-300">Forever</p>
+                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-champagne-200">Your memories are safe</p>
                 </div>
-                <div className="transition-transform hover:scale-105">
-                  <p className="text-3xl font-semibold text-primary-300">Simple</p>
-                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-graphite-200">To set up and share</p>
+                <div className="hover-lift">
+                  <p className="font-display text-3xl font-semibold text-primary-300">Simple</p>
+                  <p className="mt-1 max-w-[18ch] text-xs uppercase tracking-wide text-champagne-200">To set up and share</p>
                 </div>
               </div>
             </div>
@@ -299,10 +299,10 @@ export default function LandingPage() {
 
         <section id="features" data-animate className="space-y-12 py-20">
           <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('features') ? 'animate-fade-in-up' : 'opacity-0'}`}>
-            <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
               From Your Heart to Theirs, in Three Simple Steps
             </h2>
-            <p className="mx-auto max-w-2xl text-base text-graphite-600">
+            <p className="mx-auto max-w-2xl text-base text-espresso-600">
               Whether it&apos;s a birthday surprise, anniversary gift, critical account access for your family, or a message for when you&apos;re gone—Forebearer makes it easy to share what matters most.
             </p>
           </div>
@@ -311,7 +311,7 @@ export default function LandingPage() {
             {featureHighlights.map((feature, index) => (
               <Card
                 key={feature.title}
-                className={`flex h-full flex-col overflow-hidden border-graphite-200/80 transition-all duration-700 hover:scale-105 hover:shadow-2xl ${visibleSections.has('features') ? 'animate-fade-in-up' : 'opacity-0'}`}
+                className={`flex h-full flex-col overflow-hidden border-champagne-200 transition-all duration-700 hover-lift shadow-sm ${visibleSections.has('features') ? 'animate-fade-in-up' : 'opacity-0'}`}
                 style={{
                   animationDelay: `${index * 0.2}s`,
                   animationFillMode: 'backwards'
@@ -322,14 +322,14 @@ export default function LandingPage() {
                     src={feature.image}
                     alt={feature.title}
                     fill
-                    className="object-cover transition-transform duration-500 hover:scale-110"
+                    className="object-cover"
                     sizes="(min-width: 1024px) 33vw, 100vw"
                     priority
                   />
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-6">
-                  <h3 className="text-xl font-semibold text-graphite-900">{feature.title}</h3>
-                  <p className="text-sm text-graphite-600">{feature.description}</p>
+                  <h3 className="font-display text-xl font-semibold text-espresso-900">{feature.title}</h3>
+                  <p className="text-sm text-espresso-600">{feature.description}</p>
                 </div>
               </Card>
             ))}
@@ -337,7 +337,7 @@ export default function LandingPage() {
         </section>
 
         <section id="how-it-works" data-animate className="py-20">
-          <div className={`rounded-3xl overflow-hidden border border-graphite-200 bg-white shadow-lg transition-all duration-700 ${visibleSections.has('how-it-works') ? 'animate-scale-in' : 'opacity-0'}`}>
+          <div className={`rounded-3xl overflow-hidden border border-champagne-200 bg-white shadow-sm transition-all duration-700 ${visibleSections.has('how-it-works') ? 'animate-scale-in' : 'opacity-0'}`}>
             <div className="grid lg:grid-cols-2">
               {/* Image Side */}
               <div className="relative h-64 lg:h-auto">
@@ -354,10 +354,10 @@ export default function LandingPage() {
               {/* Content Side */}
               <div className="p-8 lg:p-12 space-y-8">
                 <div className="space-y-4">
-                  <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+                  <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
                     How It Works
                   </h2>
-                  <p className="text-base text-graphite-600">
+                  <p className="text-base text-espresso-600">
                     Creating and sharing your memory bundles is simple. Just follow these three steps.
                   </p>
                 </div>
@@ -366,14 +366,14 @@ export default function LandingPage() {
                   {timeline.map((item, index) => (
                     <li
                       key={item.title}
-                      className="flex gap-4 transition-all duration-300 hover:translate-x-2"
+                      className="flex gap-4 transition-all duration-300 hover-lift"
                     >
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary-500 bg-primary-50 text-base font-semibold text-primary-700">
                         {index + 1}
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-lg font-semibold text-graphite-900">{item.title}</h3>
-                        <p className="text-sm text-graphite-600">{item.description}</p>
+                        <h3 className="font-display text-lg font-semibold text-espresso-900">{item.title}</h3>
+                        <p className="text-sm text-espresso-600">{item.description}</p>
                       </div>
                     </li>
                   ))}
@@ -381,7 +381,7 @@ export default function LandingPage() {
 
                 <Link
                   href="/faq"
-                  className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+                  className="hover-underline inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
                 >
                   Learn more &rarr;
                 </Link>
@@ -391,13 +391,13 @@ export default function LandingPage() {
         </section>
 
         <section id="security" data-animate className="py-20">
-          <div className={`rounded-3xl border border-graphite-200 bg-white/90 p-8 sm:p-10 lg:p-12 shadow-lg transition-all duration-700 ${visibleSections.has('security') ? 'animate-scale-in' : 'opacity-0'}`}>
+          <div className={`rounded-3xl border border-champagne-200 bg-white p-8 sm:p-10 lg:p-12 shadow-sm transition-all duration-700 ${visibleSections.has('security') ? 'animate-scale-in' : 'opacity-0'}`}>
             <div className="mx-auto max-w-4xl space-y-8 text-center">
               <div className="space-y-3">
-                <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+                <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
                   Your Memories, Safe and Sound
                 </h2>
-                <p className="mx-auto max-w-2xl text-base text-graphite-600">
+                <p className="mx-auto max-w-2xl text-base text-espresso-600">
                   We protect your precious moments with care. Everything is encrypted, backed up, and ready to share when the time comes.
                 </p>
               </div>
@@ -406,21 +406,21 @@ export default function LandingPage() {
                 {securityFeatures.map((feature, index) => (
                   <div
                     key={feature.title}
-                    className={`rounded-2xl border border-graphite-200/70 bg-white p-6 text-center transition-all duration-700 hover:scale-105 hover:shadow-lg ${visibleSections.has('security') ? 'animate-fade-in-up' : 'opacity-0'}`}
+                    className={`rounded-2xl border border-champagne-200 bg-white p-6 text-center transition-all duration-700 hover-lift shadow-sm ${visibleSections.has('security') ? 'animate-fade-in-up' : 'opacity-0'}`}
                     style={{
                       animationDelay: `${index * 0.15}s`,
                       animationFillMode: 'backwards'
                     }}
                   >
-                    <h3 className="text-lg font-semibold text-graphite-900 mb-2">{feature.title}</h3>
-                    <p className="text-sm text-graphite-600">{feature.description}</p>
+                    <h3 className="font-display text-lg font-semibold text-espresso-900 mb-2">{feature.title}</h3>
+                    <p className="text-sm text-espresso-600">{feature.description}</p>
                   </div>
                 ))}
               </div>
 
               <Link
                 href="/support"
-                className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+                className="hover-underline inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
               >
                 Learn how we keep things safe &rarr;
               </Link>
@@ -430,10 +430,10 @@ export default function LandingPage() {
 
         <section id="faq" data-animate className="py-20">
           <div className={`flex flex-col gap-4 text-center transition-all duration-700 ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}>
-            <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
               Questions? We&apos;ve Got Answers
             </h2>
-              <p className="mx-auto max-w-2xl text-base text-graphite-600">
+              <p className="mx-auto max-w-2xl text-base text-espresso-600">
                 Here&apos;s what people usually want to know about creating and sharing their memory bundles.
               </p>
           </div>
@@ -442,14 +442,14 @@ export default function LandingPage() {
             {faqPreview.map((faq, index) => (
               <Card
                 key={faq.question}
-                className={`h-full border-graphite-200/70 p-6 transition-all duration-700 hover:scale-105 hover:shadow-lg ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}
+                className={`h-full border-champagne-200 p-6 transition-all duration-700 hover-lift shadow-sm ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`}
                 style={{
                   animationDelay: `${0.2 + index * 0.1}s`,
                   animationFillMode: 'backwards'
                 }}
               >
-                <h3 className="text-lg font-semibold text-graphite-900">{faq.question}</h3>
-                <p className="mt-3 text-sm text-graphite-600">{faq.answer}</p>
+                <h3 className="font-display text-lg font-semibold text-espresso-900">{faq.question}</h3>
+                <p className="mt-3 text-sm text-espresso-600">{faq.answer}</p>
               </Card>
             ))}
           </div>
@@ -457,7 +457,7 @@ export default function LandingPage() {
           <div className={`mt-10 text-center transition-all duration-700 ${visibleSections.has('faq') ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.5s', animationFillMode: 'backwards' }}>
             <Link
               href="/faq"
-              className="inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
+              className="hover-underline inline-flex items-center text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700"
             >
               Visit the full FAQ &rarr;
             </Link>
@@ -465,20 +465,20 @@ export default function LandingPage() {
         </section>
 
         <section id="cta" data-animate className="py-24">
-          <div className={`rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-lg sm:px-12 lg:px-16 transition-all duration-700 ${visibleSections.has('cta') ? 'animate-scale-in' : 'opacity-0'}`}>
-            <h2 className="text-3xl font-semibold tracking-tight text-graphite-900 sm:text-4xl">
+          <div className={`rounded-3xl border border-primary-200 bg-primary-50 px-8 py-12 text-center shadow-sm sm:px-12 lg:px-16 transition-all duration-700 ${visibleSections.has('cta') ? 'animate-scale-in' : 'opacity-0'}`}>
+            <h2 className="font-display text-3xl font-semibold tracking-tight text-espresso-900 sm:text-4xl">
               Start Sharing the Memories That Matter
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-graphite-600">
+            <p className="mx-auto mt-4 max-w-2xl text-base text-espresso-600">
               Create your first memory bundle with 300 MB of free storage. Upload photos, write messages, store passwords and account details, and choose when to share them with the people you love.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href="/signup">
-                <Button size="lg" className="w-full transition-transform hover:scale-110 sm:w-auto">
+                <Button size="lg" className="w-full hover-lift sm:w-auto">
                   Create your memory box
                 </Button>
               </Link>
-              <Link href="/signin" className="text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
+              <Link href="/signin" className="hover-underline text-sm font-semibold text-primary-600 transition-colors hover:text-primary-700">
                 Already have an account? Sign in
               </Link>
             </div>

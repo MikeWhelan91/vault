@@ -256,7 +256,7 @@ export default function ItemViewPage({ params }: { params: Promise<{ id: string 
           <Progress
             value={downloadProgress}
             label="Downloading and decrypting..."
-            color="blue"
+            color="primary"
             size="lg"
           />
         </Card>

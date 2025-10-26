@@ -30,7 +30,7 @@ export function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-graphite-200/80 bg-white/90 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
+    <header className="sticky top-0 z-50 border-b border-champagne-300/80 bg-white/90 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-10">
           <Link
@@ -45,7 +45,7 @@ export function SiteHeader() {
             />
           </Link>
 
-          <div className="hidden items-center gap-8 text-sm font-medium text-graphite-600 lg:flex">
+          <div className="hidden items-center gap-8 text-sm font-medium text-espresso-700 lg:flex">
             {NAV_LINKS.map((link) => {
               const target = resolveHref(link.href);
               const isActive = pathname === target || pathname === link.href;
@@ -54,7 +54,7 @@ export function SiteHeader() {
                 <Link
                   key={link.href}
                   href={target}
-                  className={`transition-colors hover:text-primary-600 ${
+                  className={`hover-underline transition-colors hover:text-primary-600 ${
                     isActive ? "text-primary-600" : ""
                   }`}
                 >
@@ -66,7 +66,7 @@ export function SiteHeader() {
         </div>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link href={resolveHref("/signin")} className="text-sm font-medium text-graphite-600 transition-colors hover:text-primary-600">
+          <Link href={resolveHref("/signin")} className="text-sm font-medium text-espresso-700 transition-colors hover:text-primary-600">
             Sign In
           </Link>
           <Link href={resolveHref("/signup")}>
@@ -77,7 +77,7 @@ export function SiteHeader() {
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
-          className="inline-flex items-center justify-center rounded-lg border border-graphite-200 p-2 text-graphite-700 transition-colors hover:bg-graphite-100 hover:text-primary-600 lg:hidden"
+          className="inline-flex items-center justify-center rounded-lg border border-champagne-300 p-2 text-espresso-800 transition-colors hover:bg-champagne-100 hover:text-primary-600 lg:hidden"
           aria-label="Toggle navigation"
         >
           {isOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
@@ -85,7 +85,7 @@ export function SiteHeader() {
       </nav>
 
       {isOpen && (
-        <div className="border-t border-graphite-200/80 bg-white/95 backdrop-blur">
+        <div className="border-t border-champagne-300/80 bg-white/95 backdrop-blur">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 sm:px-6 lg:px-8">
             {NAV_LINKS.map((link) => {
               const target = resolveHref(link.href);
@@ -94,7 +94,7 @@ export function SiteHeader() {
                   key={link.href}
                   href={target}
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium text-graphite-700 transition-colors hover:text-primary-600"
+                  className="text-base font-medium text-espresso-800 transition-colors hover:text-primary-600"
                 >
                   {link.label}
                 </Link>
@@ -105,7 +105,7 @@ export function SiteHeader() {
               <Link
                 href={resolveHref("/signin")}
                 onClick={() => setIsOpen(false)}
-                className="text-base font-medium text-graphite-700 transition-colors hover:text-primary-600"
+                className="text-base font-medium text-espresso-800 transition-colors hover:text-primary-600"
               >
                 Sign In
               </Link>

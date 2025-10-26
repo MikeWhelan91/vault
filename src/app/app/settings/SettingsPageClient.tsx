@@ -181,7 +181,7 @@ export default function SettingsPageClient() {
         title="Settings"
         subtitle="Manage your account and preferences"
         icon={Settings}
-        iconColor="text-graphite-600"
+        iconColor="text-espresso-600"
       />
 
       {/* Settings Grid */}
@@ -189,12 +189,12 @@ export default function SettingsPageClient() {
         {/* Account Information */}
         <Card>
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
-              <User className="w-5 h-5 text-graphite-600" />
+            <div className="w-10 h-10 rounded-lg bg-champagne-100 flex items-center justify-center flex-shrink-0">
+              <User className="w-5 h-5 text-espresso-600" />
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-base font-semibold text-graphite-900 mb-2">Account</h2>
-              <div className="space-y-1 text-sm text-graphite-600">
+              <h2 className="text-base font-semibold text-espresso-900 mb-2">Account</h2>
+              <div className="space-y-1 text-sm text-espresso-600">
                 <div className="truncate">{session.userId}</div>
                 {metadata && (
                   <div>{metadata.items.length} items stored</div>
@@ -207,12 +207,12 @@ export default function SettingsPageClient() {
         {/* Billing & Subscription */}
         <Card>
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
-              <CreditCard className="w-5 h-5 text-graphite-600" />
+            <div className="w-10 h-10 rounded-lg bg-champagne-100 flex items-center justify-center flex-shrink-0">
+              <CreditCard className="w-5 h-5 text-espresso-600" />
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-base font-semibold text-graphite-900 mb-2">Billing</h2>
-              <p className="text-sm text-graphite-600 mb-3">
+              <h2 className="text-base font-semibold text-espresso-900 mb-2">Billing</h2>
+              <p className="text-sm text-espresso-600 mb-3">
                 {metadata?.tier === 'plus' ? 'Plus Tier - $9/month' : 'Free Tier'}
               </p>
               <Button
@@ -231,12 +231,12 @@ export default function SettingsPageClient() {
         {isNativeApp && (
           <Card>
             <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
-                <Smartphone className="w-5 h-5 text-graphite-600" />
+              <div className="w-10 h-10 rounded-lg bg-champagne-100 flex items-center justify-center flex-shrink-0">
+                <Smartphone className="w-5 h-5 text-espresso-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-base font-semibold text-graphite-900 mb-2">Haptic Feedback</h2>
-                <p className="text-sm text-graphite-600 mb-3">
+                <h2 className="text-base font-semibold text-espresso-900 mb-2">Haptic Feedback</h2>
+                <p className="text-sm text-espresso-600 mb-3">
                   {hapticsEnabled ? 'Vibration enabled for interactions' : 'Vibration disabled'}
                 </p>
                 <Button
@@ -255,12 +255,12 @@ export default function SettingsPageClient() {
         {/* Delete All Data */}
         <Card>
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
-              <Database className="w-5 h-5 text-graphite-600" />
+            <div className="w-10 h-10 rounded-lg bg-champagne-100 flex items-center justify-center flex-shrink-0">
+              <Database className="w-5 h-5 text-espresso-600" />
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-base font-semibold text-graphite-900 mb-2">Delete All Data</h2>
-              <p className="text-sm text-graphite-600 mb-3">
+              <h2 className="text-base font-semibold text-espresso-900 mb-2">Delete All Data</h2>
+              <p className="text-sm text-espresso-600 mb-3">
                 Remove all items and bundles. Account stays active.
               </p>
               <Button
@@ -278,12 +278,12 @@ export default function SettingsPageClient() {
         {/* Delete Account */}
         <Card>
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-lg bg-graphite-100 flex items-center justify-center flex-shrink-0">
-              <AlertTriangle className="w-5 h-5 text-graphite-600" />
+            <div className="w-10 h-10 rounded-lg bg-champagne-100 flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-5 h-5 text-espresso-600" />
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-base font-semibold text-graphite-900 mb-2">Delete Account</h2>
-              <p className="text-sm text-graphite-600 mb-3">
+              <h2 className="text-base font-semibold text-espresso-900 mb-2">Delete Account</h2>
+              <p className="text-sm text-espresso-600 mb-3">
                 Permanently delete everything. Cannot be undone.
               </p>
               <Button
@@ -320,7 +320,7 @@ export default function SettingsPageClient() {
             </div>
           </div>
 
-          <p className="text-sm text-graphite-600">
+          <p className="text-sm text-espresso-600">
             This action cannot be undone. Are you sure you want to continue?
           </p>
 
@@ -365,7 +365,7 @@ export default function SettingsPageClient() {
             </div>
           </div>
 
-          <p className="text-sm text-graphite-600">
+          <p className="text-sm text-espresso-600">
             This action cannot be undone. Are you absolutely sure?
           </p>
 
