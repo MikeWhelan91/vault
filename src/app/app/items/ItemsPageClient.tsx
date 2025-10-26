@@ -41,7 +41,7 @@ import { StorageIndicator } from '@/components/StorageIndicator';
 import type { TierName } from '@/lib/pricing';
 import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
-import { RecordModal } from '@/components/RecordModal';
+import { SimpleRecordModal } from '@/components/SimpleRecordModal';
 
 const CATEGORY_LABELS: Record<FileCategory, string> = {
   image: 'Image file',
@@ -52,7 +52,7 @@ const CATEGORY_LABELS: Record<FileCategory, string> = {
   other: 'File',
 };
 
-type VaultTab = 'files' | 'messages' | 'letters' | 'assets';
+type VaultTab = 'files';
 
 export default function ItemsPageClient() {
   const { metadata, addItem, getItemKey, session } = useCrypto();
@@ -104,88 +104,32 @@ export default function ItemsPageClient() {
     }),
   };
 
-  const tabs = [
-    { id: 'files' as VaultTab, label: 'Files & Passwords', icon: FolderOpen, count: items.length },
-    { id: 'messages' as VaultTab, label: 'Video Messages', icon: VideoIcon, count: 0 },
-    { id: 'letters' as VaultTab, label: 'Letters', icon: Mail, count: 0 },
-    { id: 'assets' as VaultTab, label: 'Digital Assets', icon: Briefcase, count: 0 },
-  ];
+  // No tabs needed - single view
+  const showTabs = false;
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Header */}
       <MobilePageHeader
         title="My Vault"
-        subtitle="All your encrypted files, messages, letters, and digital assets in one place."
+        subtitle="All your encrypted files, passwords, and recordings in one secure place."
         icon={Vault}
         actions={
-          <>
-            {activeTab === 'files' && (
-              <Button onClick={() => setShowAddModal(true)} size="sm">
-                <Plus className="h-4 w-4" />
-                <span className="ml-2">Add Item</span>
-              </Button>
-            )}
-            {activeTab === 'messages' && (
-              <Button onClick={() => setShowRecordModal(true)} size="sm">
-                <Plus className="h-4 w-4" />
-                <span className="ml-2">Record Message</span>
-              </Button>
-            )}
-            {activeTab === 'letters' && (
-              <Link href="/app/letters">
-                <Button size="sm">
-                  <Plus className="h-4 w-4" />
-                  <span className="ml-2">Write Letter</span>
-                </Button>
-              </Link>
-            )}
-            {activeTab === 'assets' && (
-              <Link href="/app/assets">
-                <Button size="sm">
-                  <Plus className="h-4 w-4" />
-                  <span className="ml-2">Add Asset</span>
-                </Button>
-              </Link>
-            )}
-          </>
+          <div className="flex gap-2">
+            <Button onClick={() => setShowRecordModal(true)} size="sm" variant="secondary">
+              <VideoIcon className="h-4 w-4" />
+              <span className="ml-2">Record</span>
+            </Button>
+            <Button onClick={() => setShowAddModal(true)} size="sm">
+              <Plus className="h-4 w-4" />
+              <span className="ml-2">Add Item</span>
+            </Button>
+          </div>
         }
       />
 
-      {/* Tab Navigation */}
-      <div className="border-b border-graphite-200 bg-white rounded-t-2xl overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
-        <div className="flex gap-1 p-2 min-w-max">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all whitespace-nowrap ${
-                  isActive
-                    ? 'bg-primary-500 text-white shadow-md'
-                    : 'text-graphite-600 hover:bg-graphite-50 hover:text-graphite-900'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="text-sm font-medium">{tab.label}</span>
-                {tab.count > 0 && (
-                  <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-graphite-100 text-graphite-600'
-                  }`}>
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      {activeTab === 'files' && (
-        <>
+      {/* Files Content */}
+      <>
           {/* Storage Indicator */}
       <StorageIndicator
         tier={tier}
@@ -294,68 +238,7 @@ export default function ItemsPageClient() {
         </div>
       )}
       </>
-      )}
 
-      {/* Messages Tab */}
-      {activeTab === 'messages' && (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
-          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
-              <VideoIcon className="h-7 w-7" />
-            </div>
-            <h3 className="text-xl font-semibold text-graphite-900">No video messages yet</h3>
-            <p className="mt-2 max-w-sm text-sm text-graphite-600">
-              Record heartfelt video or audio messages for future delivery to loved ones on special occasions.
-            </p>
-            <Button onClick={() => setShowRecordModal(true)} size="lg" className="mt-6">
-              <Plus className="h-4 w-4" />
-              <span className="ml-2">Record Your First Message</span>
-            </Button>
-          </div>
-        </Card>
-      )}
-
-      {/* Letters Tab */}
-      {activeTab === 'letters' && (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
-          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
-              <Mail className="h-7 w-7" />
-            </div>
-            <h3 className="text-xl font-semibold text-graphite-900">No scheduled letters yet</h3>
-            <p className="mt-2 max-w-sm text-sm text-graphite-600">
-              Write and schedule letters to be delivered on specific dates or occasions.
-            </p>
-            <Link href="/app/letters">
-              <Button size="lg" className="mt-6">
-                <Plus className="h-4 w-4" />
-                <span className="ml-2">Write Your First Letter</span>
-              </Button>
-            </Link>
-          </div>
-        </Card>
-      )}
-
-      {/* Digital Assets Tab */}
-      {activeTab === 'assets' && (
-        <Card className="rounded-3xl border border-graphite-200 bg-white shadow-sm">
-          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-dashed border-graphite-200 bg-graphite-50 text-graphite-500">
-              <Briefcase className="h-7 w-7" />
-            </div>
-            <h3 className="text-xl font-semibold text-graphite-900">No digital assets yet</h3>
-            <p className="mt-2 max-w-sm text-sm text-graphite-600">
-              Create an inventory of your bank accounts, subscriptions, crypto wallets, and online accounts.
-            </p>
-            <Link href="/app/assets">
-              <Button size="lg" className="mt-6">
-                <Plus className="h-4 w-4" />
-                <span className="ml-2">Add Your First Asset</span>
-              </Button>
-            </Link>
-          </div>
-        </Card>
-      )}
 
       {/* Add Item Modal */}
       <AddItemModal
@@ -366,7 +249,7 @@ export default function ItemsPageClient() {
       />
 
       {/* Record Video/Audio Modal */}
-      <RecordModal
+      <SimpleRecordModal
         isOpen={showRecordModal}
         onClose={() => setShowRecordModal(false)}
       />
@@ -490,8 +373,8 @@ function AddItemModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  type: ItemType;
-  onTypeChange: (type: ItemType) => void;
+  type: ItemType | 'recording';
+  onTypeChange: (type: ItemType | 'recording') => void;
 }) {
   const { metadata, addItem, getItemKey, session } = useCrypto();
   const { showToast } = useToast();
@@ -512,6 +395,9 @@ function AddItemModal({
   const [cardExpiry, setCardExpiry] = useState('');
   const [cardCVV, setCardCVV] = useState('');
   const [secureNoteContent, setSecureNoteContent] = useState('');
+
+  // Recording state
+  const [showRecordingUI, setShowRecordingUI] = useState(false);
 
   // Clear error when file changes or type changes
   React.useEffect(() => {
