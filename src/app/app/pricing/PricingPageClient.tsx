@@ -90,11 +90,15 @@ export default function PricingPageClient() {
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">Unlimited items</span>
+                <span className="text-graphite-700">1 video recording</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-700">Monthly heartbeat only</span>
+                <span className="text-graphite-700">Unlimited file types</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
+                <span className="text-graphite-700">Monthly heartbeat check-ins</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-graphite-400 flex-shrink-0 mt-0.5" />
@@ -153,7 +157,15 @@ export default function PricingPageClient() {
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Bulk file upload</span>
+                <span className="text-graphite-900 font-medium">Unlimited video recordings</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+                <span className="text-graphite-900 font-medium">Bulk file uploads</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+                <span className="text-graphite-900 font-medium">Custom heartbeat schedules</span>
               </li>
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
@@ -162,22 +174,6 @@ export default function PricingPageClient() {
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
                 <span className="text-graphite-900 font-medium">Letter scheduler</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Custom heartbeat schedules</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Pause/resume heartbeat</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Release analytics</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                <span className="text-graphite-900 font-medium">Priority support</span>
               </li>
             </ul>
 
