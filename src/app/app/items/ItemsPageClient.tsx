@@ -10,7 +10,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { FileUpload } from '@/components/ui/FileUpload';
 import { Progress } from '@/components/ui/Progress';
-import { encryptFile } from '@/lib/crypto';
+import { encryptFile, generateIV, generateSalt, wrapKey, bytesToHex } from '@/lib/crypto';
 import { uploadObject } from '@/lib/r2-client';
 import type { ItemType } from '@/types';
 import {
@@ -25,6 +25,12 @@ import {
   ArrowRight,
   ChevronDown,
   FolderOpen,
+  Key,
+  CreditCard,
+  Lock,
+  Eye,
+  EyeOff,
+  RefreshCw,
 } from 'lucide-react';
 import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
 import type { FileCategory } from '@/lib/file-types';
@@ -60,6 +66,9 @@ export default function ItemsPageClient() {
 
   // Categorize items
   const categorizedItems = {
+    passwords: items.filter(item => item.type === 'password'),
+    cards: items.filter(item => item.type === 'card'),
+    secureNotes: items.filter(item => item.type === 'secure_note'),
     notes: items.filter(item => item.type === 'note'),
     images: items.filter(item => {
       if (item.type !== 'file') return false;
@@ -140,6 +149,36 @@ export default function ItemsPageClient() {
         </Card>
       ) : (
         <div className="space-y-8">
+          {/* Passwords */}
+          {categorizedItems.passwords.length > 0 && (
+            <CategorySection
+              title="Passwords"
+              icon={<Key className="w-5 h-5" />}
+              items={categorizedItems.passwords}
+              count={categorizedItems.passwords.length}
+            />
+          )}
+
+          {/* Cards */}
+          {categorizedItems.cards.length > 0 && (
+            <CategorySection
+              title="Credit Cards"
+              icon={<CreditCard className="w-5 h-5" />}
+              items={categorizedItems.cards}
+              count={categorizedItems.cards.length}
+            />
+          )}
+
+          {/* Secure Notes */}
+          {categorizedItems.secureNotes.length > 0 && (
+            <CategorySection
+              title="Secure Notes"
+              icon={<Lock className="w-5 h-5" />}
+              items={categorizedItems.secureNotes}
+              count={categorizedItems.secureNotes.length}
+            />
+          )}
+
           {/* Notes */}
           {categorizedItems.notes.length > 0 && (
             <CategorySection
@@ -262,13 +301,28 @@ function CategorySection({
 function ItemCard({ item }: { item: any }) {
   const fileInfo = item.type === 'file' ? getFileTypeInfo(item.name) : null;
   const hasPreview = item.type === 'note' || (item.type === 'file' && canPreviewFile(item.name));
-  const fileDescription = item.type === 'note'
-    ? 'Secure note'
-    : fileInfo
-      ? CATEGORY_LABELS[fileInfo.category]
-      : 'File';
+
+  const getDescription = () => {
+    if (item.type === 'password') return 'Login credentials';
+    if (item.type === 'card') return 'Credit card';
+    if (item.type === 'secure_note') return 'Secure note';
+    if (item.type === 'note') return 'Secure note';
+    if (fileInfo) return CATEGORY_LABELS[fileInfo.category];
+    return 'File';
+  };
+
+  const fileDescription = getDescription();
 
   const getIcon = () => {
+    if (item.type === 'password') {
+      return <Key className="w-4 h-4 text-graphite-500" />;
+    }
+    if (item.type === 'card') {
+      return <CreditCard className="w-4 h-4 text-graphite-500" />;
+    }
+    if (item.type === 'secure_note') {
+      return <Lock className="w-4 h-4 text-graphite-500" />;
+    }
     if (item.type === 'note') {
       return <StickyNote className="w-4 h-4 text-graphite-500" />;
     }
@@ -332,6 +386,18 @@ function AddItemModal({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
 
+  // Password/card/secure_note fields
+  const [passwordName, setPasswordName] = useState('');
+  const [passwordUrl, setPasswordUrl] = useState('');
+  const [passwordUsername, setPasswordUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordNotes, setPasswordNotes] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCVV, setCardCVV] = useState('');
+  const [secureNoteContent, setSecureNoteContent] = useState('');
+
   // Clear error when file changes or type changes
   React.useEffect(() => {
     setUploadError(null);
@@ -345,6 +411,16 @@ function AddItemModal({
       setNoteName('');
       setNoteContent('');
       setCurrentFileIndex(0);
+      setPasswordName('');
+      setPasswordUrl('');
+      setPasswordUsername('');
+      setPassword('');
+      setPasswordNotes('');
+      setCardNumber('');
+      setCardExpiry('');
+      setCardCVV('');
+      setSecureNoteContent('');
+      setShowPassword(false);
     }
   }, [isOpen]);
 
@@ -487,9 +563,213 @@ function AddItemModal({
     }
   };
 
+  const generateRandomPassword = () => {
+    const length = 16;
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+    let newPassword = '';
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+    for (let i = 0; i < length; i++) {
+      newPassword += charset[array[i] % charset.length];
+    }
+    setPassword(newPassword);
+    setShowPassword(true);
+  };
+
+  const handleAddPassword = async () => {
+    if (!passwordName.trim() || !password.trim()) {
+      showToast('Please enter a name and password', 'error');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const { generateItemKey } = await import('@/lib/crypto');
+      const itemKey = await generateItemKey();
+
+      // Encrypt password
+      const encoder = new TextEncoder();
+      const passwordBytes = encoder.encode(password);
+      const passwordIv = generateIV();
+      const passwordEncryptedBuffer = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv: passwordIv.buffer as ArrayBuffer },
+        itemKey,
+        passwordBytes.buffer as ArrayBuffer
+      );
+
+      // Encrypt notes if present
+      let notesEncrypted, notesIV;
+      if (passwordNotes) {
+        const notesBytes = encoder.encode(passwordNotes);
+        const notesIv = generateIV();
+        const notesEncryptedBuffer = await crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: notesIv.buffer as ArrayBuffer },
+          itemKey,
+          notesBytes.buffer as ArrayBuffer
+        );
+        notesEncrypted = bytesToHex(new Uint8Array(notesEncryptedBuffer));
+        notesIV = bytesToHex(notesIv);
+      }
+
+      // Create item in database
+      await addItem({
+        type: 'password',
+        name: passwordName,
+        size: new Uint8Array(passwordEncryptedBuffer).length,
+        itemKeySalt: '',
+        url: passwordUrl || undefined,
+        username: passwordUsername || undefined,
+        passwordEncrypted: bytesToHex(new Uint8Array(passwordEncryptedBuffer)),
+        passwordIV: bytesToHex(passwordIv),
+        notesEncrypted,
+        notesIV,
+      }, itemKey);
+
+      showToast('Password added successfully', 'success');
+      onClose();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to add password', 'error');
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleAddCard = async () => {
+    if (!passwordName.trim() || !cardNumber.trim()) {
+      showToast('Please enter a name and card number', 'error');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const { generateItemKey } = await import('@/lib/crypto');
+      const itemKey = await generateItemKey();
+      const encoder = new TextEncoder();
+
+      // Encrypt card number
+      const cardBytes = encoder.encode(cardNumber);
+      const cardIv = generateIV();
+      const cardEncryptedBuffer = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv: cardIv.buffer as ArrayBuffer },
+        itemKey,
+        cardBytes.buffer as ArrayBuffer
+      );
+
+      // Encrypt expiry if present
+      let cardExpiryEncrypted;
+      if (cardExpiry) {
+        const expiryBytes = encoder.encode(cardExpiry);
+        const expiryIv = generateIV();
+        const expiryEncryptedBuffer = await crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: expiryIv.buffer as ArrayBuffer },
+          itemKey,
+          expiryBytes.buffer as ArrayBuffer
+        );
+        cardExpiryEncrypted = bytesToHex(new Uint8Array(expiryEncryptedBuffer));
+      }
+
+      // Encrypt CVV if present
+      let cardCVVEncrypted, cardCVVIV;
+      if (cardCVV) {
+        const cvvBytes = encoder.encode(cardCVV);
+        const cvvIv = generateIV();
+        const cvvEncryptedBuffer = await crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: cvvIv.buffer as ArrayBuffer },
+          itemKey,
+          cvvBytes.buffer as ArrayBuffer
+        );
+        cardCVVEncrypted = bytesToHex(new Uint8Array(cvvEncryptedBuffer));
+        cardCVVIV = bytesToHex(cvvIv);
+      }
+
+      // Encrypt notes if present
+      let notesEncrypted, notesIV;
+      if (passwordNotes) {
+        const notesBytes = encoder.encode(passwordNotes);
+        const notesIv = generateIV();
+        const notesEncryptedBuffer = await crypto.subtle.encrypt(
+          { name: 'AES-GCM', iv: notesIv.buffer as ArrayBuffer },
+          itemKey,
+          notesBytes.buffer as ArrayBuffer
+        );
+        notesEncrypted = bytesToHex(new Uint8Array(notesEncryptedBuffer));
+        notesIV = bytesToHex(notesIv);
+      }
+
+      await addItem({
+        type: 'card',
+        name: passwordName,
+        size: new Uint8Array(cardEncryptedBuffer).length,
+        itemKeySalt: '',
+        username: passwordUsername || undefined,
+        cardNumberEncrypted: bytesToHex(new Uint8Array(cardEncryptedBuffer)),
+        cardExpiryEncrypted,
+        cardCVVEncrypted,
+        cardCVVIV,
+        notesEncrypted,
+        notesIV,
+      }, itemKey);
+
+      showToast('Card added successfully', 'success');
+      onClose();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to add card', 'error');
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleAddSecureNote = async () => {
+    if (!passwordName.trim() || !secureNoteContent.trim()) {
+      showToast('Please enter a name and content', 'error');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const { generateItemKey } = await import('@/lib/crypto');
+      const itemKey = await generateItemKey();
+      const encoder = new TextEncoder();
+
+      // Encrypt secure note content
+      const noteBytes = encoder.encode(secureNoteContent);
+      const noteIv = generateIV();
+      const noteEncryptedBuffer = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv: noteIv.buffer as ArrayBuffer },
+        itemKey,
+        noteBytes.buffer as ArrayBuffer
+      );
+
+      await addItem({
+        type: 'secure_note',
+        name: passwordName,
+        size: new Uint8Array(noteEncryptedBuffer).length,
+        itemKeySalt: '',
+        notesEncrypted: bytesToHex(new Uint8Array(noteEncryptedBuffer)),
+        notesIV: bytesToHex(noteIv),
+      }, itemKey);
+
+      showToast('Secure note added successfully', 'success');
+      onClose();
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to add secure note', 'error');
+      console.error(error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleSubmit = () => {
     if (type === 'note') {
       handleAddNote();
+    } else if (type === 'password') {
+      handleAddPassword();
+    } else if (type === 'card') {
+      handleAddCard();
+    } else if (type === 'secure_note') {
+      handleAddSecureNote();
     } else {
       handleAddFile();
     }
@@ -499,34 +779,61 @@ function AddItemModal({
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Item" size="lg">
       <div className="space-y-6">
         {/* Type Selector */}
-        <div className="flex gap-4">
+        <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => onTypeChange('file')}
-            className={`
-              flex-1 p-4 rounded-lg border-2 transition-colors
-              ${
-                type === 'file'
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-graphite-200 hover:border-graphite-300'
-              }
-            `}
+            className={`p-3 rounded-lg border-2 transition-colors ${
+              type === 'file'
+                ? 'border-primary-500 bg-primary-50'
+                : 'border-graphite-200 hover:border-graphite-300'
+            }`}
           >
-            <FileText className={`w-8 h-8 mx-auto mb-2 ${type === 'file' ? 'text-primary-600' : 'text-graphite-400'}`} />
-            <span className="font-medium text-graphite-900">File</span>
+            <FileText className={`w-6 h-6 mx-auto mb-1 ${type === 'file' ? 'text-primary-600' : 'text-graphite-400'}`} />
+            <span className="text-xs font-medium text-graphite-900">File</span>
           </button>
           <button
             onClick={() => onTypeChange('note')}
-            className={`
-              flex-1 p-4 rounded-lg border-2 transition-colors
-              ${
-                type === 'note'
-                  ? 'border-primary-500 bg-primary-50'
-                  : 'border-graphite-200 hover:border-graphite-300'
-              }
-            `}
+            className={`p-3 rounded-lg border-2 transition-colors ${
+              type === 'note'
+                ? 'border-primary-500 bg-primary-50'
+                : 'border-graphite-200 hover:border-graphite-300'
+            }`}
           >
-            <StickyNote className={`w-8 h-8 mx-auto mb-2 ${type === 'note' ? 'text-primary-600' : 'text-graphite-400'}`} />
-            <span className="font-medium text-graphite-900">Note</span>
+            <StickyNote className={`w-6 h-6 mx-auto mb-1 ${type === 'note' ? 'text-primary-600' : 'text-graphite-400'}`} />
+            <span className="text-xs font-medium text-graphite-900">Note</span>
+          </button>
+          <button
+            onClick={() => onTypeChange('password')}
+            className={`p-3 rounded-lg border-2 transition-colors ${
+              type === 'password'
+                ? 'border-primary-500 bg-primary-50'
+                : 'border-graphite-200 hover:border-graphite-300'
+            }`}
+          >
+            <Key className={`w-6 h-6 mx-auto mb-1 ${type === 'password' ? 'text-primary-600' : 'text-graphite-400'}`} />
+            <span className="text-xs font-medium text-graphite-900">Password</span>
+          </button>
+          <button
+            onClick={() => onTypeChange('card')}
+            className={`p-3 rounded-lg border-2 transition-colors ${
+              type === 'card'
+                ? 'border-primary-500 bg-primary-50'
+                : 'border-graphite-200 hover:border-graphite-300'
+            }`}
+          >
+            <CreditCard className={`w-6 h-6 mx-auto mb-1 ${type === 'card' ? 'text-primary-600' : 'text-graphite-400'}`} />
+            <span className="text-xs font-medium text-graphite-900">Card</span>
+          </button>
+          <button
+            onClick={() => onTypeChange('secure_note')}
+            className={`p-3 rounded-lg border-2 transition-colors ${
+              type === 'secure_note'
+                ? 'border-primary-500 bg-primary-50'
+                : 'border-graphite-200 hover:border-graphite-300'
+            }`}
+          >
+            <Lock className={`w-6 h-6 mx-auto mb-1 ${type === 'secure_note' ? 'text-primary-600' : 'text-graphite-400'}`} />
+            <span className="text-xs font-medium text-graphite-900">Secure Note</span>
           </button>
         </div>
 
@@ -590,6 +897,160 @@ function AddItemModal({
           </div>
         )}
 
+        {/* Password Input */}
+        {type === 'password' && (
+          <div className="space-y-4">
+            <Input
+              label="Name"
+              value={passwordName}
+              onChange={(e) => setPasswordName(e.target.value)}
+              placeholder="e.g., Gmail, Bank Account"
+              disabled={isUploading}
+            />
+            <Input
+              label="Website URL"
+              value={passwordUrl}
+              onChange={(e) => setPasswordUrl(e.target.value)}
+              placeholder="https://example.com"
+              disabled={isUploading}
+            />
+            <Input
+              label="Username/Email"
+              value={passwordUsername}
+              onChange={(e) => setPasswordUsername(e.target.value)}
+              placeholder="user@example.com"
+              disabled={isUploading}
+            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password *
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  className="w-full px-3 py-2 pr-20 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                  disabled={isUploading}
+                />
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="p-1.5 hover:bg-graphite-100 rounded-lg transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={generateRandomPassword}
+                    className="p-1.5 hover:bg-graphite-100 rounded-lg transition-colors"
+                    title="Generate password"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Notes
+              </label>
+              <textarea
+                value={passwordNotes}
+                onChange={(e) => setPasswordNotes(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                rows={3}
+                placeholder="Additional notes..."
+                disabled={isUploading}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Card Input */}
+        {type === 'card' && (
+          <div className="space-y-4">
+            <Input
+              label="Card Name"
+              value={passwordName}
+              onChange={(e) => setPasswordName(e.target.value)}
+              placeholder="e.g., Visa, Chase Sapphire"
+              disabled={isUploading}
+            />
+            <Input
+              label="Cardholder Name"
+              value={passwordUsername}
+              onChange={(e) => setPasswordUsername(e.target.value)}
+              placeholder="John Doe"
+              disabled={isUploading}
+            />
+            <Input
+              label="Card Number *"
+              value={cardNumber}
+              onChange={(e) => setCardNumber(e.target.value)}
+              placeholder="1234 5678 9012 3456"
+              disabled={isUploading}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Expiry"
+                value={cardExpiry}
+                onChange={(e) => setCardExpiry(e.target.value)}
+                placeholder="MM/YY"
+                disabled={isUploading}
+              />
+              <Input
+                label="CVV"
+                value={cardCVV}
+                onChange={(e) => setCardCVV(e.target.value)}
+                placeholder="123"
+                disabled={isUploading}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Notes
+              </label>
+              <textarea
+                value={passwordNotes}
+                onChange={(e) => setPasswordNotes(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                rows={3}
+                placeholder="Additional notes..."
+                disabled={isUploading}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Secure Note Input */}
+        {type === 'secure_note' && (
+          <div className="space-y-4">
+            <Input
+              label="Note Name"
+              value={passwordName}
+              onChange={(e) => setPasswordName(e.target.value)}
+              placeholder="e.g., Recovery Codes, PIN"
+              disabled={isUploading}
+            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Content *
+              </label>
+              <textarea
+                value={secureNoteContent}
+                onChange={(e) => setSecureNoteContent(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white text-graphite-900"
+                rows={8}
+                placeholder="Enter your secure note content..."
+                disabled={isUploading}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Error Message */}
         {uploadError && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -624,7 +1085,13 @@ function AddItemModal({
           <Button onClick={handleSubmit} isLoading={isUploading}>
             {type === 'file'
               ? (selectedFiles.length > 1 ? `Upload ${selectedFiles.length} Files` : 'Upload File')
-              : 'Add Note'}
+              : type === 'note'
+              ? 'Add Note'
+              : type === 'password'
+              ? 'Add Password'
+              : type === 'card'
+              ? 'Add Card'
+              : 'Add Secure Note'}
           </Button>
         </div>
       </div>

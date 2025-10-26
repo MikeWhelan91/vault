@@ -18,6 +18,20 @@ export interface VaultItem {
   version: number;
   // Metadata stored client-side (in memory or indexedDB)
   itemKeySalt: string; // hex-encoded salt for item key derivation
+
+  // Password-specific fields (for type='password', 'card', 'secure_note')
+  url?: string;
+  username?: string;
+  favorite?: boolean;
+  lastUsed?: string;
+  passwordEncrypted?: string;
+  passwordIV?: string;
+  cardNumberEncrypted?: string;
+  cardExpiryEncrypted?: string;
+  cardCVVEncrypted?: string;
+  cardCVVIV?: string;
+  notesEncrypted?: string;
+  notesIV?: string;
 }
 
 export interface VaultMetadata {
