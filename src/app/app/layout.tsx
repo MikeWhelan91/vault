@@ -65,7 +65,7 @@ function AppNav() {
 
   const navigation = [
     { name: 'Dashboard', href: '/app' },
-    { name: 'Passwords', href: '/app/passwords' },
+    { name: 'Items', href: '/app/items' },
     { name: 'Releases', href: '/app/release' },
     { name: 'My Bundles', href: '/app/bundles' },
     ...(isPaidUser ? [{ name: 'Letters', href: '/app/letters' }] : []),

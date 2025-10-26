@@ -24,7 +24,7 @@ export function BottomNav() {
 
   const navItems = [
     { name: 'Home', href: '/app', icon: Home },
-    { name: 'Passwords', href: '/app/passwords', icon: Key },
+    { name: 'Items', href: '/app/items', icon: FileText },
     { name: 'Releases', href: '/app/release', icon: Send },
   ];
 
