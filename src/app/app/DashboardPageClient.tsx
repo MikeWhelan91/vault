@@ -60,6 +60,13 @@ export default function DashboardPageClient() {
     }
   };
 
+  const handleCheckInSuccess = async () => {
+    // Clear the checkInBundleId to hide the section
+    setCheckInBundleId(null);
+    // Refresh bundles to get updated data
+    await fetchBundles();
+  };
+
   useEffect(() => {
     fetchBundles();
   }, [session.dbUserId]);
@@ -335,7 +342,7 @@ export default function DashboardPageClient() {
               lastHeartbeat={bundle.lastHeartbeat}
               nextHeartbeat={bundle.nextHeartbeat}
               cadenceDays={bundle.heartbeatCadenceDays || 1}
-              onCheckInSuccess={fetchBundles}
+              onCheckInSuccess={handleCheckInSuccess}
             />
           ))}
         </div>
