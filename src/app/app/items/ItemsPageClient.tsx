@@ -118,15 +118,36 @@ export default function ItemsPageClient() {
         icon={Vault}
         actions={
           <>
-            <Button onClick={() => setShowAddModal(true)} size="sm">
-              <Plus className="h-4 w-4" />
-              <span className="ml-2">
-                {activeTab === 'files' ? 'Add Item' :
-                 activeTab === 'messages' ? 'Record Message' :
-                 activeTab === 'letters' ? 'Write Letter' :
-                 'Add Asset'}
-              </span>
-            </Button>
+            {activeTab === 'files' && (
+              <Button onClick={() => setShowAddModal(true)} size="sm">
+                <Plus className="h-4 w-4" />
+                <span className="ml-2">Add Item</span>
+              </Button>
+            )}
+            {activeTab === 'messages' && (
+              <Link href="/app/messages">
+                <Button size="sm">
+                  <Plus className="h-4 w-4" />
+                  <span className="ml-2">Record Message</span>
+                </Button>
+              </Link>
+            )}
+            {activeTab === 'letters' && (
+              <Link href="/app/letters">
+                <Button size="sm">
+                  <Plus className="h-4 w-4" />
+                  <span className="ml-2">Write Letter</span>
+                </Button>
+              </Link>
+            )}
+            {activeTab === 'assets' && (
+              <Link href="/app/assets">
+                <Button size="sm">
+                  <Plus className="h-4 w-4" />
+                  <span className="ml-2">Add Asset</span>
+                </Button>
+              </Link>
+            )}
           </>
         }
       />
@@ -286,10 +307,12 @@ export default function ItemsPageClient() {
             <p className="mt-2 max-w-sm text-sm text-graphite-600">
               Record heartfelt video or audio messages for future delivery to loved ones on special occasions.
             </p>
-            <Button onClick={() => setShowAddModal(true)} size="lg" className="mt-6">
-              <Plus className="h-4 w-4" />
-              <span className="ml-2">Record Your First Message</span>
-            </Button>
+            <Link href="/app/messages">
+              <Button size="lg" className="mt-6">
+                <Plus className="h-4 w-4" />
+                <span className="ml-2">Record Your First Message</span>
+              </Button>
+            </Link>
           </div>
         </Card>
       )}
@@ -326,10 +349,12 @@ export default function ItemsPageClient() {
             <p className="mt-2 max-w-sm text-sm text-graphite-600">
               Create an inventory of your bank accounts, subscriptions, crypto wallets, and online accounts.
             </p>
-            <Button onClick={() => setShowAddModal(true)} size="lg" className="mt-6">
-              <Plus className="h-4 w-4" />
-              <span className="ml-2">Add Your First Asset</span>
-            </Button>
+            <Link href="/app/assets">
+              <Button size="lg" className="mt-6">
+                <Plus className="h-4 w-4" />
+                <span className="ml-2">Add Your First Asset</span>
+              </Button>
+            </Link>
           </div>
         </Card>
       )}
