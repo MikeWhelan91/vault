@@ -30,6 +30,7 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [fileName, setFileName] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -48,7 +49,7 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
       }).length;
 
       if (!canUploadVideo(tier, currentVideoCount)) {
-        showToast(UPGRADE_MESSAGES.video_limit.message, 'error');
+        setShowUpgradeModal(true);
         return;
       }
     }
@@ -267,10 +268,11 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
   }, []);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      title="Record Video/Audio"
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="Record Video/Audio"
       size="xl"
     >
       <div className="space-y-6">
@@ -391,5 +393,63 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
         </div>
       </div>
     </Modal>
+
+    {/* Upgrade Modal for Video Limit */}
+    <Modal
+      isOpen={showUpgradeModal}
+      onClose={() => setShowUpgradeModal(false)}
+      title="Upgrade to Record More Videos"
+    >
+        <div className="space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary-100">
+              <Video className="h-5 w-5 text-primary-600" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm text-plum-700">
+                {UPGRADE_MESSAGES.video_limit.message}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-primary-200 bg-primary-50 p-4">
+            <h4 className="font-semibold text-plum-900 mb-2">Plus Plan Benefits:</h4>
+            <ul className="space-y-2 text-sm text-plum-700">
+              <li className="flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary-500"></div>
+                Unlimited video recordings
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary-500"></div>
+                5 GB storage (vs 300 MB)
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary-500"></div>
+                Unlimited bundles & trustees
+              </li>
+              <li className="flex items-center gap-2">
+                <div className="h-1.5 w-1.5 rounded-full bg-primary-500"></div>
+                Custom heartbeat schedules
+              </li>
+            </ul>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <Button
+              variant="ghost"
+              onClick={() => setShowUpgradeModal(false)}
+              className="flex-1"
+            >
+              Maybe Later
+            </Button>
+            <Link href="/app/pricing" className="flex-1">
+              <Button className="w-full">
+                View Pricing
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }
