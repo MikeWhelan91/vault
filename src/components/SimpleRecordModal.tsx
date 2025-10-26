@@ -1,14 +1,17 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Video, Mic, Play, Pause, Square, Send } from 'lucide-react';
+import { Video, Mic, Play, Pause, Square, Send, AlertCircle } from 'lucide-react';
 import { useToast } from '@/contexts/ToastContext';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { encryptFile, generateItemKey } from '@/lib/crypto';
 import { uploadObject } from '@/lib/r2-client';
+import { canUploadVideo, UPGRADE_MESSAGES, type TierName } from '@/lib/pricing';
+import { getFileTypeInfo } from '@/lib/file-types';
 
 type MediaType = 'video' | 'audio';
 
@@ -20,7 +23,7 @@ interface SimpleRecordModalProps {
 
 export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModalProps) {
   const { showToast } = useToast();
-  const { addItem, session } = useCrypto();
+  const { addItem, session, metadata } = useCrypto();
   const [mediaType, setMediaType] = useState<MediaType>('video');
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -35,6 +38,21 @@ export function SimpleRecordModal({ isOpen, onClose, onSave }: SimpleRecordModal
   const videoPreviewRef = useRef<HTMLVideoElement>(null);
 
   const startRecording = async () => {
+    // Check video limits for free users
+    if (mediaType === 'video' && metadata) {
+      const tier = (metadata.tier as TierName) || 'free';
+      const currentVideoCount = metadata.items.filter(item => {
+        if (item.type !== 'file') return false;
+        const itemFileInfo = getFileTypeInfo(item.name);
+        return itemFileInfo.category === 'video';
+      }).length;
+
+      if (!canUploadVideo(tier, currentVideoCount)) {
+        showToast(UPGRADE_MESSAGES.video_limit.message, 'error');
+        return;
+      }
+    }
+
     try {
       const constraints = mediaType === 'video'
         ? { video: true, audio: true }

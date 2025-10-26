@@ -499,10 +499,16 @@ function AddItemModal({
         }
       }
 
-      if (newVideoCount > 0 && !canUploadVideo(tier, currentVideoCount + newVideoCount - 1)) {
-        const upgradeMsg = UPGRADE_MESSAGES.video_limit;
-        setUploadError(upgradeMsg.message);
-        return;
+      // Check if adding these new videos would exceed the limit
+      // For each new video, check if we can upload it given the running total
+      if (newVideoCount > 0) {
+        for (let i = 0; i < newVideoCount; i++) {
+          if (!canUploadVideo(tier, currentVideoCount + i)) {
+            const upgradeMsg = UPGRADE_MESSAGES.video_limit;
+            setUploadError(upgradeMsg.message);
+            return;
+          }
+        }
       }
     }
 
