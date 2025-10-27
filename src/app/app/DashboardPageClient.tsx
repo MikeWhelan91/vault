@@ -32,7 +32,7 @@ import {
   Activity
 } from 'lucide-react';
 import { getFileTypeInfo } from '@/lib/file-types';
-import { getTierLimits, type TierName } from '@/lib/pricing';
+import { getTierLimits, isPaidTier, type TierName } from '@/lib/pricing';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 import { BundleCheckIn } from '@/components/BundleCheckIn';
 
@@ -352,7 +352,7 @@ export default function DashboardPageClient() {
         subtitle="Monitor your encrypted storage, track release readiness, and keep every trustee in the loop from one private dashboard."
         icon={Home}
         badge={
-          tier === 'plus' ? (
+          isPaidTier(tier) ? (
             <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
               <Crown className="h-3 w-3" />
               Plus

@@ -300,6 +300,10 @@ export function getRetentionPolicies(tier: TierName) {
   return limits.retention;
 }
 
+export function isPaidTier(tier: TierName): boolean {
+  return tier !== 'free';
+}
+
 /**
  * Upgrade prompts and messaging
  */

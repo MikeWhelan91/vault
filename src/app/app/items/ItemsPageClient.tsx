@@ -43,6 +43,8 @@ import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 import { SimpleRecordModal } from '@/components/SimpleRecordModal';
 import { useThumbnail } from '@/hooks/useThumbnail';
+import { useRouter } from 'next/navigation';
+import { AlertCircle } from 'lucide-react';
 
 const CATEGORY_LABELS: Record<FileCategory, string> = {
   image: 'Image file',
@@ -58,10 +60,16 @@ type VaultTab = 'all' | 'images' | 'videos' | 'documents' | 'passwords' | 'other
 export default function ItemsPageClient() {
   const { metadata, addItem, getItemKey, session } = useCrypto();
   const { showToast } = useToast();
+  const router = useRouter();
   const [showAddModal, setShowAddModal] = useState(false);
   const [addType, setAddType] = useState<ItemType>('file');
   const [showRecordModal, setShowRecordModal] = useState(false);
   const [activeTab, setActiveTab] = useState<VaultTab>('all');
+
+  // Calculate days since last activity for warning banner
+  const daysSinceActivity = metadata?.lastActivityAt
+    ? Math.floor((Date.now() - new Date(metadata.lastActivityAt).getTime()) / (1000 * 60 * 60 * 24))
+    : 0;
 
   if (!metadata) {
     return <div>Loading...</div>;
@@ -126,6 +134,15 @@ export default function ItemsPageClient() {
 
   const tabItems = getItemsForTab();
 
+  // Count items not in any bundles (for warning)
+  const itemsNotInBundles = items.filter(item => {
+    // Check if item is in any bundle
+    const inBundle = metadata.bundles?.some(bundle =>
+      bundle.items?.some((bundleItem: any) => bundleItem.itemId === item.id)
+    );
+    return !inBundle;
+  }).length;
+
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       {/* Header */}
@@ -146,6 +163,37 @@ export default function ItemsPageClient() {
           </div>
         }
       />
+
+      {/* Inactivity Warning Banner */}
+      {daysSinceActivity >= 540 && itemsNotInBundles > 0 && (
+        <Card className="border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100">
+          <div className="flex items-start gap-4 p-5">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-200">
+              <AlertCircle className="h-5 w-5 text-amber-700" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm font-semibold text-amber-900 mb-1">
+                Vault Storage Policy Notice
+              </h3>
+              <p className="text-sm text-amber-800 mb-3">
+                You have {itemsNotInBundles} item{itemsNotInBundles !== 1 ? 's' : ''} not in any bundles.
+                Items not in bundles will be deleted after <strong>2 years of inactivity</strong>.
+                You've been inactive for <strong>{Math.floor(daysSinceActivity / 30)} months</strong>.
+              </p>
+              <p className="text-xs text-amber-700 mb-3">
+                <strong>To protect these items:</strong> Add them to a bundle or log in regularly.
+              </p>
+              <Button
+                onClick={() => router.push('/app/release')}
+                size="sm"
+                className="bg-amber-600 hover:bg-amber-700"
+              >
+                Add Items to Bundle
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* Storage Indicator */}
       <StorageIndicator

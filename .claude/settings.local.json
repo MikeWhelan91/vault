@@ -41,7 +41,19 @@
       "Bash(gh run list:*)",
       "Bash(findstr:*)",
       "WebSearch",
-      "Bash(del nul)"
+      "Bash(del nul)",
+      "WebFetch(domain:www.deadmansswitch.net)",
+      "WebFetch(domain:www.cipherwill.com)",
+      "WebFetch(domain:meminto.com)",
+      "Bash(npx prisma db execute:*)",
+      "Bash(for:*)",
+      "Bash(do)",
+      "Bash(if grep -q \"tier === ''plus''\" \"$file\")",
+      "Bash(then)",
+      "Bash(echo:*)",
+      "Bash(if ! grep -q \"isPaidTier\" \"$file\")",
+      "Bash(fi)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

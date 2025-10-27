@@ -209,7 +209,7 @@ export default function AdminUsersPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`inline-block px-2 py-1 text-xs font-semibold rounded ${
-                          user.tier === 'plus'
+                          user.tier !== 'free'
                             ? 'bg-purple-100 text-purple-800'
                             : 'bg-gray-100 text-gray-800'
                         }`}

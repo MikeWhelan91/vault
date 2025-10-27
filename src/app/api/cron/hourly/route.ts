@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { sendCheckInReminder, sendReleaseNotification, sendOwnerBundleReleasedNotification } from '@/lib/email';
 import { sendPushNotificationToMultipleTokens } from '@/lib/firebase-admin';
+import { getRetentionPolicies, type TierName } from '@/lib/pricing';
 
 /**
  * GET /api/cron/hourly
@@ -218,12 +219,22 @@ async function triggerRelease(bundle: any) {
     // Generate release token if it doesn't exist
     const releaseToken = bundle.releaseToken || crypto.randomUUID();
 
-    // Mark bundle as released and set release token
+    // Get retention policy based on user tier
+    const userTier = (bundle.user.tier as TierName) || 'free';
+    const retention = getRetentionPolicies(userTier);
+
+    // Calculate deletion date
+    const now = new Date();
+    const deleteScheduledFor = new Date(now.getTime() + (retention.postReleaseDays * 24 * 60 * 60 * 1000));
+
+    // Mark bundle as released, set release token and deletion date
     await prisma.releaseBundle.update({
       where: { id: bundle.id },
       data: {
         released: true,
-        releaseToken: releaseToken
+        releasedAt: now,
+        releaseToken: releaseToken,
+        deleteScheduledFor: deleteScheduledFor,
       },
     });
 

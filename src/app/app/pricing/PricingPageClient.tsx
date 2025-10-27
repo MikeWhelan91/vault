@@ -119,13 +119,13 @@ export default function PricingPageClient() {
         </Card>
 
         {/* Plus Tier */}
-        <Card className={`relative overflow-hidden rounded-3xl border ${tier === 'plus' ? 'border-primary-400 bg-primary-50/60' : 'border-primary-500'} shadow-sm`}>
+        <Card className={`relative overflow-hidden rounded-3xl border ${isPaidTier(tier) ? 'border-primary-400 bg-primary-50/60' : 'border-primary-500'} shadow-sm`}>
           {tier === 'free' && (
             <div className="absolute top-0 right-0 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg sm:px-4 sm:py-1.5">
               RECOMMENDED
             </div>
           )}
-          {tier === 'plus' && (
+          {isPaidTier(tier) && (
             <div className="mb-4 mt-2">
               <span className="px-3 py-1 text-xs font-bold bg-primary-500 text-white rounded-full">
                 CURRENT PLAN

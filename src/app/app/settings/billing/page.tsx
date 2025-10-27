@@ -160,7 +160,7 @@ export default function BillingPage() {
                     Current Plan
                   </span>
                 )}
-                {tier === 'plus' && (
+                {isPaidTier(tier) && (
                   <span className="px-2 py-0.5 text-xs font-medium bg-primary-500 text-white rounded-full flex items-center gap-1">
                     <Crown className="w-3 h-3" />
                     Active
@@ -353,7 +353,7 @@ export default function BillingPage() {
       )}
 
       {/* Plus Subscription Management */}
-      {tier === 'plus' && (
+      {isPaidTier(tier) && (
         <div>
           <h2 className="text-lg font-semibold text-warm-900 mb-4">Manage Subscription</h2>
           <Card>
