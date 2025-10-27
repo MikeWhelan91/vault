@@ -32,6 +32,18 @@ export async function POST(request: NextRequest) {
           orderBy: { updatedAt: 'desc' },
         },
         heartbeat: true,
+        releaseBundles: {
+          where: {
+            archived: false, // Only include active bundles
+          },
+          include: {
+            bundleItems: {
+              select: {
+                itemId: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -54,6 +66,7 @@ export async function POST(request: NextRequest) {
         totalSize: user.totalSize.toString(),
         storageLimit: user.storageLimit.toString(),
         tier: user.tier,
+        lastActivityAt: user.lastActivityAt?.toISOString(),
       },
       items: user.items.map(item => ({
         id: item.id,
@@ -67,6 +80,11 @@ export async function POST(request: NextRequest) {
         wrappedItemKeyIV: item.wrappedItemKeyIV,
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),
+      })),
+      bundles: user.releaseBundles.map(bundle => ({
+        id: bundle.id,
+        name: bundle.name,
+        items: bundle.bundleItems.map(bi => ({ itemId: bi.itemId })),
       })),
       heartbeat: user.heartbeat ? {
         enabled: user.heartbeat.enabled,

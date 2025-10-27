@@ -13,6 +13,7 @@ import { Progress } from '@/components/ui/Progress';
 import { encryptFile, generateIV, generateSalt, wrapKey, bytesToHex } from '@/lib/crypto';
 import { uploadObject } from '@/lib/r2-client';
 import type { ItemType } from '@/types';
+import { isPaidTier, type TierName } from '@/lib/pricing';
 import {
   FileText,
   StickyNote,
@@ -38,7 +39,6 @@ import {
 import { getFileTypeInfo, canPreviewFile } from '@/lib/file-types';
 import type { FileCategory } from '@/lib/file-types';
 import { StorageIndicator } from '@/components/StorageIndicator';
-import type { TierName } from '@/lib/pricing';
 import { canUploadVideo, UPGRADE_MESSAGES } from '@/lib/pricing';
 import { MobilePageHeader } from '@/components/mobile/MobilePageHeader';
 import { SimpleRecordModal } from '@/components/SimpleRecordModal';
@@ -178,7 +178,7 @@ export default function ItemsPageClient() {
               <p className="text-sm text-amber-800 mb-3">
                 You have {itemsNotInBundles} item{itemsNotInBundles !== 1 ? 's' : ''} not in any bundles.
                 Items not in bundles will be deleted after <strong>2 years of inactivity</strong>.
-                You've been inactive for <strong>{Math.floor(daysSinceActivity / 30)} months</strong>.
+                You&apos;ve been inactive for <strong>{Math.floor(daysSinceActivity / 30)} months</strong>.
               </p>
               <p className="text-xs text-amber-700 mb-3">
                 <strong>To protect these items:</strong> Add them to a bundle or log in regularly.
@@ -934,7 +934,7 @@ function AddItemModal({
                 }
               }}
               disabled={isUploading}
-              multiple={metadata && (metadata.tier as TierName) === 'plus'}
+              multiple={metadata && isPaidTier(metadata.tier as TierName)}
             />
             {selectedFiles.length > 0 && (
               <div className="mt-2 space-y-1">

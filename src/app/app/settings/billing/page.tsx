@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCrypto } from '@/contexts/CryptoContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { getTierLimits, type TierName } from '@/lib/pricing';
+import { getTierLimits, isPaidTier, type TierName } from '@/lib/pricing';
 import { CreditCard, Check, ArrowLeft, Crown, Loader2 } from 'lucide-react';
 import { STRIPE_PRICES } from '@/lib/stripe';
 import { useIsNativeApp } from '@/lib/platform';

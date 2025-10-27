@@ -6,7 +6,7 @@ import { useCrypto } from '@/contexts/CryptoContext';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Check, ArrowRight, Package, Users, HardDrive } from 'lucide-react';
-import { getTierLimits, type TierName } from '@/lib/pricing';
+import { getTierLimits, isPaidTier, type TierName } from '@/lib/pricing';
 
 export default function PricingPageClient() {
   const { metadata } = useCrypto();

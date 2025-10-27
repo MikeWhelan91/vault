@@ -61,8 +61,10 @@ export async function POST(request: NextRequest) {
         totalSize: newUser.totalSize.toString(),
         storageLimit: newUser.storageLimit.toString(),
         tier: newUser.tier,
+        lastActivityAt: newUser.lastActivityAt?.toISOString(),
       },
       items: [],
+      bundles: [],
       heartbeat: null,
       created: true,
     });

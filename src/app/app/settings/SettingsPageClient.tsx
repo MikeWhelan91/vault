@@ -10,6 +10,7 @@ import { Modal } from '@/components/ui/Modal';
 import { User, Trash2, Database, AlertTriangle, CreditCard, Fingerprint, Smartphone, Settings } from 'lucide-react';
 import { useIsNativeApp } from '@/lib/platform';
 import { biometric, haptics } from '@/lib/mobile';
+import { isPaidTier, type TierName } from '@/lib/pricing';
 import {
   hasBiometricCredentials,
   storeBiometricCredentials,
@@ -212,7 +213,7 @@ export default function SettingsPageClient() {
             <div className="flex-1 min-w-0">
               <h2 className="text-base font-semibold text-plum-900 mb-2">Billing</h2>
               <p className="text-sm text-plum-600 mb-3">
-                {metadata?.isPaidTier(tier) ? 'Plus Tier - $9/month' : 'Free Tier'}
+                {metadata && isPaidTier(metadata.tier as TierName) ? 'Plus Tier - $9/month' : 'Free Tier'}
               </p>
               <Button
                 variant="ghost"

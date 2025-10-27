@@ -43,6 +43,8 @@ export interface VaultMetadata {
   storageLimit: number; // bytes allowed
   tier: UserTier;
   gracePeriodEndsAt?: string | null; // ISO timestamp when excess data will be deleted
+  lastActivityAt?: string; // ISO timestamp of last user activity (for inactivity cleanup)
+  bundles?: any[]; // Release bundles (for checking if items are protected)
 }
 
 export interface ReleaseBundle {
