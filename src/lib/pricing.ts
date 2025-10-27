@@ -2,14 +2,15 @@
  * Pricing tiers and feature limits for Forebearer
  */
 
-export type TierName = 'free' | 'plus';
+export type TierName = 'free' | 'plus_monthly' | 'plus_annual' | 'plus_lifetime';
 
 export interface TierLimits {
   name: string;
   displayName: string;
+  billingCycle: 'free' | 'monthly' | 'annual' | 'lifetime';
   price: {
-    monthly: number;
-    annual?: number;
+    amount: number;
+    display: string;
   };
   storage: {
     bytes: number;
@@ -32,6 +33,15 @@ export interface TierLimits {
     max: number | null; // null = unlimited
     display: string;
   };
+  releaseWindow: {
+    maxYears: number | null; // null = unlimited
+    display: string;
+  };
+  retention: {
+    vaultInactivityYears: number; // Years of inactivity before orphaned items deleted
+    postReleaseDays: number; // Days after bundle release before deletion
+    display: string;
+  };
   features: {
     analytics: boolean;
     prioritySupport: boolean;
@@ -46,8 +56,10 @@ export const TIER_LIMITS: Record<TierName, TierLimits> = {
   free: {
     name: 'free',
     displayName: 'Free',
+    billingCycle: 'free',
     price: {
-      monthly: 0,
+      amount: 0,
+      display: '$0',
     },
     storage: {
       bytes: 300 * 1024 * 1024, // 300 MB
@@ -70,6 +82,15 @@ export const TIER_LIMITS: Record<TierName, TierLimits> = {
       max: 1,
       display: '1 video only',
     },
+    releaseWindow: {
+      maxYears: 1,
+      display: 'Up to 1 year',
+    },
+    retention: {
+      vaultInactivityYears: 2,
+      postReleaseDays: 30,
+      display: 'Items not in bundles deleted after 2 years of inactivity. Released bundles available for 30 days.',
+    },
     features: {
       analytics: false,
       prioritySupport: false,
@@ -79,12 +100,13 @@ export const TIER_LIMITS: Record<TierName, TierLimits> = {
       letterScheduler: false,
     },
   },
-  plus: {
-    name: 'plus',
-    displayName: 'Plus',
+  plus_monthly: {
+    name: 'plus_monthly',
+    displayName: 'Plus Monthly',
+    billingCycle: 'monthly',
     price: {
-      monthly: 9.99,
-      annual: 89.99, // $89.99/year (saves ~$30)
+      amount: 12.99,
+      display: '$12.99/month',
     },
     storage: {
       bytes: 5 * 1024 * 1024 * 1024, // 5 GB
@@ -106,6 +128,109 @@ export const TIER_LIMITS: Record<TierName, TierLimits> = {
     videos: {
       max: null, // Unlimited
       display: 'Unlimited videos',
+    },
+    releaseWindow: {
+      maxYears: 5,
+      display: 'Up to 5 years',
+    },
+    retention: {
+      vaultInactivityYears: 2,
+      postReleaseDays: 90,
+      display: 'Items not in bundles deleted after 2 years of inactivity. Released bundles available for 90 days.',
+    },
+    features: {
+      analytics: true,
+      prioritySupport: true,
+      multipleCheckInMethods: true,
+      bulkUpload: true,
+      conditionalReleases: true,
+      letterScheduler: true,
+    },
+  },
+  plus_annual: {
+    name: 'plus_annual',
+    displayName: 'Plus Annual',
+    billingCycle: 'annual',
+    price: {
+      amount: 89,
+      display: '$89/year (Save 43%)',
+    },
+    storage: {
+      bytes: 5 * 1024 * 1024 * 1024, // 5 GB
+      display: '5 GB',
+    },
+    bundles: {
+      max: null, // Unlimited
+      display: 'Unlimited bundles',
+    },
+    trustees: {
+      maxPerBundle: null, // Unlimited
+      display: 'Unlimited trustees',
+    },
+    heartbeat: {
+      minIntervalDays: 7, // Can do weekly
+      customSchedules: true,
+      display: 'Custom schedules (weekly, bi-weekly, custom)',
+    },
+    videos: {
+      max: null, // Unlimited
+      display: 'Unlimited videos',
+    },
+    releaseWindow: {
+      maxYears: 10,
+      display: 'Up to 10 years',
+    },
+    retention: {
+      vaultInactivityYears: 2,
+      postReleaseDays: 90,
+      display: 'Items not in bundles deleted after 2 years of inactivity. Released bundles available for 90 days.',
+    },
+    features: {
+      analytics: true,
+      prioritySupport: true,
+      multipleCheckInMethods: true,
+      bulkUpload: true,
+      conditionalReleases: true,
+      letterScheduler: true,
+    },
+  },
+  plus_lifetime: {
+    name: 'plus_lifetime',
+    displayName: 'Plus Lifetime',
+    billingCycle: 'lifetime',
+    price: {
+      amount: 299,
+      display: '$299 one-time (Best Value)',
+    },
+    storage: {
+      bytes: 10 * 1024 * 1024 * 1024, // 10 GB
+      display: '10 GB',
+    },
+    bundles: {
+      max: null, // Unlimited
+      display: 'Unlimited bundles',
+    },
+    trustees: {
+      maxPerBundle: null, // Unlimited
+      display: 'Unlimited trustees',
+    },
+    heartbeat: {
+      minIntervalDays: 7, // Can do weekly
+      customSchedules: true,
+      display: 'Custom schedules (weekly, bi-weekly, custom)',
+    },
+    videos: {
+      max: null, // Unlimited
+      display: 'Unlimited videos',
+    },
+    releaseWindow: {
+      maxYears: null, // Unlimited - 15+ years
+      display: 'Unlimited (15+ years)',
+    },
+    retention: {
+      vaultInactivityYears: 2,
+      postReleaseDays: 180,
+      display: 'Items not in bundles deleted after 2 years of inactivity. Released bundles available for 6 months.',
     },
     features: {
       analytics: true,
@@ -159,6 +284,22 @@ export function canUploadVideo(tier: TierName, currentVideoCount: number): boole
   return currentVideoCount < limits.videos.max;
 }
 
+export function canSetReleaseDate(tier: TierName, yearsFromNow: number): boolean {
+  const limits = getTierLimits(tier);
+  if (limits.releaseWindow.maxYears === null) return true; // Unlimited
+  return yearsFromNow <= limits.releaseWindow.maxYears;
+}
+
+export function getMaxReleaseYears(tier: TierName): number | null {
+  const limits = getTierLimits(tier);
+  return limits.releaseWindow.maxYears;
+}
+
+export function getRetentionPolicies(tier: TierName) {
+  const limits = getTierLimits(tier);
+  return limits.retention;
+}
+
 /**
  * Upgrade prompts and messaging
  */
@@ -176,7 +317,7 @@ export const UPGRADE_MESSAGES = {
   },
   storage_limit: {
     title: 'Upgrade for More Storage',
-    message: 'You\'ve reached your 300 MB storage limit. Upgrade to Plus for 5 GB of storage.',
+    message: 'You\'ve reached your 300 MB storage limit. Upgrade to Plus for 5 GB (or 10 GB with Lifetime).',
     cta: 'Upgrade to Plus',
   },
   heartbeat_schedule: {
@@ -192,6 +333,11 @@ export const UPGRADE_MESSAGES = {
   video_limit: {
     title: 'Upgrade for Unlimited Videos',
     message: 'Free tier allows 1 video only. Upgrade to Plus for unlimited video uploads.',
+    cta: 'Upgrade to Plus',
+  },
+  release_window_limit: {
+    title: 'Upgrade for Longer Release Windows',
+    message: 'Your tier limits release dates. Upgrade to extend your release window or choose Lifetime for unlimited timeframes.',
     cta: 'Upgrade to Plus',
   },
 };

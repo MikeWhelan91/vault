@@ -25,7 +25,10 @@ model User {
   wrappedDataKeyIV  String // hex-encoded IV for wrapped data key
 
   // Subscription tier
-  tier String @default("free") // 'free' | 'plus'
+  tier String @default("free") // 'free' | 'plus_monthly' | 'plus_annual' | 'plus_lifetime'
+
+  // Activity tracking (for vault cleanup)
+  lastActivityAt DateTime @default(now()) // Updated on login, upload, bundle creation, check-in
 
   // Grace period tracking (for downgraded users)
   gracePeriodEndsAt DateTime? // When excess data will be deleted (null if not in grace period)
@@ -321,8 +324,11 @@ model ReleaseBundle {
 
   // Status
   released    Boolean  @default(false)
+  releasedAt  DateTime? // When the bundle was released
   releaseToken String?  @unique
   firstAccessedAt DateTime? // When a trustee first accessed this bundle (starts 24hr timer)
+  deleteScheduledFor DateTime? // When bundle data should be deleted (releasedAt + retention period)
+  archived    Boolean  @default(false) // True after data has been deleted post-release
 
   // Bundle note (encrypted with bundle key for trustee access)
   bundleNoteEncrypted String? // Encrypted note content (hex-encoded)
