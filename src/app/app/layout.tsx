@@ -66,7 +66,7 @@ function AppNav() {
   const navigation = [
     { name: 'Dashboard', href: '/app' },
     { name: 'My Vault', href: '/app/items' },
-    { name: 'Releases', href: '/app/release' },
+    { name: 'Create', href: '/app/release' },
     { name: 'My Bundles', href: '/app/bundles' },
   ];
 

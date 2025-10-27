@@ -193,7 +193,6 @@ export default function LettersPageClient() {
         title="Scheduled Letters"
         subtitle="Write letters to be delivered on birthdays, anniversaries, or any special date."
         icon={Mail}
-        iconColor="text-blue-600"
         badge={
           isPaidUser ? (
             <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">

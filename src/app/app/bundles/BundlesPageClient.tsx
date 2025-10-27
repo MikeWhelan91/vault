@@ -110,7 +110,6 @@ export default function BundlesPageClient() {
         title="My Bundles"
         subtitle="Coordinate trustees, confirm delivery timelines, and keep every bundle ready to unlock at the right moment."
         icon={Package}
-        iconColor="text-emerald-600"
         actions={
           <>
             <Link href="/app/release">

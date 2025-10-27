@@ -181,7 +181,6 @@ export default function SettingsPageClient() {
         title="Settings"
         subtitle="Manage your account and preferences"
         icon={Settings}
-        iconColor="text-plum-600"
       />
 
       {/* Settings Grid */}

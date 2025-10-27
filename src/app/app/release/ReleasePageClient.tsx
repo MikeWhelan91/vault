@@ -281,7 +281,6 @@ export default function ReleasePageClient() {
         title="Create Release"
         subtitle="Choose what you want to share and who should receive it"
         icon={Send}
-        iconColor="text-violet-600"
       />
 
       {/* Bundle Limit Reached - Show Upgrade Prompt */}
