@@ -3,6 +3,7 @@ import prisma from '@/lib/prisma';
 import { sendCheckInReminder, sendReleaseNotification, sendOwnerBundleReleasedNotification } from '@/lib/email';
 import { sendPushNotificationToMultipleTokens } from '@/lib/firebase-admin';
 import { getRetentionPolicies, type TierName } from '@/lib/pricing';
+import crypto from 'crypto';
 
 /**
  * GET /api/cron/hourly
@@ -220,7 +221,11 @@ async function triggerRelease(bundle: any) {
     const releaseToken = bundle.releaseToken || crypto.randomUUID();
 
     // Get retention policy based on user tier
-    const userTier = (bundle.user.tier as TierName) || 'free';
+    // Ensure tier is valid, default to 'free' if not
+    let userTier: TierName = 'free';
+    if (bundle.user.tier && ['free', 'plus_monthly', 'plus_annual', 'plus_lifetime'].includes(bundle.user.tier)) {
+      userTier = bundle.user.tier as TierName;
+    }
     const retention = getRetentionPolicies(userTier);
 
     // Calculate deletion date
